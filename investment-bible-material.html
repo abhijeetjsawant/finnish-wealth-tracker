@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#1976d2">
+    <title>Investment Bible - Finnish Wealth Tracker</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/material-design.css">
+    <link rel="stylesheet" href="css/material-forms.css">
+    <link rel="stylesheet" href="css/material-dashboard.css">
+</head>
+<body>
+    <!-- Material Design App Bar -->
+    <header class="md-app-bar md-elevation-2">
+        <button class="md-icon-button" onclick="toggleDrawer()">
+            <span class="material-icons">menu</span>
+        </button>
+        <h1 class="md-app-bar-title">Investment Bible</h1>
+        <div style="flex: 1;"></div>
+        <button class="md-icon-button" onclick="toggleSearch()">
+            <span class="material-icons">search</span>
+        </button>
+        <button class="md-icon-button" onclick="showBookmarks()">
+            <span class="material-icons">bookmark</span>
+        </button>
+        <button class="md-icon-button" onclick="toggleTheme()">
+            <span class="material-icons">dark_mode</span>
+        </button>
+    </header>
+
+    <!-- Search Bar (Hidden by default) -->
+    <div class="md-search-bar" id="searchBar" style="display: none;">
+        <div class="md-search-container">
+            <span class="material-icons">search</span>
+            <input type="text" placeholder="Search investment topics, guides, calculators..." class="md-search-input">
+            <button class="md-icon-button" onclick="toggleSearch()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Drawer -->
+    <nav class="md-drawer" id="drawer">
+        <div class="md-drawer-header">
+            <img src="https://ui-avatars.com/api/?name=FW&background=1976d2&color=fff&size=64" alt="Avatar" class="drawer-avatar">
+            <div class="drawer-user-info">
+                <div class="drawer-user-name">Finnish Wealth Tracker</div>
+                <div class="drawer-user-email">Building wealth in Finland</div>
+            </div>
+        </div>
+        <div class="md-drawer-content">
+            <a href="dashboard-material.html" class="md-drawer-item">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">account_balance_wallet</span>
+                Portfolio
+            </a>
+            <a href="tax-analytics-material.html" class="md-drawer-item">
+                <span class="material-icons">analytics</span>
+                Tax Analytics
+            </a>
+            <a href="morning-checkin-material.html" class="md-drawer-item">
+                <span class="material-icons">wb_sunny</span>
+                Morning Check-in
+            </a>
+            <div class="md-drawer-divider"></div>
+            <a href="#" class="md-drawer-item active">
+                <span class="material-icons">menu_book</span>
+                Investment Bible
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">language</span>
+                Bicultural Mode
+            </a>
+            <div class="md-drawer-divider"></div>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">settings</span>
+                Settings
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">help</span>
+                Help & Support
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="md-content">
+        <!-- Header Section -->
+        <section class="dashboard-section">
+            <div class="bible-header">
+                <div class="header-content">
+                    <h1 class="bible-title">
+                        <span class="material-icons">auto_stories</span>
+                        Finnish Investment Bible
+                    </h1>
+                    <p class="bible-subtitle">
+                        Your comprehensive guide to building wealth in Finland - from basics to advanced strategies
+                    </p>
+                </div>
+                <div class="progress-overview">
+                    <div class="learning-progress">
+                        <div class="progress-circle">
+                            <svg width="80" height="80">
+                                <circle cx="40" cy="40" r="35" stroke="var(--md-outline-variant)" stroke-width="6" fill="none"/>
+                                <circle cx="40" cy="40" r="35" stroke="var(--md-primary)" stroke-width="6" fill="none" 
+                                        stroke-dasharray="220" stroke-dashoffset="132" transform="rotate(-90 40 40)"/>
+                            </svg>
+                            <div class="progress-text">40%</div>
+                        </div>
+                        <div class="progress-label">Learning Progress</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Path Categories -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Learning Paths</h2>
+            <div class="learning-paths-grid">
+                <div class="md-card md-elevation-1 learning-path-card beginner" onclick="openLearningPath('beginner')">
+                    <div class="path-header">
+                        <div class="path-icon beginner">
+                            <span class="material-icons">school</span>
+                        </div>
+                        <div class="path-level">Beginner</div>
+                    </div>
+                    <div class="path-content">
+                        <h3 class="path-title">Finnish Investment Basics</h3>
+                        <p class="path-description">
+                            Start your investment journey with Finnish fundamentals, account types, and basic principles.
+                        </p>
+                        <div class="path-stats">
+                            <div class="stat-item">
+                                <span class="material-icons">quiz</span>
+                                12 Lessons
+                            </div>
+                            <div class="stat-item">
+                                <span class="material-icons">schedule</span>
+                                3-4 hours
+                            </div>
+                        </div>
+                        <div class="path-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%;"></div>
+                            </div>
+                            <span class="progress-text">9/12 lessons completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 learning-path-card intermediate" onclick="openLearningPath('intermediate')">
+                    <div class="path-header">
+                        <div class="path-icon intermediate">
+                            <span class="material-icons">trending_up</span>
+                        </div>
+                        <div class="path-level">Intermediate</div>
+                    </div>
+                    <div class="path-content">
+                        <h3 class="path-title">Portfolio Building & ETFs</h3>
+                        <p class="path-description">
+                            Learn portfolio construction, ETF selection, and diversification strategies for Finnish investors.
+                        </p>
+                        <div class="path-stats">
+                            <div class="stat-item">
+                                <span class="material-icons">quiz</span>
+                                15 Lessons
+                            </div>
+                            <div class="stat-item">
+                                <span class="material-icons">schedule</span>
+                                5-6 hours
+                            </div>
+                        </div>
+                        <div class="path-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 27%;"></div>
+                            </div>
+                            <span class="progress-text">4/15 lessons completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 learning-path-card advanced" onclick="openLearningPath('advanced')">
+                    <div class="path-header">
+                        <div class="path-icon advanced">
+                            <span class="material-icons">psychology</span>
+                        </div>
+                        <div class="path-level">Advanced</div>
+                    </div>
+                    <div class="path-content">
+                        <h3 class="path-title">Tax Optimization & Strategies</h3>
+                        <p class="path-description">
+                            Master Finnish tax laws, advanced strategies, and optimize your investment efficiency.
+                        </p>
+                        <div class="path-stats">
+                            <div class="stat-item">
+                                <span class="material-icons">quiz</span>
+                                18 Lessons
+                            </div>
+                            <div class="stat-item">
+                                <span class="material-icons">schedule</span>
+                                6-8 hours
+                            </div>
+                        </div>
+                        <div class="path-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <span class="progress-text">0/18 lessons completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Topics */
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Featured Topics</h2>
+                <button class="md-button md-button-text">
+                    View All Topics
+                    <span class="material-icons">arrow_forward</span>
+                </button>
+            </div>
+            <div class="topics-grid">
+                <div class="md-card md-elevation-1 topic-card" onclick="openTopic('ost-guide')">
+                    <div class="topic-header">
+                        <div class="topic-icon finnish">
+                            <span class="material-icons">account_balance</span>
+                        </div>
+                        <div class="topic-badge hot">🔥 Popular</div>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">OST Account Mastery</h3>
+                        <p class="topic-description">
+                            Complete guide to maximizing your Osakesäästötili (OST) for tax-efficient investing in Finland.
+                        </p>
+                        <div class="topic-meta">
+                            <span class="reading-time">
+                                <span class="material-icons">schedule</span>
+                                15 min read
+                            </span>
+                            <span class="difficulty beginner">Beginner</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 topic-card" onclick="openTopic('etf-selection')">
+                    <div class="topic-header">
+                        <div class="topic-icon investment">
+                            <span class="material-icons">pie_chart</span>
+                        </div>
+                        <div class="topic-badge new">✨ New</div>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">ETF Selection for Finns</h3>
+                        <p class="topic-description">
+                            How to choose the right ETFs considering Finnish tax implications and UCITS regulations.
+                        </p>
+                        <div class="topic-meta">
+                            <span class="reading-time">
+                                <span class="material-icons">schedule</span>
+                                20 min read
+                            </span>
+                            <span class="difficulty intermediate">Intermediate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 topic-card" onclick="openTopic('bicultural-investing')">
+                    <div class="topic-header">
+                        <div class="topic-icon bicultural">
+                            <span class="material-icons">language</span>
+                        </div>
+                        <div class="topic-badge trending">📈 Trending</div>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Bicultural Investing</h3>
+                        <p class="topic-description">
+                            Investment strategies for expats and bicultural individuals navigating Finnish financial systems.
+                        </p>
+                        <div class="topic-meta">
+                            <span class="reading-time">
+                                <span class="material-icons">schedule</span>
+                                25 min read
+                            </span>
+                            <span class="difficulty intermediate">Intermediate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 topic-card" onclick="openTopic('tax-strategies')">
+                    <div class="topic-header">
+                        <div class="topic-icon tax">
+                            <span class="material-icons">calculate</span>
+                        </div>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Advanced Tax Strategies</h3>
+                        <p class="topic-description">
+                            Tax-loss harvesting, dividend timing, and other advanced techniques for Finnish investors.
+                        </p>
+                        <div class="topic-meta">
+                            <span class="reading-time">
+                                <span class="material-icons">schedule</span>
+                                30 min read
+                            </span>
+                            <span class="difficulty advanced">Advanced</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Tools -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Interactive Tools & Calculators</h2>
+                <button class="md-button md-button-text">
+                    All Tools
+                    <span class="material-icons">arrow_forward</span>
+                </button>
+            </div>
+            <div class="tools-grid">
+                <div class="md-card md-elevation-1 tool-card" onclick="openTool('ost-calculator')">
+                    <div class="tool-header">
+                        <div class="tool-icon calculator">
+                            <span class="material-icons">calculate</span>
+                        </div>
+                        <div class="tool-type">Calculator</div>
+                    </div>
+                    <div class="tool-content">
+                        <h3 class="tool-title">OST Contribution Calculator</h3>
+                        <p class="tool-description">
+                            Calculate optimal OST contributions and tax savings potential.
+                        </p>
+                        <button class="md-button md-button-outlined">
+                            <span class="material-icons">launch</span>
+                            Try Calculator
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 tool-card" onclick="openTool('portfolio-simulator')">
+                    <div class="tool-header">
+                        <div class="tool-icon simulator">
+                            <span class="material-icons">timeline</span>
+                        </div>
+                        <div class="tool-type">Simulator</div>
+                    </div>
+                    <div class="tool-content">
+                        <h3 class="tool-title">Portfolio Growth Simulator</h3>
+                        <p class="tool-description">
+                            Simulate long-term portfolio growth with different allocation strategies.
+                        </p>
+                        <button class="md-button md-button-outlined">
+                            <span class="material-icons">launch</span>
+                            Run Simulation
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 tool-card" onclick="openTool('tax-optimizer')">
+                    <div class="tool-header">
+                        <div class="tool-icon optimizer">
+                            <span class="material-icons">tune</span>
+                        </div>
+                        <div class="tool-type">Optimizer</div>
+                    </div>
+                    <div class="tool-content">
+                        <h3 class="tool-title">Tax Efficiency Optimizer</h3>
+                        <p class="tool-description">
+                            Optimize your investment allocation for maximum tax efficiency.
+                        </p>
+                        <button class="md-button md-button-outlined">
+                            <span class="material-icons">launch</span>
+                            Optimize Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Updates -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Updates</h2>
+                <button class="md-button md-button-text">
+                    View Changelog
+                    <span class="material-icons">history</span>
+                </button>
+            </div>
+            <div class="updates-container">
+                <div class="md-card md-elevation-1 update-card">
+                    <div class="update-header">
+                        <div class="update-icon new">
+                            <span class="material-icons">fiber_new</span>
+                        </div>
+                        <div class="update-date">January 15, 2025</div>
+                    </div>
+                    <div class="update-content">
+                        <h3 class="update-title">2025 Tax Changes Guide Added</h3>
+                        <p class="update-description">
+                            Comprehensive guide covering the latest Finnish tax changes for 2025, including updated OST limits and capital gains rates.
+                        </p>
+                        <div class="update-tags">
+                            <span class="md-chip">Tax</span>
+                            <span class="md-chip">2025</span>
+                            <span class="md-chip">OST</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 update-card">
+                    <div class="update-header">
+                        <div class="update-icon updated">
+                            <span class="material-icons">update</span>
+                        </div>
+                        <div class="update-date">January 10, 2025</div>
+                    </div>
+                    <div class="update-content">
+                        <h3 class="update-title">ETF Comparison Tool Enhanced</h3>
+                        <p class="update-description">
+                            Added TER comparison, tracking error analysis, and Finnish tax efficiency scoring for popular European ETFs.
+                        </p>
+                        <div class="update-tags">
+                            <span class="md-chip">Tools</span>
+                            <span class="md-chip">ETF</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 update-card">
+                    <div class="update-header">
+                        <div class="update-icon improved">
+                            <span class="material-icons">auto_fix_high</span>
+                        </div>
+                        <div class="update-date">January 5, 2025</div>
+                    </div>
+                    <div class="update-content">
+                        <h3 class="update-title">Bicultural Investing Section</h3>
+                        <p class="update-description">
+                            New dedicated section for expats and multicultural investors with country-specific guidance and cross-border considerations.
+                        </p>
+                        <div class="update-tags">
+                            <span class="md-chip">Bicultural</span>
+                            <span class="md-chip">Expat</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Quick Access</h2>
+            <div class="quick-access-grid">
+                <button class="md-card md-elevation-1 quick-access-card" onclick="quickAccess('glossary')">
+                    <div class="access-icon">
+                        <span class="material-icons">translate</span>
+                    </div>
+                    <div class="access-content">
+                        <h3 class="access-title">Finnish Finance Glossary</h3>
+                        <p class="access-subtitle">Terms & translations</p>
+                    </div>
+                </button>
+
+                <button class="md-card md-elevation-1 quick-access-card" onclick="quickAccess('faq')">
+                    <div class="access-icon">
+                        <span class="material-icons">help_outline</span>
+                    </div>
+                    <div class="access-content">
+                        <h3 class="access-title">Frequently Asked</h3>
+                        <p class="access-subtitle">Common questions</p>
+                    </div>
+                </button>
+
+                <button class="md-card md-elevation-1 quick-access-card" onclick="quickAccess('resources')">
+                    <div class="access-icon">
+                        <span class="material-icons">link</span>
+                    </div>
+                    <div class="access-content">
+                        <h3 class="access-title">External Resources</h3>
+                        <p class="access-subtitle">Helpful links</p>
+                    </div>
+                </button>
+
+                <button class="md-card md-elevation-1 quick-access-card" onclick="quickAccess('community')">
+                    <div class="access-icon">
+                        <span class="material-icons">forum</span>
+                    </div>
+                    <div class="access-content">
+                        <h3 class="access-title">Community Forum</h3>
+                        <p class="access-subtitle">Join discussions</p>
+                    </div>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="md-bottom-nav">
+        <a href="dashboard-material.html" class="md-bottom-nav-item">
+            <span class="material-icons">dashboard</span>
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">pie_chart</span>
+            <span class="nav-label">Portfolio</span>
+        </a>
+        <a href="tax-analytics-material.html" class="md-bottom-nav-item">
+            <span class="material-icons">insights</span>
+            <span class="nav-label">Analytics</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item active">
+            <span class="material-icons">menu_book</span>
+            <span class="nav-label">Bible</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize ripple effects
+        document.querySelectorAll('.md-button, .md-icon-button, .learning-path-card, .topic-card, .tool-card, .quick-access-card').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('md-ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Drawer functionality
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            drawer.classList.toggle('open');
+            
+            // Add overlay
+            let overlay = document.querySelector('.drawer-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'drawer-overlay';
+                overlay.onclick = toggleDrawer;
+                document.body.appendChild(overlay);
+            }
+            overlay.classList.toggle('show');
+        }
+
+        // Search functionality
+        function toggleSearch() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
+            if (searchBar.style.display === 'block') {
+                searchBar.querySelector('input').focus();
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update icon
+            const icon = document.querySelector('.md-app-bar .md-icon-button:nth-last-child(1) .material-icons');
+            icon.textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+
+        // Bookmarks placeholder
+        function showBookmarks() {
+            alert('Bookmarks coming soon! Save your favorite investment guides and tools.');
+        }
+
+        // Investment Bible Functions
+        class InvestmentBible {
+            constructor() {
+                this.initializeProgress();
+                this.loadUserProgress();
+            }
+
+            initializeProgress() {
+                // Load learning progress from localStorage
+                const progress = this.getUserProgress();
+                this.updateProgressCircle(progress.overall);
+            }
+
+            getUserProgress() {
+                const defaultProgress = {
+                    overall: 40,
+                    beginner: { completed: 9, total: 12 },
+                    intermediate: { completed: 4, total: 15 },
+                    advanced: { completed: 0, total: 18 }
+                };
+
+                try {
+                    return JSON.parse(localStorage.getItem('learningProgress')) || defaultProgress;
+                } catch {
+                    return defaultProgress;
+                }
+            }
+
+            updateProgressCircle(percentage) {
+                const circle = document.querySelector('.progress-circle circle:last-child');
+                const circumference = 2 * Math.PI * 35;
+                const offset = circumference - (percentage / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+                
+                document.querySelector('.progress-text').textContent = `${percentage}%`;
+            }
+
+            saveProgress(pathId, lesson, completed) {
+                const progress = this.getUserProgress();
+                if (progress[pathId]) {
+                    if (completed) {
+                        progress[pathId].completed = Math.min(progress[pathId].completed + 1, progress[pathId].total);
+                    }
+                    // Recalculate overall progress
+                    const totalCompleted = progress.beginner.completed + progress.intermediate.completed + progress.advanced.completed;
+                    const totalLessons = progress.beginner.total + progress.intermediate.total + progress.advanced.total;
+                    progress.overall = Math.round((totalCompleted / totalLessons) * 100);
+                    
+                    localStorage.setItem('learningProgress', JSON.stringify(progress));
+                    this.updateProgressCircle(progress.overall);
+                }
+            }
+
+            loadUserProgress() {
+                const progress = this.getUserProgress();
+                
+                // Update path progress bars
+                this.updatePathProgress('beginner', progress.beginner);
+                this.updatePathProgress('intermediate', progress.intermediate);
+                this.updatePathProgress('advanced', progress.advanced);
+            }
+
+            updatePathProgress(pathId, progressData) {
+                const pathCard = document.querySelector(`.learning-path-card.${pathId}`);
+                if (pathCard) {
+                    const progressBar = pathCard.querySelector('.progress-fill');
+                    const progressText = pathCard.querySelector('.progress-text');
+                    
+                    const percentage = (progressData.completed / progressData.total) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                    progressText.textContent = `${progressData.completed}/${progressData.total} lessons completed`;
+                }
+            }
+        }
+
+        // Learning Path Functions
+        function openLearningPath(pathId) {
+            const pathContent = {
+                beginner: {
+                    title: 'Finnish Investment Basics',
+                    lessons: [
+                        'Understanding Finnish Financial System',
+                        'OST vs AOT: Which Account to Choose?',
+                        'Basic Investment Principles',
+                        'Risk and Return in Finnish Markets',
+                        'Getting Started with Nordnet/Degiro',
+                        'Your First ETF Purchase',
+                        'Understanding Costs and Fees',
+                        'Finnish Tax Basics for Investors',
+                        'Building Your Emergency Fund',
+                        'Setting Investment Goals',
+                        'Regular Investing vs Lump Sum',
+                        'Common Beginner Mistakes'
+                    ]
+                },
+                intermediate: {
+                    title: 'Portfolio Building & ETFs',
+                    lessons: [
+                        'Modern Portfolio Theory Basics',
+                        'Asset Allocation Strategies',
+                        'European ETF Landscape',
+                        'UCITS vs Non-UCITS ETFs',
+                        'Geographical Diversification',
+                        'Sector and Factor ETFs',
+                        'Bond ETFs for Finnish Investors',
+                        'Currency Hedging Considerations',
+                        'Rebalancing Strategies',
+                        'Cost Analysis: TER vs Tracking Error',
+                        'ESG Investing in Finland',
+                        'Small Cap and Emerging Markets',
+                        'Real Estate Investment (REITs)',
+                        'Portfolio Monitoring and Review',
+                        'Performance Measurement'
+                    ]
+                },
+                advanced: {
+                    title: 'Tax Optimization & Strategies',
+                    lessons: [
+                        'Finnish Tax System Deep Dive',
+                        'OST Limit Optimization',
+                        'Tax-Loss Harvesting Strategies',
+                        'Dividend vs Accumulating ETFs',
+                        'Cross-Border Tax Implications',
+                        'Withholding Tax Optimization',
+                        'Advanced Rebalancing Techniques',
+                        'Options and Derivatives Tax',
+                        'Retirement Planning Integration',
+                        'Estate Planning Considerations',
+                        'Business Investment Accounts',
+                        'International Tax Treaties',
+                        'Cryptocurrency Taxation',
+                        'Advanced Portfolio Strategies',
+                        'Tax-Efficient Withdrawal Strategies',
+                        'Professional Tax Advice When Needed',
+                        'Year-End Tax Planning',
+                        'Multi-Generational Wealth Building'
+                    ]
+                }
+            };
+
+            showLearningPathModal(pathId, pathContent[pathId]);
+        }
+
+        function showLearningPathModal(pathId, content) {
+            const modal = createModal(`Learning Path: ${content.title}`, generateLearningPathContent(pathId, content));
+            modal.classList.add('learning-path-modal');
+        }
+
+        function generateLearningPathContent(pathId, content) {
+            const progress = investmentBible.getUserProgress()[pathId];
+            let html = `
+                <div class="path-modal-content">
+                    <div class="path-progress-header">
+                        <div class="progress-stats">
+                            <div class="stat">
+                                <span class="stat-number">${progress.completed}</span>
+                                <span class="stat-label">Completed</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">${progress.total - progress.completed}</span>
+                                <span class="stat-label">Remaining</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">${Math.round((progress.completed / progress.total) * 100)}%</span>
+                                <span class="stat-label">Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lessons-list">
+            `;
+            
+            content.lessons.forEach((lesson, index) => {
+                const isCompleted = index < progress.completed;
+                const isNext = index === progress.completed;
+                
+                html += `
+                    <div class="lesson-item ${isCompleted ? 'completed' : ''} ${isNext ? 'next' : ''}">
+                        <div class="lesson-icon">
+                            ${isCompleted ? '<span class="material-icons">check_circle</span>' : 
+                              isNext ? '<span class="material-icons">play_circle</span>' : 
+                              '<span class="material-icons">radio_button_unchecked</span>'}
+                        </div>
+                        <div class="lesson-content">
+                            <h4 class="lesson-title">${lesson}</h4>
+                            <div class="lesson-meta">
+                                <span class="lesson-number">Lesson ${index + 1}</span>
+                                <span class="lesson-duration">15-20 min</span>
+                            </div>
+                        </div>
+                        <div class="lesson-action">
+                            ${isCompleted ? '<span class="completed-badge">✓</span>' : 
+                              isNext ? '<button class="md-button md-button-filled" onclick="startLesson(\'' + pathId + '\', ' + index + ')">Start</button>' :
+                              '<button class="md-button md-button-outlined" disabled>Locked</button>'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    <div class="path-actions">
+                        <button class="md-button md-button-filled" onclick="continueLearning('${pathId}')">
+                            ${progress.completed === 0 ? 'Start Learning Path' : 'Continue Learning'}
+                        </button>
+                        <button class="md-button md-button-text" onclick="bookmarkPath('${pathId}')">
+                            <span class="material-icons">bookmark_add</span>
+                            Bookmark
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // Topic Functions
+        function openTopic(topicId) {
+            const topics = {
+                'ost-guide': {
+                    title: 'OST Account Mastery',
+                    content: `
+                        <h3>What is OST (Osakesäästötili)?</h3>
+                        <p>The OST (Osakesäästötili) or "Share Savings Account" is Finland's tax-advantaged investment account, similar to an ISA in the UK or Roth IRA in the US.</p>
+                        
+                        <h4>Key Benefits:</h4>
+                        <ul>
+                            <li><strong>Tax-free growth:</strong> No capital gains tax on investments within the account</li>
+                            <li><strong>€50,000 annual limit:</strong> Can contribute up to €50,000 per year</li>
+                            <li><strong>Flexible investments:</strong> Stocks, ETFs, and mutual funds allowed</li>
+                            <li><strong>Low withdrawal tax:</strong> Only 15% tax on withdrawals after age 68</li>
+                        </ul>
+                        
+                        <h4>Optimization Strategies:</h4>
+                        <ol>
+                            <li><strong>Maximize contributions:</strong> Use the full €50,000 limit each year</li>
+                            <li><strong>Growth-focused investments:</strong> Choose high-growth potential assets</li>
+                            <li><strong>Long-term holding:</strong> Benefit from compound growth without tax drag</li>
+                            <li><strong>Rebalancing freedom:</strong> Rebalance without triggering taxable events</li>
+                        </ol>
+                    `
+                },
+                'etf-selection': {
+                    title: 'ETF Selection for Finnish Investors',
+                    content: `
+                        <h3>Choosing ETFs in Finland</h3>
+                        <p>Selecting the right ETFs as a Finnish investor requires considering tax efficiency, costs, and regulatory compliance.</p>
+                        
+                        <h4>Key Considerations:</h4>
+                        <ul>
+                            <li><strong>UCITS compliance:</strong> Choose UCITS ETFs for tax efficiency</li>
+                            <li><strong>Accumulating vs Distributing:</strong> Accumulating ETFs defer dividend taxation</li>
+                            <li><strong>Domicile matters:</strong> Irish and Luxembourg domiciled ETFs often optimal</li>
+                            <li><strong>Total costs:</strong> Consider TER, spread, and tracking error</li>
+                        </ul>
+                        
+                        <h4>Popular Finnish-Friendly ETFs:</h4>
+                        <ul>
+                            <li><strong>VWCE:</strong> Vanguard FTSE All-World UCITS ETF (Accumulating)</li>
+                            <li><strong>IWDA:</strong> iShares Core MSCI World UCITS ETF (Accumulating)</li>
+                            <li><strong>EUNL:</strong> iShares Core MSCI Europe UCITS ETF</li>
+                            <li><strong>VUAA:</strong> Vanguard S&P 500 UCITS ETF (Accumulating)</li>
+                        </ul>
+                    `
+                },
+                'bicultural-investing': {
+                    title: 'Bicultural Investing Guide',
+                    content: `
+                        <h3>Investing as a Bicultural Individual in Finland</h3>
+                        <p>Navigating investment decisions when you have ties to multiple countries requires special consideration of tax treaties, reporting requirements, and optimization strategies.</p>
+                        
+                        <h4>Common Scenarios:</h4>
+                        <ul>
+                            <li><strong>Expats in Finland:</strong> Foreign nationals working in Finland</li>
+                            <li><strong>Finnish diaspora:</strong> Finnish citizens living abroad</li>
+                            <li><strong>Dual citizens:</strong> Holding citizenship in multiple countries</li>
+                            <li><strong>Return migrants:</strong> Finns returning after years abroad</li>
+                        </ul>
+                        
+                        <h4>Key Considerations:</h4>
+                        <ol>
+                            <li><strong>Tax residency:</strong> Understand which country you're tax resident in</li>
+                            <li><strong>Reporting requirements:</strong> Some countries require disclosure of foreign accounts</li>
+                            <li><strong>Double taxation treaties:</strong> Leverage treaties to avoid double taxation</li>
+                            <li><strong>Currency exposure:</strong> Consider your lifetime currency needs</li>
+                        </ol>
+                        
+                        <h4>Optimization Strategies:</h4>
+                        <ul>
+                            <li>Maximize OST if Finnish tax resident</li>
+                            <li>Consider global diversification beyond European markets</li>
+                            <li>Plan for potential future relocations</li>
+                            <li>Seek professional advice for complex situations</li>
+                        </ul>
+                    `
+                }
+            };
+
+            const topic = topics[topicId];
+            if (topic) {
+                showTopicModal(topic.title, topic.content);
+            }
+        }
+
+        function showTopicModal(title, content) {
+            const modal = createModal(title, content);
+            modal.classList.add('topic-modal');
+        }
+
+        // Tool Functions
+        function openTool(toolId) {
+            const tools = {
+                'ost-calculator': () => showOSTCalculator(),
+                'portfolio-simulator': () => showPortfolioSimulator(),
+                'tax-optimizer': () => showTaxOptimizer()
+            };
+
+            if (tools[toolId]) {
+                tools[toolId]();
+            }
+        }
+
+        function showOSTCalculator() {
+            const content = `
+                <div class="calculator-content">
+                    <div class="calculator-inputs">
+                        <div class="md-text-field">
+                            <input type="number" id="ostContribution" class="md-text-field-input" placeholder=" ">
+                            <label class="md-text-field-label">Annual OST Contribution (€)</label>
+                        </div>
+                        <div class="md-text-field">
+                            <input type="number" id="expectedReturn" class="md-text-field-input" placeholder=" " value="7">
+                            <label class="md-text-field-label">Expected Annual Return (%)</label>
+                        </div>
+                        <div class="md-text-field">
+                            <input type="number" id="investmentYears" class="md-text-field-input" placeholder=" " value="20">
+                            <label class="md-text-field-label">Investment Period (years)</label>
+                        </div>
+                    </div>
+                    <div class="calculator-results" id="ostResults">
+                        <div class="result-item">
+                            <span class="result-label">Total Contributions:</span>
+                            <span class="result-value" id="totalContributions">€0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Projected Value:</span>
+                            <span class="result-value" id="projectedValue">€0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Tax Savings vs AOT:</span>
+                            <span class="result-value" id="taxSavings">€0</span>
+                        </div>
+                    </div>
+                    <button class="md-button md-button-filled" onclick="calculateOST()">Calculate</button>
+                </div>
+            `;
+            
+            createModal('OST Contribution Calculator', content);
+        }
+
+        function calculateOST() {
+            const contribution = parseFloat(document.getElementById('ostContribution').value) || 0;
+            const returnRate = parseFloat(document.getElementById('expectedReturn').value) / 100 || 0.07;
+            const years = parseInt(document.getElementById('investmentYears').value) || 20;
+            
+            const totalContributions = contribution * years;
+            const projectedValue = contribution * (((1 + returnRate) ** years - 1) / returnRate);
+            const gains = projectedValue - totalContributions;
+            const taxSavings = gains * 0.30; // 30% capital gains tax saved
+            
+            document.getElementById('totalContributions').textContent = `€${totalContributions.toLocaleString()}`;
+            document.getElementById('projectedValue').textContent = `€${projectedValue.toLocaleString()}`;
+            document.getElementById('taxSavings').textContent = `€${taxSavings.toLocaleString()}`;
+        }
+
+        // Quick Access Functions
+        function quickAccess(section) {
+            const sections = {
+                'glossary': 'Finnish Finance Glossary - Coming soon!',
+                'faq': 'Frequently Asked Questions - Coming soon!',
+                'resources': 'External Resources - Coming soon!',
+                'community': 'Community Forum - Coming soon!'
+            };
+            
+            alert(sections[section] || 'Section coming soon!');
+        }
+
+        // Utility Functions
+        function createModal(title, content) {
+            // Remove existing modal
+            const existingModal = document.getElementById('contentModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            const modal = document.createElement('div');
+            modal.id = 'contentModal';
+            modal.className = 'md-modal open';
+            modal.innerHTML = `
+                <div class="md-modal-overlay" onclick="closeModal()"></div>
+                <div class="md-modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">${title}</h2>
+                        <button class="md-icon-button" onclick="closeModal()">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                    <div class="modal-content">${content}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            return modal;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('contentModal');
+            if (modal) {
+                modal.classList.remove('open');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        function startLesson(pathId, lessonIndex) {
+            alert(`Starting lesson ${lessonIndex + 1} in ${pathId} path - Full lesson content coming soon!`);
+            // Simulate lesson completion
+            investmentBible.saveProgress(pathId, lessonIndex, true);
+        }
+
+        function continueLearning(pathId) {
+            const progress = investmentBible.getUserProgress()[pathId];
+            startLesson(pathId, progress.completed);
+        }
+
+        function bookmarkPath(pathId) {
+            alert(`Bookmarked ${pathId} learning path!`);
+        }
+
+        // Initialize Investment Bible
+        const investmentBible = new InvestmentBible();
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any additional initialization here
+        });
+
+        // Scroll effects
+        window.addEventListener('scroll', () => {
+            const appBar = document.querySelector('.md-app-bar');
+            if (window.scrollY > 0) {
+                appBar.classList.add('md-elevation-4');
+            } else {
+                appBar.classList.remove('md-elevation-4');
+            }
+        });
+    </script>
+</body>
+</html>

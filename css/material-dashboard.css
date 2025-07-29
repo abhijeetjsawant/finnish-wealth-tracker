@@ -1685,3 +1685,723 @@ body {
         width: 100%;
     }
 }
+
+/* Investment Bible Styles */
+.bible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--md-spacing-6);
+    background: linear-gradient(135deg, #1976d2, #1565c0, #0d47a1);
+    color: var(--md-on-primary);
+    border-radius: var(--md-radius-large);
+    margin-bottom: var(--md-spacing-6);
+    box-shadow: var(--md-elevation-3);
+}
+
+.header-content {
+    flex: 1;
+}
+
+.bible-title {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-3);
+    font-size: var(--md-headline-large);
+    font-weight: 400;
+    margin: 0 0 var(--md-spacing-2) 0;
+    color: var(--md-on-primary);
+}
+
+.bible-title .material-icons {
+    font-size: 36px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.bible-subtitle {
+    font-size: var(--md-body-large);
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.5;
+    max-width: 500px;
+}
+
+.progress-overview {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-4);
+}
+
+.learning-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--md-spacing-2);
+}
+
+.progress-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.progress-circle svg {
+    transform: rotate(-90deg);
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-primary);
+}
+
+.progress-label {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-primary);
+    opacity: 0.9;
+}
+
+/* Learning Paths Grid */
+.learning-paths-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--md-spacing-4);
+}
+
+.learning-path-card {
+    padding: var(--md-spacing-5);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+    border-left: 6px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.learning-path-card:hover {
+    box-shadow: var(--md-elevation-4);
+    transform: translateY(-4px);
+}
+
+.learning-path-card.beginner {
+    border-left-color: #4caf50;
+}
+
+.learning-path-card.intermediate {
+    border-left-color: #ff9800;
+}
+
+.learning-path-card.advanced {
+    border-left-color: #f44336;
+}
+
+.path-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--md-spacing-4);
+}
+
+.path-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.path-icon.beginner {
+    background: #4caf50;
+}
+
+.path-icon.intermediate {
+    background: #ff9800;
+}
+
+.path-icon.advanced {
+    background: #f44336;
+}
+
+.path-level {
+    font-size: var(--md-label-large);
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.path-title {
+    font-size: var(--md-title-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-3) 0;
+}
+
+.path-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.6;
+    margin: 0 0 var(--md-spacing-4) 0;
+}
+
+.path-stats {
+    display: flex;
+    gap: var(--md-spacing-4);
+    margin-bottom: var(--md-spacing-4);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-1);
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.stat-item .material-icons {
+    font-size: 18px;
+}
+
+.path-progress {
+    margin-top: var(--md-spacing-3);
+}
+
+/* Topics Grid */
+.topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--md-spacing-4);
+}
+
+.topic-card {
+    padding: var(--md-spacing-4);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.topic-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-2px);
+}
+
+.topic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--md-spacing-3);
+}
+
+.topic-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.topic-icon.finnish {
+    background: #003d82; /* Finnish blue */
+}
+
+.topic-icon.investment {
+    background: #1976d2;
+}
+
+.topic-icon.bicultural {
+    background: #7b1fa2;
+}
+
+.topic-icon.tax {
+    background: #388e3c;
+}
+
+.topic-badge {
+    font-size: var(--md-label-small);
+    padding: var(--md-spacing-1) var(--md-spacing-2);
+    border-radius: var(--md-radius-small);
+    font-weight: 500;
+}
+
+.topic-badge.hot {
+    background: rgba(255, 87, 34, 0.1);
+    color: #ff5722;
+}
+
+.topic-badge.new {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.topic-badge.trending {
+    background: rgba(103, 58, 183, 0.1);
+    color: #673ab7;
+}
+
+.topic-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-2) 0;
+}
+
+.topic-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 var(--md-spacing-3) 0;
+}
+
+.topic-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reading-time {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-1);
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.reading-time .material-icons {
+    font-size: 16px;
+}
+
+.difficulty {
+    font-size: var(--md-label-small);
+    padding: var(--md-spacing-1) var(--md-spacing-2);
+    border-radius: var(--md-radius-small);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.difficulty.beginner {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.difficulty.intermediate {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+}
+
+.difficulty.advanced {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+/* Tools Grid */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--md-spacing-4);
+}
+
+.tool-card {
+    padding: var(--md-spacing-4);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+    text-align: center;
+}
+
+.tool-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-2px);
+}
+
+.tool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--md-spacing-4);
+}
+
+.tool-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto var(--md-spacing-3);
+}
+
+.tool-icon.calculator {
+    background: #1976d2;
+}
+
+.tool-icon.simulator {
+    background: #388e3c;
+}
+
+.tool-icon.optimizer {
+    background: #7b1fa2;
+}
+
+.tool-type {
+    font-size: var(--md-label-medium);
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: absolute;
+    top: var(--md-spacing-3);
+    right: var(--md-spacing-3);
+}
+
+.tool-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-2) 0;
+}
+
+.tool-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 var(--md-spacing-4) 0;
+}
+
+/* Updates Container */
+.updates-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-4);
+}
+
+.update-card {
+    padding: var(--md-spacing-4);
+    border-left: 4px solid var(--md-outline-variant);
+}
+
+.update-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--md-spacing-3);
+}
+
+.update-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.update-icon.new {
+    background: #4caf50;
+}
+
+.update-icon.updated {
+    background: #2196f3;
+}
+
+.update-icon.improved {
+    background: #ff9800;
+}
+
+.update-date {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.update-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-2) 0;
+}
+
+.update-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 var(--md-spacing-3) 0;
+}
+
+.update-tags {
+    display: flex;
+    gap: var(--md-spacing-2);
+    flex-wrap: wrap;
+}
+
+/* Quick Access Grid */
+.quick-access-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--md-spacing-3);
+}
+
+.quick-access-card {
+    padding: var(--md-spacing-4);
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-3);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+    border: none;
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+    text-align: left;
+    border-radius: var(--md-radius-medium);
+}
+
+.quick-access-card:hover {
+    box-shadow: var(--md-elevation-2);
+    background: var(--md-surface-variant);
+}
+
+.access-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--md-primary);
+    color: white;
+    flex-shrink: 0;
+}
+
+.access-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-1);
+}
+
+.access-title {
+    font-size: var(--md-title-small);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0;
+}
+
+.access-subtitle {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    margin: 0;
+}
+
+/* Modal Enhancements for Bible */
+.learning-path-modal .md-modal-content {
+    max-width: 700px;
+    max-height: 90vh;
+}
+
+.path-modal-content {
+    padding: var(--md-spacing-2);
+}
+
+.path-progress-header {
+    background: var(--md-surface-variant);
+    padding: var(--md-spacing-4);
+    border-radius: var(--md-radius-medium);
+    margin-bottom: var(--md-spacing-4);
+}
+
+.progress-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--md-spacing-4);
+    text-align: center;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-1);
+}
+
+.stat-number {
+    font-size: var(--md-headline-medium);
+    font-weight: 500;
+    color: var(--md-primary);
+}
+
+.stat-label {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.lessons-list {
+    margin-bottom: var(--md-spacing-4);
+}
+
+.lesson-item {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-3);
+    padding: var(--md-spacing-3);
+    border-radius: var(--md-radius-medium);
+    margin-bottom: var(--md-spacing-2);
+    transition: all var(--md-transition-fast);
+}
+
+.lesson-item:hover {
+    background: var(--md-surface-variant);
+}
+
+.lesson-item.completed {
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.lesson-item.next {
+    background: rgba(25, 118, 210, 0.05);
+    border: 1px solid rgba(25, 118, 210, 0.2);
+}
+
+.lesson-icon {
+    flex-shrink: 0;
+}
+
+.lesson-icon .material-icons {
+    font-size: 24px;
+}
+
+.lesson-item.completed .material-icons {
+    color: var(--md-success);
+}
+
+.lesson-item.next .material-icons {
+    color: var(--md-primary);
+}
+
+.lesson-content {
+    flex: 1;
+}
+
+.lesson-title {
+    font-size: var(--md-body-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-1) 0;
+}
+
+.lesson-meta {
+    display: flex;
+    gap: var(--md-spacing-3);
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.lesson-action {
+    flex-shrink: 0;
+}
+
+.completed-badge {
+    color: var(--md-success);
+    font-size: var(--md-title-medium);
+}
+
+.path-actions {
+    display: flex;
+    gap: var(--md-spacing-3);
+    justify-content: center;
+    padding-top: var(--md-spacing-4);
+    border-top: 1px solid var(--md-outline-variant);
+}
+
+/* Calculator Styles */
+.calculator-content {
+    padding: var(--md-spacing-2);
+}
+
+.calculator-inputs {
+    margin-bottom: var(--md-spacing-4);
+}
+
+.calculator-results {
+    background: var(--md-surface-variant);
+    padding: var(--md-spacing-4);
+    border-radius: var(--md-radius-medium);
+    margin-bottom: var(--md-spacing-4);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--md-spacing-2) 0;
+    border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-label {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+}
+
+.result-value {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+}
+
+/* Mobile Responsive for Investment Bible */
+@media (max-width: 768px) {
+    .bible-header {
+        flex-direction: column;
+        gap: var(--md-spacing-4);
+        text-align: center;
+    }
+    
+    .learning-paths-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .topics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-access-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .path-stats {
+        flex-direction: column;
+        gap: var(--md-spacing-2);
+    }
+    
+    .topic-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--md-spacing-2);
+    }
+    
+    .progress-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .path-actions {
+        flex-direction: column;
+    }
+    
+    .path-actions .md-button {
+        width: 100%;
+    }
+}
