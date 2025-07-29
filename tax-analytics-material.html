@@ -216,11 +216,11 @@
                         </div>
                     </div>
                     <div class="recommendation-actions">
-                        <button class="md-button md-button-filled">
+                        <button class="md-button md-button-filled" onclick="openOSTInvestmentModal()">
                             <span class="material-icons">add</span>
                             Add OST Investment
                         </button>
-                        <button class="md-button md-button-text">Learn More</button>
+                        <button class="md-button md-button-text" onclick="showOSTLearnMore()">Learn More</button>
                     </div>
                 </div>
 
@@ -242,11 +242,11 @@
                         </div>
                     </div>
                     <div class="recommendation-actions">
-                        <button class="md-button md-button-outlined">
+                        <button class="md-button md-button-outlined" onclick="analyzeTaxLossHarvesting()">
                             <span class="material-icons">analytics</span>
                             Analyze Holdings
                         </button>
-                        <button class="md-button md-button-text">Learn More</button>
+                        <button class="md-button md-button-text" onclick="showTaxLossLearnMore()">Learn More</button>
                     </div>
                 </div>
 
@@ -268,11 +268,11 @@
                         </div>
                     </div>
                     <div class="recommendation-actions">
-                        <button class="md-button md-button-outlined">
+                        <button class="md-button md-button-outlined" onclick="showDividendCalendar()">
                             <span class="material-icons">schedule</span>
                             View Calendar
                         </button>
-                        <button class="md-button md-button-text">Learn More</button>
+                        <button class="md-button md-button-text" onclick="showDividendLearnMore()">Learn More</button>
                     </div>
                 </div>
             </div>
@@ -766,6 +766,245 @@
                 const valueSpan = item.querySelector('.legend-value');
                 if (valueSpan) valueSpan.textContent = values[index];
             });
+        }
+
+        // Recommendation Action Handlers
+        function openOSTInvestmentModal() {
+            // Check if investment modal exists from Phase 1
+            const modal = document.getElementById('investmentModal');
+            if (modal) {
+                // Pre-select OST account type
+                const ostOption = document.querySelector('input[name="accountType"][value="ost"]');
+                if (ostOption) ostOption.checked = true;
+                
+                // Show modal
+                modal.style.display = 'flex';
+                modal.classList.add('open');
+                
+                // Focus on investment type selection
+                const investmentTypes = document.querySelector('.investment-type-grid');
+                if (investmentTypes) {
+                    investmentTypes.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                // Fallback: redirect to dashboard with OST preselected
+                const url = new URL(window.location.origin + '/dashboard-material.html');
+                url.searchParams.set('openModal', 'investment');
+                url.searchParams.set('accountType', 'ost');
+                window.location.href = url.toString();
+            }
+        }
+
+        function showOSTLearnMore() {
+            showInfoModal(
+                'OST Account Benefits',
+                `<div class="info-content">
+                    <h3>Finnish OST (Osakesäästötili) Benefits:</h3>
+                    <ul>
+                        <li><strong>Tax-Deferred Growth:</strong> No capital gains tax on investments within the account</li>
+                        <li><strong>Annual Limit:</strong> €50,000 contribution limit per year</li>
+                        <li><strong>Withdrawal Tax:</strong> Only 15% tax on withdrawals after age 68</li>
+                        <li><strong>Flexibility:</strong> Can hold stocks, ETFs, and mutual funds</li>
+                        <li><strong>No Required Distributions:</strong> Unlike pensions, no mandatory withdrawals</li>
+                    </ul>
+                    <p class="highlight">Maximize your OST first for optimal tax efficiency!</p>
+                </div>`
+            );
+        }
+
+        function analyzeTaxLossHarvesting() {
+            const data = taxCalculator.getInvestmentData();
+            const aotInvestments = data.aotInvestments;
+            
+            // Calculate potential tax-loss harvesting opportunities
+            const harvestingOpportunities = aotInvestments.map(investment => {
+                const unrealizedGain = (investment.currentValue || investment.amount) - investment.amount;
+                const percentageChange = (unrealizedGain / investment.amount) * 100;
+                
+                return {
+                    ...investment,
+                    unrealizedGain,
+                    percentageChange,
+                    harvestingPotential: unrealizedGain < 0 ? Math.abs(unrealizedGain) : 0
+                };
+            }).filter(inv => inv.harvestingPotential > 0)
+              .sort((a, b) => b.harvestingPotential - a.harvestingPotential);
+
+            let content = '<div class="analysis-content">';
+            
+            if (harvestingOpportunities.length === 0) {
+                content += `
+                    <p class="no-opportunities">🎉 Great news! No tax-loss harvesting opportunities found.</p>
+                    <p>All your AOT investments are currently showing gains. Consider this analysis again during market downturns.</p>
+                `;
+            } else {
+                const totalHarvestable = harvestingOpportunities.reduce((sum, inv) => sum + inv.harvestingPotential, 0);
+                const taxSavings = totalHarvestable * 0.30; // 30% capital gains tax
+                
+                content += `
+                    <h3>Tax-Loss Harvesting Analysis</h3>
+                    <div class="analysis-summary">
+                        <div class="summary-item">
+                            <strong>Total Harvestable Loss:</strong> €${totalHarvestable.toLocaleString()}
+                        </div>
+                        <div class="summary-item">
+                            <strong>Potential Tax Savings:</strong> €${taxSavings.toLocaleString()}
+                        </div>
+                    </div>
+                    <h4>Underperforming Investments:</h4>
+                    <div class="opportunities-list">
+                `;
+                
+                harvestingOpportunities.forEach(inv => {
+                    content += `
+                        <div class="opportunity-item">
+                            <div class="investment-info">
+                                <strong>${inv.symbol || inv.type}</strong>
+                                <span class="loss-amount">-€${inv.harvestingPotential.toLocaleString()}</span>
+                                <span class="percentage">(${inv.percentageChange.toFixed(1)}%)</span>
+                            </div>
+                            <div class="harvest-actions">
+                                <button class="md-button md-button-text" onclick="harvestLoss('${inv.symbol}')">Consider Selling</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                content += '</div><p class="disclaimer">⚠️ Consider reinvestment rules and wash sale regulations before executing.</p>';
+            }
+            
+            content += '</div>';
+            
+            showInfoModal('Tax-Loss Harvesting Analysis', content);
+        }
+
+        function showTaxLossLearnMore() {
+            showInfoModal(
+                'Tax-Loss Harvesting in Finland',
+                `<div class="info-content">
+                    <h3>How Tax-Loss Harvesting Works:</h3>
+                    <ul>
+                        <li><strong>Realize Losses:</strong> Sell underperforming investments to realize capital losses</li>
+                        <li><strong>Offset Gains:</strong> Use losses to offset capital gains, reducing taxable income</li>
+                        <li><strong>Tax Rate:</strong> Save 30% on capital gains tax through strategic loss realization</li>
+                        <li><strong>Reinvestment:</strong> Consider similar (but not identical) investments to maintain exposure</li>
+                        <li><strong>Timing:</strong> Best executed before year-end for maximum tax benefit</li>
+                    </ul>
+                    <div class="warning">
+                        <strong>Important:</strong> Consult with a Finnish tax advisor before executing tax-loss harvesting strategies.
+                    </div>
+                </div>`
+            );
+        }
+
+        function showDividendCalendar() {
+            const now = new Date();
+            const months = [];
+            
+            // Generate next 12 months of dividend calendar
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
+                const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                const isOptimal = (date.getMonth() + 1) % 3 === 0; // Every 3rd month for quarterly dividends
+                
+                months.push({
+                    name: monthName,
+                    optimal: isOptimal,
+                    recommendation: isOptimal ? 'Optimal for dividend stock purchases' : 'Consider ETF accumulating shares'
+                });
+            }
+
+            let content = `
+                <div class="calendar-content">
+                    <h3>Dividend Timing Optimization Calendar</h3>
+                    <p>Strategic timing can help optimize tax efficiency across tax years:</p>
+                    <div class="months-grid">
+            `;
+            
+            months.forEach(month => {
+                content += `
+                    <div class="month-item ${month.optimal ? 'optimal' : ''}">
+                        <div class="month-name">${month.name}</div>
+                        <div class="month-recommendation">${month.recommendation}</div>
+                        ${month.optimal ? '<span class="optimal-badge">✓ Optimal</span>' : ''}
+                    </div>
+                `;
+            });
+            
+            content += `
+                    </div>
+                    <div class="calendar-tips">
+                        <h4>Tips for Dividend Timing:</h4>
+                        <ul>
+                            <li>Purchase dividend stocks before ex-dividend dates in optimal months</li>
+                            <li>Consider accumulating ETFs to avoid dividend tax timing issues</li>
+                            <li>Plan major stock purchases around dividend calendars</li>
+                            <li>Monitor ex-dividend dates for Finnish and international stocks</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            showInfoModal('Dividend Timing Calendar', content);
+        }
+
+        function showDividendLearnMore() {
+            showInfoModal(
+                'Dividend Tax Optimization',
+                `<div class="info-content">
+                    <h3>Finnish Dividend Taxation:</h3>
+                    <ul>
+                        <li><strong>Tax Rate:</strong> 30% on dividend income for most investors</li>
+                        <li><strong>Timing Matters:</strong> Dividends are taxed in the year received</li>
+                        <li><strong>Ex-Dividend Date:</strong> Purchase before this date to receive the dividend</li>
+                        <li><strong>Accumulating ETFs:</strong> Reinvest dividends automatically, deferring tax</li>
+                        <li><strong>Double Taxation Treaties:</strong> May reduce foreign dividend withholding</li>
+                    </ul>
+                    <div class="optimization-tip">
+                        <strong>Pro Tip:</strong> Consider accumulating share classes (ISIN ending in 'EUR') to defer dividend taxation.
+                    </div>
+                </div>`
+            );
+        }
+
+        // Generic info modal function
+        function showInfoModal(title, content) {
+            // Create modal if it doesn't exist
+            let modal = document.getElementById('infoModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'infoModal';
+                modal.className = 'md-modal';
+                modal.innerHTML = `
+                    <div class="md-modal-overlay" onclick="closeInfoModal()"></div>
+                    <div class="md-modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="infoModalTitle"></h2>
+                            <button class="md-icon-button" onclick="closeInfoModal()">
+                                <span class="material-icons">close</span>
+                            </button>
+                        </div>
+                        <div class="modal-content" id="infoModalContent"></div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Set content and show
+            document.getElementById('infoModalTitle').textContent = title;
+            document.getElementById('infoModalContent').innerHTML = content;
+            modal.classList.add('open');
+        }
+
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            if (modal) {
+                modal.classList.remove('open');
+            }
+        }
+
+        function harvestLoss(symbol) {
+            alert(`Tax-loss harvesting for ${symbol} - Feature coming soon! This will help you execute strategic loss realization.`);
         }
 
         // Initialize on page load

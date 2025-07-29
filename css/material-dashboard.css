@@ -1035,6 +1035,194 @@ body {
     gap: var(--md-spacing-3);
 }
 
+/* Info Modal Content Styles */
+.info-content {
+    padding: var(--md-spacing-2);
+}
+
+.info-content h3 {
+    color: var(--md-primary);
+    margin-bottom: var(--md-spacing-3);
+    font-weight: 500;
+}
+
+.info-content ul {
+    margin: var(--md-spacing-3) 0;
+    padding-left: var(--md-spacing-5);
+}
+
+.info-content li {
+    margin-bottom: var(--md-spacing-2);
+    line-height: 1.6;
+}
+
+.info-content .highlight {
+    background: rgba(25, 118, 210, 0.1);
+    color: var(--md-primary);
+    padding: var(--md-spacing-2) var(--md-spacing-3);
+    border-radius: var(--md-radius-medium);
+    font-weight: 500;
+    margin-top: var(--md-spacing-3);
+    display: block;
+}
+
+.info-content .warning {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+    padding: var(--md-spacing-3);
+    border-radius: var(--md-radius-medium);
+    margin-top: var(--md-spacing-3);
+    border-left: 4px solid #ff9800;
+}
+
+.info-content .optimization-tip {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--md-success);
+    padding: var(--md-spacing-3);
+    border-radius: var(--md-radius-medium);
+    margin-top: var(--md-spacing-3);
+    border-left: 4px solid var(--md-success);
+}
+
+/* Analysis Content Styles */
+.analysis-content {
+    padding: var(--md-spacing-2);
+}
+
+.analysis-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--md-spacing-4);
+    margin: var(--md-spacing-4) 0;
+    padding: var(--md-spacing-4);
+    background: var(--md-surface-variant);
+    border-radius: var(--md-radius-medium);
+}
+
+.analysis-summary .summary-item {
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.no-opportunities {
+    text-align: center;
+    font-size: var(--md-title-medium);
+    color: var(--md-success);
+    margin: var(--md-spacing-4) 0;
+}
+
+.opportunities-list {
+    margin: var(--md-spacing-3) 0;
+}
+
+.opportunity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--md-spacing-3);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--md-radius-medium);
+    margin-bottom: var(--md-spacing-2);
+}
+
+.investment-info {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-3);
+}
+
+.loss-amount {
+    color: var(--md-error);
+    font-weight: 500;
+}
+
+.percentage {
+    color: var(--md-on-surface-variant);
+    font-size: var(--md-body-small);
+}
+
+.disclaimer {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    margin-top: var(--md-spacing-3);
+    padding: var(--md-spacing-2);
+    background: var(--md-surface-variant);
+    border-radius: var(--md-radius-small);
+}
+
+/* Calendar Content Styles */
+.calendar-content {
+    padding: var(--md-spacing-2);
+}
+
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--md-spacing-3);
+    margin: var(--md-spacing-4) 0;
+}
+
+.month-item {
+    padding: var(--md-spacing-4);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--md-radius-medium);
+    position: relative;
+    transition: all var(--md-transition-fast);
+}
+
+.month-item.optimal {
+    border-color: var(--md-success);
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.month-name {
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-2);
+}
+
+.month-recommendation {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    line-height: 1.4;
+}
+
+.optimal-badge {
+    position: absolute;
+    top: var(--md-spacing-2);
+    right: var(--md-spacing-2);
+    background: var(--md-success);
+    color: white;
+    font-size: var(--md-label-small);
+    padding: var(--md-spacing-1) var(--md-spacing-2);
+    border-radius: var(--md-radius-small);
+    font-weight: 500;
+}
+
+.calendar-tips {
+    margin-top: var(--md-spacing-4);
+    padding: var(--md-spacing-4);
+    background: var(--md-surface-variant);
+    border-radius: var(--md-radius-medium);
+}
+
+.calendar-tips h4 {
+    color: var(--md-primary);
+    margin-bottom: var(--md-spacing-3);
+    font-weight: 500;
+}
+
+.calendar-tips ul {
+    margin: 0;
+    padding-left: var(--md-spacing-5);
+}
+
+.calendar-tips li {
+    margin-bottom: var(--md-spacing-2);
+    line-height: 1.5;
+}
+
 /* Mobile Responsive for Tax Analytics */
 @media (max-width: 768px) {
     .recommendations-grid {
@@ -1052,5 +1240,27 @@ body {
     .tax-breakdown-container {
         grid-template-columns: 1fr;
         gap: var(--md-spacing-4);
+    }
+    
+    .analysis-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .months-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .opportunity-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--md-spacing-2);
+    }
+    
+    .harvest-actions {
+        width: 100%;
+    }
+    
+    .harvest-actions .md-button {
+        width: 100%;
     }
 }
