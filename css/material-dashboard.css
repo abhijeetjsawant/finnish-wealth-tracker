@@ -920,3 +920,137 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Tax Analytics Styles */
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--md-spacing-4);
+}
+
+.recommendation-card {
+    padding: var(--md-spacing-4);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+}
+
+.recommendation-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-2px);
+}
+
+.recommendation-header {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-3);
+    margin-bottom: var(--md-spacing-4);
+}
+
+.recommendation-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.recommendation-icon.high-impact {
+    background: var(--md-error);
+}
+
+.recommendation-icon.medium-impact {
+    background: #ff9800;
+}
+
+.recommendation-icon.low-impact {
+    background: #03a9f4;
+}
+
+.recommendation-priority {
+    font-size: var(--md-label-large);
+    font-weight: 500;
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.recommendation-content {
+    margin-bottom: var(--md-spacing-4);
+}
+
+.recommendation-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-2) 0;
+}
+
+.recommendation-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 var(--md-spacing-3) 0;
+}
+
+.recommendation-savings {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-2);
+    font-size: var(--md-body-small);
+    color: var(--md-success);
+    font-weight: 500;
+    background: rgba(76, 175, 80, 0.1);
+    padding: var(--md-spacing-2) var(--md-spacing-3);
+    border-radius: var(--md-radius-medium);
+}
+
+.recommendation-savings .material-icons {
+    font-size: 16px;
+}
+
+.recommendation-actions {
+    display: flex;
+    gap: var(--md-spacing-2);
+    flex-wrap: wrap;
+}
+
+/* Tax Breakdown Chart */
+.tax-breakdown-container {
+    padding: var(--md-spacing-5);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--md-spacing-6);
+    align-items: center;
+}
+
+.tax-chart {
+    height: 250px;
+}
+
+.tax-legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-3);
+}
+
+/* Mobile Responsive for Tax Analytics */
+@media (max-width: 768px) {
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .recommendation-actions {
+        flex-direction: column;
+    }
+    
+    .recommendation-actions .md-button {
+        width: 100%;
+    }
+    
+    .tax-breakdown-container {
+        grid-template-columns: 1fr;
+        gap: var(--md-spacing-4);
+    }
+}
