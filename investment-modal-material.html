@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Investment - Material Design</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/material-design.css">
+    <link rel="stylesheet" href="css/material-forms.css">
+    
+    <style>
+        body {
+            padding: var(--md-spacing-4);
+            background: var(--md-surface-variant);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .demo-container {
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .investment-modal {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            box-shadow: var(--md-elevation-5);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: var(--md-spacing-5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-title {
+            font-size: var(--md-headline-medium);
+            font-weight: 400;
+            margin: 0;
+        }
+        
+        .modal-content {
+            padding: var(--md-spacing-5);
+        }
+        
+        .account-type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--md-spacing-3);
+            margin-bottom: var(--md-spacing-5);
+        }
+        
+        .account-type-card {
+            border: 2px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-4);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--md-transition-fast);
+            position: relative;
+        }
+        
+        .account-type-card:hover {
+            border-color: var(--md-primary);
+            box-shadow: var(--md-elevation-1);
+        }
+        
+        .account-type-card.selected {
+            border-color: var(--md-primary);
+            background: rgba(25, 118, 210, 0.08);
+        }
+        
+        .account-type-icon {
+            font-size: 32px;
+            color: var(--md-primary);
+            margin-bottom: var(--md-spacing-2);
+        }
+        
+        .account-type-title {
+            font-size: var(--md-title-medium);
+            font-weight: 500;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-1);
+        }
+        
+        .account-type-subtitle {
+            font-size: var(--md-body-small);
+            color: var(--md-on-surface-variant);
+        }
+        
+        .account-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--md-success);
+            color: var(--md-on-primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .investment-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--md-spacing-3);
+            margin-bottom: var(--md-spacing-5);
+        }
+        
+        .investment-type-card {
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-medium);
+            padding: var(--md-spacing-3);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--md-transition-fast);
+        }
+        
+        .investment-type-card:hover {
+            border-color: var(--md-primary);
+            background: rgba(25, 118, 210, 0.04);
+        }
+        
+        .investment-type-card.selected {
+            border-color: var(--md-primary);
+            background: rgba(25, 118, 210, 0.12);
+        }
+        
+        .investment-type-icon {
+            font-size: 24px;
+            color: var(--md-primary);
+            margin-bottom: var(--md-spacing-2);
+        }
+        
+        .investment-type-label {
+            font-size: var(--md-body-small);
+            color: var(--md-on-surface);
+        }
+        
+        .dynamic-fields {
+            min-height: 200px;
+            transition: all var(--md-transition-medium);
+        }
+        
+        .field-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--md-spacing-4);
+        }
+        
+        .field-group.single {
+            grid-template-columns: 1fr;
+        }
+        
+        .stock-search-container {
+            position: relative;
+        }
+        
+        .stock-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--md-surface);
+            border-radius: var(--md-radius-medium);
+            box-shadow: var(--md-elevation-3);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: var(--md-spacing-1);
+        }
+        
+        .search-result-item {
+            padding: var(--md-spacing-3);
+            cursor: pointer;
+            border-bottom: 1px solid var(--md-outline-variant);
+            transition: background var(--md-transition-fast);
+        }
+        
+        .search-result-item:hover {
+            background: var(--md-surface-variant);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-symbol {
+            font-weight: 500;
+            color: var(--md-on-surface);
+        }
+        
+        .search-result-name {
+            font-size: var(--md-body-small);
+            color: var(--md-on-surface-variant);
+            margin-top: var(--md-spacing-1);
+        }
+        
+        .info-card {
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            padding: var(--md-spacing-4);
+            margin-top: var(--md-spacing-4);
+        }
+        
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-2);
+            font-size: var(--md-title-small);
+            font-weight: 500;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-2);
+        }
+        
+        .info-card-content {
+            font-size: var(--md-body-small);
+            color: var(--md-on-surface-variant);
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .field-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .account-type-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .investment-type-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="investment-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Investment</h2>
+                <button class="md-icon-button" onclick="closeModal()">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            
+            <div class="modal-content">
+                <form id="investmentForm">
+                    <!-- Account Type Selection -->
+                    <div class="md-form-group">
+                        <h3 class="md-form-group-label">Select Account Type</h3>
+                        <div class="account-type-selector">
+                            <div class="account-type-card" onclick="selectAccountType('ost')">
+                                <div class="account-type-icon">
+                                    <span class="material-icons">account_balance</span>
+                                </div>
+                                <div class="account-type-title">OST Account</div>
+                                <div class="account-type-subtitle">Tax-deferred (€27,500 remaining)</div>
+                                <div class="account-badge" style="display: none;">
+                                    <span class="material-icons">check</span>
+                                </div>
+                            </div>
+                            <div class="account-type-card" onclick="selectAccountType('aot')">
+                                <div class="account-type-icon">
+                                    <span class="material-icons">trending_up</span>
+                                </div>
+                                <div class="account-type-title">AOT Account</div>
+                                <div class="account-type-subtitle">Regular trading (Taxable)</div>
+                                <div class="account-badge" style="display: none;">
+                                    <span class="material-icons">check</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Investment Type Selection -->
+                    <div class="md-form-group">
+                        <h3 class="md-form-group-label">Investment Type</h3>
+                        <div class="investment-type-grid">
+                            <div class="investment-type-card" onclick="selectInvestmentType('stock')">
+                                <div class="investment-type-icon">
+                                    <span class="material-icons">show_chart</span>
+                                </div>
+                                <div class="investment-type-label">Stock</div>
+                            </div>
+                            <div class="investment-type-card" onclick="selectInvestmentType('etf')">
+                                <div class="investment-type-icon">
+                                    <span class="material-icons">pie_chart</span>
+                                </div>
+                                <div class="investment-type-label">ETF</div>
+                            </div>
+                            <div class="investment-type-card" onclick="selectInvestmentType('fixed-deposit')">
+                                <div class="investment-type-icon">
+                                    <span class="material-icons">savings</span>
+                                </div>
+                                <div class="investment-type-label">Fixed Deposit</div>
+                            </div>
+                            <div class="investment-type-card" onclick="selectInvestmentType('indian-fd')">
+                                <div class="investment-type-icon">
+                                    <span class="material-icons">flag</span>
+                                </div>
+                                <div class="investment-type-label">Indian FD</div>
+                            </div>
+                            <div class="investment-type-card" onclick="selectInvestmentType('gold')">
+                                <div class="investment-type-icon">
+                                    <span class="material-icons">star</span>
+                                </div>
+                                <div class="investment-type-label">Gold</div>
+                            </div>
+                            <div class="investment-type-card" onclick="selectInvestmentType('crypto')">
+                                <div class="investment-type-icon">
+                                    <span class="material-icons">currency_bitcoin</span>
+                                </div>
+                                <div class="investment-type-label">Crypto</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Fields -->
+                    <div class="dynamic-fields" id="dynamicFields">
+                        <div class="md-text-field">
+                            <input type="text" class="md-text-field-input" placeholder=" " disabled>
+                            <label class="md-text-field-label">Select investment type above</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="md-form-actions">
+                        <button type="button" class="md-button md-button-text" onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="md-button md-button-filled">
+                            <span class="material-icons">add</span>
+                            Add Investment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedAccountType = '';
+        let selectedInvestmentType = '';
+        
+        // Initialize ripple effects
+        document.querySelectorAll('.md-button, .md-icon-button').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('md-ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+        
+        function selectAccountType(type) {
+            document.querySelectorAll('.account-type-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('.account-badge').style.display = 'none';
+            });
+            
+            const selectedCard = document.querySelector(`[onclick="selectAccountType('${type}')"]`);
+            selectedCard.classList.add('selected');
+            selectedCard.querySelector('.account-badge').style.display = 'flex';
+            
+            selectedAccountType = type;
+            updateDynamicFields();
+        }
+        
+        function selectInvestmentType(type) {
+            document.querySelectorAll('.investment-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            const selectedCard = document.querySelector(`[onclick="selectInvestmentType('${type}')"]`);
+            selectedCard.classList.add('selected');
+            
+            selectedInvestmentType = type;
+            updateDynamicFields();
+        }
+        
+        function updateDynamicFields() {
+            const container = document.getElementById('dynamicFields');
+            
+            if (!selectedInvestmentType) {
+                container.innerHTML = `
+                    <div class="md-text-field">
+                        <input type="text" class="md-text-field-input" placeholder=" " disabled>
+                        <label class="md-text-field-label">Select investment type above</label>
+                    </div>
+                `;
+                return;
+            }
+            
+            let fieldsHTML = '';
+            
+            switch (selectedInvestmentType) {
+                case 'stock':
+                    fieldsHTML = `
+                        <div class="stock-search-container">
+                            <div class="md-text-field with-leading-icon">
+                                <span class="material-icons md-text-field-leading-icon">search</span>
+                                <input type="text" class="md-text-field-input" placeholder=" " id="stockSearch" oninput="searchStocks(this.value)">
+                                <label class="md-text-field-label">Search Stock Symbol</label>
+                            </div>
+                            <div class="stock-search-results" id="stockResults" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="1" min="1">
+                                <label class="md-text-field-label">Quantity</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.01" min="0">
+                                <label class="md-text-field-label">Price per Share (€)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="date" class="md-text-field-input" placeholder=" ">
+                                <label class="md-text-field-label">Purchase Date</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.01" min="0">
+                                <label class="md-text-field-label">Fees (€)</label>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'etf':
+                    fieldsHTML = `
+                        <div class="md-text-field">
+                            <input type="text" class="md-text-field-input" placeholder=" ">
+                            <label class="md-text-field-label">ETF Name/Symbol</label>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.001" min="0">
+                                <label class="md-text-field-label">Units</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.01" min="0">
+                                <label class="md-text-field-label">NAV (€)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="date" class="md-text-field-input" placeholder=" ">
+                                <label class="md-text-field-label">Purchase Date</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.01" min="0">
+                                <label class="md-text-field-label">TER (%)</label>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'indian-fd':
+                    fieldsHTML = `
+                        <div class="md-text-field">
+                            <input type="text" class="md-text-field-input" placeholder=" ">
+                            <label class="md-text-field-label">Bank Name</label>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="1" min="0">
+                                <label class="md-text-field-label">Principal (₹)</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.01" min="0" max="100">
+                                <label class="md-text-field-label">Interest Rate (%)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="date" class="md-text-field-input" placeholder=" ">
+                                <label class="md-text-field-label">Start Date</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="1" min="1">
+                                <label class="md-text-field-label">Tenure (Years)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <div class="info-card-title">
+                                <span class="material-icons">info</span>
+                                Tax Information
+                            </div>
+                            <div class="info-card-content">
+                                Indian FDs are subject to 10% TDS and Finnish tax on foreign income. 
+                                Tax credit available for TDS paid in India.
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    fieldsHTML = `
+                        <div class="md-text-field">
+                            <input type="text" class="md-text-field-input" placeholder=" ">
+                            <label class="md-text-field-label">Asset Name</label>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="md-text-field">
+                                <input type="number" class="md-text-field-input" placeholder=" " step="0.01" min="0">
+                                <label class="md-text-field-label">Amount Invested (€)</label>
+                            </div>
+                            <div class="md-text-field">
+                                <input type="date" class="md-text-field-input" placeholder=" ">
+                                <label class="md-text-field-label">Purchase Date</label>
+                            </div>
+                        </div>
+                    `;
+            }
+            
+            container.innerHTML = fieldsHTML;
+            
+            // Initialize floating labels for new fields
+            container.querySelectorAll('.md-text-field-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value) {
+                        this.classList.add('has-value');
+                    } else {
+                        this.classList.remove('has-value');
+                    }
+                });
+            });
+        }
+        
+        function searchStocks(query) {
+            const resultsContainer = document.getElementById('stockResults');
+            
+            if (!query || query.length < 2) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            // Mock stock search results
+            const mockResults = [
+                { symbol: 'MSFT', name: 'Microsoft Corporation' },
+                { symbol: 'AAPL', name: 'Apple Inc.' },
+                { symbol: 'GOOGL', name: 'Alphabet Inc.' },
+                { symbol: 'NVDA', name: 'NVIDIA Corporation' },
+                { symbol: 'TSLA', name: 'Tesla, Inc.' }
+            ].filter(stock => 
+                stock.symbol.toLowerCase().includes(query.toLowerCase()) ||
+                stock.name.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            if (mockResults.length > 0) {
+                resultsContainer.innerHTML = mockResults.map(stock => `
+                    <div class="search-result-item" onclick="selectStock('${stock.symbol}', '${stock.name}')">
+                        <div class="search-result-symbol">${stock.symbol}</div>
+                        <div class="search-result-name">${stock.name}</div>
+                    </div>
+                `).join('');
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContainer.style.display = 'none';
+            }
+        }
+        
+        function selectStock(symbol, name) {
+            document.getElementById('stockSearch').value = `${symbol} - ${name}`;
+            document.getElementById('stockSearch').classList.add('has-value');
+            document.getElementById('stockResults').style.display = 'none';
+        }
+        
+        function closeModal() {
+            console.log('Modal would close');
+        }
+        
+        // Form submission
+        document.getElementById('investmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedAccountType || !selectedInvestmentType) {
+                alert('Please select both account type and investment type');
+                return;
+            }
+            
+            console.log('Form submitted with:', {
+                accountType: selectedAccountType,
+                investmentType: selectedInvestmentType
+            });
+            
+            // Here you would normally process the form data
+            alert('Investment would be added!');
+        });
+    </script>
+</body>
+</html>

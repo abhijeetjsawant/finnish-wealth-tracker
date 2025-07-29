@@ -1,0 +1,458 @@
+/* Material Design 3.0 Form Components */
+
+/* Text Field (Outlined) */
+.md-text-field {
+    position: relative;
+    margin-bottom: var(--md-spacing-5);
+    width: 100%;
+}
+
+.md-text-field-container {
+    position: relative;
+    border-radius: var(--md-radius-small);
+    transition: all var(--md-transition-fast);
+}
+
+.md-text-field-input {
+    width: 100%;
+    height: 56px;
+    padding: var(--md-spacing-4) var(--md-spacing-4) var(--md-spacing-2);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-small);
+    background-color: transparent;
+    color: var(--md-on-surface);
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--md-body-large);
+    line-height: 1.5;
+    transition: all var(--md-transition-fast);
+    outline: none;
+}
+
+.md-text-field-input:focus {
+    border-color: var(--md-primary);
+    border-width: 2px;
+    padding-left: calc(var(--md-spacing-4) - 1px);
+    padding-right: calc(var(--md-spacing-4) - 1px);
+}
+
+.md-text-field-input.error {
+    border-color: var(--md-error);
+}
+
+.md-text-field-label {
+    position: absolute;
+    left: var(--md-spacing-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant);
+    font-size: var(--md-body-large);
+    transition: all var(--md-transition-fast);
+    pointer-events: none;
+    background-color: var(--md-surface);
+    padding: 0 var(--md-spacing-1);
+    white-space: nowrap;
+    max-width: calc(100% - var(--md-spacing-6));
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.md-text-field-input:focus ~ .md-text-field-label,
+.md-text-field-input:not(:placeholder-shown) ~ .md-text-field-label,
+.md-text-field-input.has-value ~ .md-text-field-label {
+    top: 0;
+    font-size: var(--md-body-small);
+    color: var(--md-primary);
+    transform: translateY(-50%);
+}
+
+.md-text-field-input.error ~ .md-text-field-label {
+    color: var(--md-error);
+}
+
+.md-text-field-supporting-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--md-spacing-1);
+    padding: 0 var(--md-spacing-4);
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    min-height: 16px;
+}
+
+.md-text-field-error-text {
+    color: var(--md-error);
+}
+
+.md-text-field-counter {
+    color: var(--md-on-surface-variant);
+}
+
+/* Text Field with Leading Icon */
+.md-text-field.with-leading-icon .md-text-field-input {
+    padding-left: 52px;
+}
+
+.md-text-field.with-leading-icon .md-text-field-label {
+    left: 52px;
+}
+
+.md-text-field.with-leading-icon .md-text-field-input:focus {
+    padding-left: 51px;
+}
+
+.md-text-field-leading-icon {
+    position: absolute;
+    left: var(--md-spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant);
+    pointer-events: none;
+}
+
+/* Select Field */
+.md-select {
+    position: relative;
+    margin-bottom: var(--md-spacing-5);
+    width: 100%;
+}
+
+.md-select-input {
+    width: 100%;
+    height: 56px;
+    padding: var(--md-spacing-4) 48px var(--md-spacing-2) var(--md-spacing-4);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-small);
+    background-color: transparent;
+    color: var(--md-on-surface);
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--md-body-large);
+    cursor: pointer;
+    transition: all var(--md-transition-fast);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.md-select-input:focus {
+    border-color: var(--md-primary);
+    border-width: 2px;
+    padding-left: calc(var(--md-spacing-4) - 1px);
+    padding-right: calc(48px - 1px);
+}
+
+.md-select-dropdown-icon {
+    position: absolute;
+    right: var(--md-spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant);
+    pointer-events: none;
+    transition: transform var(--md-transition-fast);
+}
+
+.md-select-input:focus ~ .md-select-dropdown-icon {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.md-select-label {
+    position: absolute;
+    left: var(--md-spacing-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant);
+    font-size: var(--md-body-large);
+    transition: all var(--md-transition-fast);
+    pointer-events: none;
+    background-color: var(--md-surface);
+    padding: 0 var(--md-spacing-1);
+}
+
+.md-select-input:focus ~ .md-select-label,
+.md-select.has-value .md-select-label {
+    top: 0;
+    font-size: var(--md-body-small);
+    color: var(--md-primary);
+    transform: translateY(-50%);
+}
+
+/* Checkbox */
+.md-checkbox {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    min-height: 48px;
+    padding: var(--md-spacing-2);
+}
+
+.md-checkbox-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.md-checkbox-mark {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--md-outline);
+    border-radius: 2px;
+    transition: all var(--md-transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--md-spacing-3);
+}
+
+.md-checkbox-input:checked ~ .md-checkbox-mark {
+    background-color: var(--md-primary);
+    border-color: var(--md-primary);
+}
+
+.md-checkbox-mark::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform var(--md-transition-fast);
+}
+
+.md-checkbox-input:checked ~ .md-checkbox-mark::after {
+    transform: rotate(45deg) scale(1);
+}
+
+.md-checkbox-label {
+    font-size: var(--md-body-large);
+    color: var(--md-on-surface);
+    cursor: pointer;
+}
+
+/* Radio Button */
+.md-radio {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    min-height: 48px;
+    padding: var(--md-spacing-2);
+}
+
+.md-radio-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.md-radio-mark {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--md-outline);
+    border-radius: 50%;
+    transition: all var(--md-transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--md-spacing-3);
+}
+
+.md-radio-input:checked ~ .md-radio-mark {
+    border-color: var(--md-primary);
+}
+
+.md-radio-mark::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: var(--md-primary);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform var(--md-transition-fast);
+}
+
+.md-radio-input:checked ~ .md-radio-mark::after {
+    transform: scale(1);
+}
+
+.md-radio-label {
+    font-size: var(--md-body-large);
+    color: var(--md-on-surface);
+    cursor: pointer;
+}
+
+/* Switch */
+.md-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    min-height: 48px;
+    padding: var(--md-spacing-2);
+}
+
+.md-switch-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.md-switch-track {
+    position: relative;
+    width: 52px;
+    height: 32px;
+    background-color: var(--md-surface-variant);
+    border: 2px solid var(--md-outline);
+    border-radius: 16px;
+    transition: all var(--md-transition-fast);
+    margin-right: var(--md-spacing-3);
+}
+
+.md-switch-input:checked ~ .md-switch-track {
+    background-color: var(--md-primary);
+    border-color: var(--md-primary);
+}
+
+.md-switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background-color: var(--md-outline);
+    border-radius: 50%;
+    transition: all var(--md-transition-fast);
+    box-shadow: var(--md-elevation-1);
+}
+
+.md-switch-input:checked ~ .md-switch-track .md-switch-thumb {
+    left: 22px;
+    background-color: var(--md-on-primary);
+}
+
+.md-switch-label {
+    font-size: var(--md-body-large);
+    color: var(--md-on-surface);
+    cursor: pointer;
+}
+
+/* Form Groups */
+.md-form-group {
+    margin-bottom: var(--md-spacing-5);
+}
+
+.md-form-group-label {
+    display: block;
+    font-size: var(--md-body-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-3);
+}
+
+.md-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--md-spacing-3);
+    margin-top: var(--md-spacing-6);
+    padding-top: var(--md-spacing-4);
+}
+
+/* Validation States */
+.md-form-field.error .md-text-field-input,
+.md-form-field.error .md-select-input {
+    border-color: var(--md-error);
+}
+
+.md-form-field.error .md-text-field-label,
+.md-form-field.error .md-select-label {
+    color: var(--md-error);
+}
+
+.md-form-field.success .md-text-field-input,
+.md-form-field.success .md-select-input {
+    border-color: var(--md-success);
+}
+
+.md-form-field.success .md-text-field-label,
+.md-form-field.success .md-select-label {
+    color: var(--md-success);
+}
+
+/* Loading State */
+.md-form-field.loading .md-text-field-input,
+.md-form-field.loading .md-select-input {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .md-text-field-input,
+    .md-select-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+        height: 56px;
+    }
+    
+    .md-form-actions {
+        flex-direction: column;
+    }
+    
+    .md-form-actions .md-button {
+        width: 100%;
+    }
+}
+
+/* Dark Theme */
+[data-theme="dark"] .md-text-field-label {
+    background-color: #1c1b1f;
+}
+
+[data-theme="dark"] .md-select-label {
+    background-color: #1c1b1f;
+}
+
+/* Focus Ring for Accessibility */
+.md-text-field-input:focus-visible,
+.md-select-input:focus-visible {
+    outline: 2px solid var(--md-primary);
+    outline-offset: 2px;
+}
+
+/* Disabled States */
+.md-text-field-input:disabled,
+.md-select-input:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.md-text-field-input:disabled ~ .md-text-field-label,
+.md-select-input:disabled ~ .md-select-label {
+    opacity: 0.38;
+}
+
+/* Auto-resize Textarea */
+.md-text-field-input.textarea {
+    min-height: 56px;
+    resize: vertical;
+    padding-top: var(--md-spacing-4);
+    line-height: 1.5;
+}
+
+/* Input with trailing action */
+.md-text-field.with-trailing-action .md-text-field-input {
+    padding-right: 52px;
+}
+
+.md-text-field-trailing-action {
+    position: absolute;
+    right: var(--md-spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant);
+}

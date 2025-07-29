@@ -649,3 +649,274 @@ body {
 [data-theme="dark"] .action-card:hover {
     background: #2b2930;
 }
+
+/* Investment Modal */
+.md-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--md-transition-medium);
+}
+
+.md-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.md-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.md-modal-content {
+    background: var(--md-surface);
+    border-radius: var(--md-radius-extra-large);
+    box-shadow: var(--md-elevation-5);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.9) translateY(20px);
+    transition: transform var(--md-transition-medium);
+}
+
+.md-modal.open .md-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--md-spacing-5);
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+}
+
+.modal-title {
+    font-size: var(--md-headline-medium);
+    font-weight: 400;
+    margin: 0;
+}
+
+.modal-content {
+    padding: var(--md-spacing-5);
+}
+
+/* Account Type Selector */
+.account-type-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--md-spacing-3);
+    margin-bottom: var(--md-spacing-5);
+}
+
+.account-type-card {
+    border: 2px solid var(--md-outline-variant);
+    border-radius: var(--md-radius-large);
+    padding: var(--md-spacing-4);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--md-transition-fast);
+    position: relative;
+}
+
+.account-type-card:hover {
+    border-color: var(--md-primary);
+    box-shadow: var(--md-elevation-1);
+}
+
+.account-type-card.selected {
+    border-color: var(--md-primary);
+    background: rgba(25, 118, 210, 0.08);
+}
+
+.account-type-icon {
+    font-size: 32px;
+    color: var(--md-primary);
+    margin-bottom: var(--md-spacing-2);
+}
+
+.account-type-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-1);
+}
+
+.account-type-subtitle {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.account-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--md-success);
+    color: var(--md-on-primary);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+/* Investment Type Grid */
+.investment-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--md-spacing-3);
+    margin-bottom: var(--md-spacing-5);
+}
+
+.investment-type-card {
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--md-radius-medium);
+    padding: var(--md-spacing-3);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--md-transition-fast);
+}
+
+.investment-type-card:hover {
+    border-color: var(--md-primary);
+    background: rgba(25, 118, 210, 0.04);
+}
+
+.investment-type-card.selected {
+    border-color: var(--md-primary);
+    background: rgba(25, 118, 210, 0.12);
+}
+
+.investment-type-icon {
+    font-size: 24px;
+    color: var(--md-primary);
+    margin-bottom: var(--md-spacing-2);
+}
+
+.investment-type-label {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface);
+}
+
+/* Dynamic Fields */
+.dynamic-fields {
+    min-height: 200px;
+    transition: all var(--md-transition-medium);
+}
+
+.field-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--md-spacing-4);
+}
+
+.field-group.single {
+    grid-template-columns: 1fr;
+}
+
+/* Stock Search */
+.stock-search-container {
+    position: relative;
+}
+
+.stock-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--md-surface);
+    border-radius: var(--md-radius-medium);
+    box-shadow: var(--md-elevation-3);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: var(--md-spacing-1);
+}
+
+.search-result-item {
+    padding: var(--md-spacing-3);
+    cursor: pointer;
+    border-bottom: 1px solid var(--md-outline-variant);
+    transition: background var(--md-transition-fast);
+}
+
+.search-result-item:hover {
+    background: var(--md-surface-variant);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-symbol {
+    font-weight: 500;
+    color: var(--md-on-surface);
+}
+
+.search-result-name {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    margin-top: var(--md-spacing-1);
+}
+
+/* Info Card */
+.info-card {
+    background: var(--md-surface-variant);
+    border-radius: var(--md-radius-medium);
+    padding: var(--md-spacing-4);
+    margin-top: var(--md-spacing-4);
+}
+
+.info-card-title {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-2);
+    font-size: var(--md-title-small);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-2);
+}
+
+.info-card-content {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+}
+
+/* Mobile Modal Responsive */
+@media (max-width: 768px) {
+    .md-modal-content {
+        max-height: 95vh;
+        width: 95%;
+    }
+    
+    .account-type-selector {
+        grid-template-columns: 1fr;
+    }
+    
+    .investment-type-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .field-group {
+        grid-template-columns: 1fr;
+    }
+}
