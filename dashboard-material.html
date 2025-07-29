@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#1976d2">
+    <title>Dashboard - Finnish Wealth Tracker</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/material-design.css">
+    <link rel="stylesheet" href="css/material-dashboard.css">
+</head>
+<body>
+    <!-- Material Design App Bar -->
+    <header class="md-app-bar md-elevation-2">
+        <button class="md-icon-button" onclick="toggleDrawer()">
+            <span class="material-icons">menu</span>
+        </button>
+        <h1 class="md-app-bar-title">Dashboard</h1>
+        <div style="flex: 1;"></div>
+        <button class="md-icon-button" onclick="toggleSearch()">
+            <span class="material-icons">search</span>
+        </button>
+        <button class="md-icon-button" onclick="showNotifications()">
+            <span class="material-icons">notifications</span>
+        </button>
+        <button class="md-icon-button" onclick="toggleTheme()">
+            <span class="material-icons">dark_mode</span>
+        </button>
+    </header>
+
+    <!-- Search Bar (Hidden by default) -->
+    <div class="md-search-bar" id="searchBar" style="display: none;">
+        <div class="md-search-container">
+            <span class="material-icons">search</span>
+            <input type="text" placeholder="Search stocks, funds, or features..." class="md-search-input">
+            <button class="md-icon-button" onclick="toggleSearch()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Drawer -->
+    <nav class="md-drawer" id="drawer">
+        <div class="md-drawer-header">
+            <img src="https://ui-avatars.com/api/?name=FW&background=1976d2&color=fff&size=64" alt="Avatar" class="drawer-avatar">
+            <div class="drawer-user-info">
+                <div class="drawer-user-name">Finnish Wealth Tracker</div>
+                <div class="drawer-user-email">Building wealth in Finland</div>
+            </div>
+        </div>
+        <div class="md-drawer-content">
+            <a href="#" class="md-drawer-item active">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">account_balance_wallet</span>
+                Portfolio
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">analytics</span>
+                Analytics
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">calculate</span>
+                Tax Optimizer
+            </a>
+            <div class="md-drawer-divider"></div>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">menu_book</span>
+                Investment Bible
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">language</span>
+                Bicultural Mode
+            </a>
+            <div class="md-drawer-divider"></div>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">settings</span>
+                Settings
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">help</span>
+                Help & Support
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="md-content">
+        <!-- Portfolio Summary Cards -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Portfolio Summary</h2>
+            <div class="metric-grid">
+                <div class="md-card md-elevation-1 metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon primary">
+                            <span class="material-icons">account_balance_wallet</span>
+                        </div>
+                        <button class="md-icon-button metric-menu">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">Total Portfolio</div>
+                        <div class="metric-value">€125,430</div>
+                        <div class="metric-change positive">
+                            <span class="material-icons">trending_up</span>
+                            +€15,230 (13.8%)
+                        </div>
+                    </div>
+                    <div class="metric-chart">
+                        <canvas id="portfolioSparkline"></canvas>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon success">
+                            <span class="material-icons">savings</span>
+                        </div>
+                        <button class="md-icon-button metric-menu">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">Monthly Savings</div>
+                        <div class="metric-value">€2,500</div>
+                        <div class="metric-change positive">
+                            <span class="material-icons">trending_up</span>
+                            +25% vs last month
+                        </div>
+                    </div>
+                    <div class="metric-progress">
+                        <div class="md-progress-linear">
+                            <div class="md-progress-linear-bar" style="width: 83%;"></div>
+                        </div>
+                        <div class="progress-label">83% of €3,000 goal</div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon warning">
+                            <span class="material-icons">account_balance</span>
+                        </div>
+                        <button class="md-icon-button metric-menu">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">OST Account</div>
+                        <div class="metric-value">€22,500</div>
+                        <div class="metric-subvalue">€27,500 remaining</div>
+                    </div>
+                    <div class="metric-progress">
+                        <div class="md-progress-linear">
+                            <div class="md-progress-linear-bar warning" style="width: 45%;"></div>
+                        </div>
+                        <div class="progress-label">45% of €50,000 limit</div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon info">
+                            <span class="material-icons">insights</span>
+                        </div>
+                        <button class="md-icon-button metric-menu">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">Tax Efficiency</div>
+                        <div class="metric-value">8.5/10</div>
+                        <div class="metric-chips">
+                            <span class="md-chip md-chip-success">OST Active</span>
+                            <span class="md-chip">AOT: €102,930</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="action-grid">
+                <button class="md-card action-card" onclick="addInvestment()">
+                    <span class="material-icons action-icon">add_circle</span>
+                    <span class="action-label">Add Investment</span>
+                </button>
+                <button class="md-card action-card" onclick="viewAnalytics()">
+                    <span class="material-icons action-icon">analytics</span>
+                    <span class="action-label">View Analytics</span>
+                </button>
+                <button class="md-card action-card" onclick="taxCalculator()">
+                    <span class="material-icons action-icon">calculate</span>
+                    <span class="action-label">Tax Calculator</span>
+                </button>
+                <button class="md-card action-card" onclick="morningCheckIn()">
+                    <span class="material-icons action-icon">wb_sunny</span>
+                    <span class="action-label">Morning Check-in</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Portfolio Allocation -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Portfolio Allocation</h2>
+                <button class="md-button md-button-text">
+                    View Details
+                    <span class="material-icons">arrow_forward</span>
+                </button>
+            </div>
+            <div class="md-card md-elevation-2">
+                <div class="allocation-container">
+                    <div class="allocation-chart">
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+                    <div class="allocation-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #1976d2;"></span>
+                            <span class="legend-label">Stocks</span>
+                            <span class="legend-value">45%</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #00897b;"></span>
+                            <span class="legend-label">ETFs</span>
+                            <span class="legend-value">35%</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #f57c00;"></span>
+                            <span class="legend-label">Fixed Deposits</span>
+                            <span class="legend-value">15%</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #7b1fa2;"></span>
+                            <span class="legend-label">Other</span>
+                            <span class="legend-value">5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Activity</h2>
+                <button class="md-button md-button-text">
+                    View All
+                    <span class="material-icons">arrow_forward</span>
+                </button>
+            </div>
+            <div class="md-card md-elevation-1">
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon buy">
+                            <span class="material-icons">add</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Bought MSFT</div>
+                            <div class="activity-subtitle">100 shares @ €380.50</div>
+                        </div>
+                        <div class="activity-meta">
+                            <div class="activity-amount">€38,050</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon sell">
+                            <span class="material-icons">remove</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Sold AAPL</div>
+                            <div class="activity-subtitle">50 shares @ €175.20</div>
+                        </div>
+                        <div class="activity-meta">
+                            <div class="activity-amount">€8,760</div>
+                            <div class="activity-time">Yesterday</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon dividend">
+                            <span class="material-icons">attach_money</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Dividend Received</div>
+                            <div class="activity-subtitle">VWCE - Q4 2024</div>
+                        </div>
+                        <div class="activity-meta">
+                            <div class="activity-amount">€245.80</div>
+                            <div class="activity-time">3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Insights -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Market Insights</h2>
+            <div class="insights-grid">
+                <div class="md-card md-elevation-1 insight-card">
+                    <div class="insight-header">
+                        <span class="material-icons insight-icon">trending_up</span>
+                        <h3>Best Performer</h3>
+                    </div>
+                    <div class="insight-content">
+                        <div class="insight-title">NVIDIA (NVDA)</div>
+                        <div class="insight-value positive">+45.2%</div>
+                        <div class="insight-subtitle">Year to date</div>
+                    </div>
+                </div>
+                <div class="md-card md-elevation-1 insight-card">
+                    <div class="insight-header">
+                        <span class="material-icons insight-icon">trending_down</span>
+                        <h3>Worst Performer</h3>
+                    </div>
+                    <div class="insight-content">
+                        <div class="insight-title">PayPal (PYPL)</div>
+                        <div class="insight-value negative">-18.5%</div>
+                        <div class="insight-subtitle">Year to date</div>
+                    </div>
+                </div>
+                <div class="md-card md-elevation-1 insight-card">
+                    <div class="insight-header">
+                        <span class="material-icons insight-icon">info</span>
+                        <h3>Tax Tip</h3>
+                    </div>
+                    <div class="insight-content">
+                        <div class="insight-text">Consider tax-loss harvesting PYPL to offset gains</div>
+                        <button class="md-button md-button-text small">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="md-fab md-elevation-3" onclick="openAddInvestment()">
+        <span class="material-icons">add</span>
+    </button>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="md-bottom-nav">
+        <a href="#" class="md-bottom-nav-item active">
+            <span class="material-icons">dashboard</span>
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">pie_chart</span>
+            <span class="nav-label">Portfolio</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">insights</span>
+            <span class="nav-label">Analytics</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">more_horiz</span>
+            <span class="nav-label">More</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize ripple effects
+        document.querySelectorAll('.md-button, .md-icon-button, .md-fab, .action-card').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('md-ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Drawer functionality
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            drawer.classList.toggle('open');
+            
+            // Add overlay
+            let overlay = document.querySelector('.drawer-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'drawer-overlay';
+                overlay.onclick = toggleDrawer;
+                document.body.appendChild(overlay);
+            }
+            overlay.classList.toggle('show');
+        }
+
+        // Search functionality
+        function toggleSearch() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
+            if (searchBar.style.display === 'block') {
+                searchBar.querySelector('input').focus();
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update icon
+            const icon = document.querySelector('.md-app-bar .md-icon-button:nth-last-child(1) .material-icons');
+            icon.textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+
+        // Initialize charts
+        const ctx1 = document.getElementById('allocationChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: ['Stocks', 'ETFs', 'Fixed Deposits', 'Other'],
+                datasets: [{
+                    data: [45, 35, 15, 5],
+                    backgroundColor: ['#1976d2', '#00897b', '#f57c00', '#7b1fa2'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Portfolio sparkline
+        const ctx2 = document.getElementById('portfolioSparkline').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['', '', '', '', '', '', ''],
+                datasets: [{
+                    data: [110000, 112000, 115000, 113000, 118000, 122000, 125430],
+                    borderColor: '#1976d2',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Scroll effects
+        window.addEventListener('scroll', () => {
+            const appBar = document.querySelector('.md-app-bar');
+            if (window.scrollY > 0) {
+                appBar.classList.add('md-elevation-4');
+            } else {
+                appBar.classList.remove('md-elevation-4');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+/* Material Design 3.0 Design System */
+
+/* Import Material Icons */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Material Design Color System */
+:root {
+    /* Primary Colors - Blue */
+    --md-primary: #1976d2;
+    --md-primary-light: #63a4ff;
+    --md-primary-dark: #004ba0;
+    --md-on-primary: #ffffff;
+    
+    /* Secondary Colors - Teal */
+    --md-secondary: #00897b;
+    --md-secondary-light: #4ebaaa;
+    --md-secondary-dark: #005b4f;
+    --md-on-secondary: #ffffff;
+    
+    /* Surface Colors */
+    --md-surface: #ffffff;
+    --md-surface-variant: #f5f5f5;
+    --md-on-surface: #1c1b1f;
+    --md-on-surface-variant: #49454e;
+    
+    /* Background */
+    --md-background: #fafafa;
+    --md-on-background: #1c1b1f;
+    
+    /* Error Colors */
+    --md-error: #ba1a1a;
+    --md-error-container: #ffdad6;
+    --md-on-error: #ffffff;
+    --md-on-error-container: #410002;
+    
+    /* Success Colors */
+    --md-success: #4caf50;
+    --md-success-container: #c8e6c9;
+    
+    /* Outline */
+    --md-outline: #79747e;
+    --md-outline-variant: #cac4d0;
+    
+    /* Elevation Shadows */
+    --md-elevation-1: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+    --md-elevation-2: 0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12);
+    --md-elevation-3: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12);
+    --md-elevation-4: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+    --md-elevation-5: 0px 7px 8px -4px rgba(0,0,0,0.2), 0px 12px 17px 2px rgba(0,0,0,0.14), 0px 5px 22px 4px rgba(0,0,0,0.12);
+    
+    /* Typography Scale */
+    --md-display-large: 57px;
+    --md-display-medium: 45px;
+    --md-display-small: 36px;
+    --md-headline-large: 32px;
+    --md-headline-medium: 28px;
+    --md-headline-small: 24px;
+    --md-title-large: 22px;
+    --md-title-medium: 16px;
+    --md-title-small: 14px;
+    --md-label-large: 14px;
+    --md-label-medium: 12px;
+    --md-label-small: 11px;
+    --md-body-large: 16px;
+    --md-body-medium: 14px;
+    --md-body-small: 12px;
+    
+    /* Spacing */
+    --md-spacing-1: 4px;
+    --md-spacing-2: 8px;
+    --md-spacing-3: 12px;
+    --md-spacing-4: 16px;
+    --md-spacing-5: 24px;
+    --md-spacing-6: 32px;
+    --md-spacing-7: 48px;
+    --md-spacing-8: 64px;
+    
+    /* Border Radius */
+    --md-radius-small: 4px;
+    --md-radius-medium: 8px;
+    --md-radius-large: 12px;
+    --md-radius-extra-large: 28px;
+    --md-radius-full: 50%;
+    
+    /* Transitions */
+    --md-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --md-transition-medium: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --md-transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --md-primary: #90caf9;
+    --md-primary-light: #e3f2fd;
+    --md-primary-dark: #1565c0;
+    --md-on-primary: #003258;
+    
+    --md-secondary: #4db6ac;
+    --md-secondary-light: #82e9de;
+    --md-secondary-dark: #00867d;
+    --md-on-secondary: #00332c;
+    
+    --md-surface: #1c1b1f;
+    --md-surface-variant: #2b2930;
+    --md-on-surface: #e6e1e5;
+    --md-on-surface-variant: #cac4d0;
+    
+    --md-background: #121212;
+    --md-on-background: #e6e1e5;
+    
+    --md-outline: #938f99;
+    --md-outline-variant: #49454f;
+}
+
+/* Base Typography */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--md-background);
+    color: var(--md-on-background);
+    line-height: 1.5;
+    font-size: var(--md-body-medium);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Design App Bar */
+.md-app-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: var(--md-surface);
+    box-shadow: var(--md-elevation-2);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--md-spacing-4);
+    z-index: 1000;
+    transition: all var(--md-transition-medium);
+}
+
+.md-app-bar-scrolled {
+    box-shadow: var(--md-elevation-4);
+}
+
+.md-app-bar-title {
+    font-size: var(--md-title-large);
+    font-weight: 400;
+    color: var(--md-on-surface);
+    margin-left: var(--md-spacing-4);
+}
+
+/* Material Design Cards */
+.md-card {
+    background-color: var(--md-surface);
+    border-radius: var(--md-radius-large);
+    padding: var(--md-spacing-4);
+    box-shadow: var(--md-elevation-1);
+    transition: all var(--md-transition-medium);
+}
+
+.md-card:hover {
+    box-shadow: var(--md-elevation-3);
+}
+
+.md-card-elevated {
+    box-shadow: var(--md-elevation-2);
+}
+
+.md-card-elevated:hover {
+    box-shadow: var(--md-elevation-4);
+}
+
+/* Material Design Buttons */
+.md-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-spacing-2);
+    min-width: 64px;
+    height: 40px;
+    padding: 0 var(--md-spacing-5);
+    border: none;
+    border-radius: var(--md-radius-extra-large);
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--md-label-large);
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    text-transform: none;
+    cursor: pointer;
+    transition: all var(--md-transition-fast);
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Filled Button */
+.md-button-filled {
+    background-color: var(--md-primary);
+    color: var(--md-on-primary);
+}
+
+.md-button-filled:hover {
+    box-shadow: var(--md-elevation-2);
+}
+
+.md-button-filled:active {
+    box-shadow: none;
+}
+
+/* Outlined Button */
+.md-button-outlined {
+    background-color: transparent;
+    color: var(--md-primary);
+    border: 1px solid var(--md-outline);
+}
+
+.md-button-outlined:hover {
+    background-color: rgba(25, 118, 210, 0.08);
+}
+
+/* Text Button */
+.md-button-text {
+    background-color: transparent;
+    color: var(--md-primary);
+}
+
+.md-button-text:hover {
+    background-color: rgba(25, 118, 210, 0.08);
+}
+
+/* Icon Button */
+.md-icon-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: var(--md-radius-full);
+    background-color: transparent;
+    color: var(--md-on-surface);
+    cursor: pointer;
+    transition: all var(--md-transition-fast);
+    overflow: hidden;
+}
+
+.md-icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Floating Action Button (FAB) */
+.md-fab {
+    position: fixed;
+    bottom: var(--md-spacing-4);
+    right: var(--md-spacing-4);
+    width: 56px;
+    height: 56px;
+    border-radius: var(--md-radius-large);
+    background-color: var(--md-primary);
+    color: var(--md-on-primary);
+    border: none;
+    box-shadow: var(--md-elevation-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+    z-index: 900;
+}
+
+.md-fab:hover {
+    box-shadow: var(--md-elevation-4);
+}
+
+.md-fab:active {
+    box-shadow: var(--md-elevation-5);
+}
+
+/* Extended FAB */
+.md-fab-extended {
+    width: auto;
+    padding: 0 var(--md-spacing-4);
+    gap: var(--md-spacing-2);
+}
+
+/* Ripple Effect */
+@keyframes md-ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.md-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: currentColor;
+    opacity: 0.3;
+    transform: scale(0);
+    animation: md-ripple 600ms ease-out;
+    pointer-events: none;
+}
+
+/* Material Design Chips */
+.md-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 var(--md-spacing-3);
+    border-radius: var(--md-radius-medium);
+    background-color: var(--md-surface-variant);
+    color: var(--md-on-surface);
+    font-size: var(--md-label-large);
+    font-weight: 500;
+    transition: all var(--md-transition-fast);
+    cursor: pointer;
+}
+
+.md-chip:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.md-chip-selected {
+    background-color: var(--md-secondary-container);
+    color: var(--md-on-secondary-container);
+}
+
+/* Material Design Text Fields */
+.md-text-field {
+    position: relative;
+    margin-top: var(--md-spacing-4);
+}
+
+.md-text-field-input {
+    width: 100%;
+    height: 56px;
+    padding: var(--md-spacing-4) var(--md-spacing-4) var(--md-spacing-2);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-small);
+    background-color: var(--md-surface);
+    color: var(--md-on-surface);
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--md-body-large);
+    transition: all var(--md-transition-fast);
+}
+
+.md-text-field-input:focus {
+    outline: none;
+    border-color: var(--md-primary);
+    border-width: 2px;
+}
+
+.md-text-field-label {
+    position: absolute;
+    left: var(--md-spacing-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant);
+    font-size: var(--md-body-large);
+    transition: all var(--md-transition-fast);
+    pointer-events: none;
+    background-color: var(--md-surface);
+    padding: 0 var(--md-spacing-1);
+}
+
+.md-text-field-input:focus ~ .md-text-field-label,
+.md-text-field-input:not(:placeholder-shown) ~ .md-text-field-label {
+    top: 0;
+    font-size: var(--md-body-small);
+    color: var(--md-primary);
+}
+
+/* Material Design Progress Indicators */
+.md-progress-linear {
+    width: 100%;
+    height: 4px;
+    background-color: var(--md-surface-variant);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.md-progress-linear-bar {
+    height: 100%;
+    background-color: var(--md-primary);
+    transition: width var(--md-transition-medium);
+}
+
+/* Material Design Snackbar */
+.md-snackbar {
+    position: fixed;
+    bottom: var(--md-spacing-4);
+    left: var(--md-spacing-4);
+    right: var(--md-spacing-4);
+    max-width: 672px;
+    margin: 0 auto;
+    background-color: #323232;
+    color: white;
+    padding: var(--md-spacing-3) var(--md-spacing-4);
+    border-radius: var(--md-radius-small);
+    box-shadow: var(--md-elevation-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--md-body-medium);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all var(--md-transition-medium);
+    z-index: 2000;
+}
+
+.md-snackbar.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .md-app-bar {
+        height: 56px;
+    }
+    
+    .md-fab {
+        bottom: var(--md-spacing-4);
+        right: var(--md-spacing-4);
+    }
+}
+
+/* Utility Classes */
+.md-elevation-0 { box-shadow: none; }
+.md-elevation-1 { box-shadow: var(--md-elevation-1); }
+.md-elevation-2 { box-shadow: var(--md-elevation-2); }
+.md-elevation-3 { box-shadow: var(--md-elevation-3); }
+.md-elevation-4 { box-shadow: var(--md-elevation-4); }
+.md-elevation-5 { box-shadow: var(--md-elevation-5); }

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#1976d2">
+    <title>Finnish Wealth Tracker - Material Design</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/material-design.css">
+    <style>
+        /* Page-specific styles */
+        body {
+            margin: 0;
+            padding-top: 64px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--md-spacing-5);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-primary-dark) 100%);
+            color: var(--md-on-primary);
+            padding: var(--md-spacing-8) var(--md-spacing-5);
+            text-align: center;
+            margin-top: -64px;
+            padding-top: calc(64px + var(--md-spacing-8));
+        }
+        
+        .hero-title {
+            font-size: var(--md-display-small);
+            font-weight: 300;
+            margin-bottom: var(--md-spacing-3);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .hero-subtitle {
+            font-size: var(--md-headline-small);
+            font-weight: 400;
+            margin-bottom: var(--md-spacing-6);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 0.2s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--md-spacing-5);
+            margin-top: calc(-1 * var(--md-spacing-7));
+            margin-bottom: var(--md-spacing-6);
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-5);
+            box-shadow: var(--md-elevation-2);
+            transition: all var(--md-transition-medium);
+            cursor: pointer;
+        }
+        
+        .metric-card:hover {
+            box-shadow: var(--md-elevation-4);
+            transform: translateY(-2px);
+        }
+        
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--md-primary-light);
+            color: var(--md-primary);
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--md-spacing-4);
+        }
+        
+        .metric-card.success .metric-icon {
+            background: var(--md-success-container);
+            color: var(--md-success);
+        }
+        
+        .metric-label {
+            font-size: var(--md-label-large);
+            color: var(--md-on-surface-variant);
+            margin-bottom: var(--md-spacing-2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: var(--md-headline-medium);
+            font-weight: 500;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-1);
+        }
+        
+        .metric-change {
+            font-size: var(--md-body-medium);
+            color: var(--md-success);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-1);
+        }
+        
+        .metric-change.negative {
+            color: var(--md-error);
+        }
+        
+        /* Feature Section */
+        .feature-section {
+            margin-bottom: var(--md-spacing-8);
+        }
+        
+        .section-title {
+            font-size: var(--md-headline-medium);
+            font-weight: 400;
+            margin-bottom: var(--md-spacing-5);
+            text-align: center;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--md-spacing-4);
+        }
+        
+        .feature-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-medium);
+            padding: var(--md-spacing-5);
+            text-align: center;
+            border: 1px solid var(--md-outline-variant);
+            transition: all var(--md-transition-medium);
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            box-shadow: var(--md-elevation-2);
+            border-color: var(--md-primary);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            color: var(--md-primary);
+            margin-bottom: var(--md-spacing-3);
+        }
+        
+        .feature-title {
+            font-size: var(--md-title-medium);
+            font-weight: 500;
+            margin-bottom: var(--md-spacing-2);
+        }
+        
+        .feature-description {
+            font-size: var(--md-body-small);
+            color: var(--md-on-surface-variant);
+            line-height: 1.5;
+        }
+        
+        /* Action Section */
+        .action-section {
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-6);
+            text-align: center;
+            margin-bottom: var(--md-spacing-6);
+        }
+        
+        .action-title {
+            font-size: var(--md-headline-small);
+            margin-bottom: var(--md-spacing-3);
+        }
+        
+        .action-description {
+            font-size: var(--md-body-large);
+            color: var(--md-on-surface-variant);
+            margin-bottom: var(--md-spacing-5);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: var(--md-spacing-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 56px;
+            }
+            
+            .hero-section {
+                padding: var(--md-spacing-6) var(--md-spacing-4);
+                padding-top: calc(56px + var(--md-spacing-6));
+            }
+            
+            .hero-title {
+                font-size: var(--md-headline-large);
+            }
+            
+            .hero-subtitle {
+                font-size: var(--md-title-large);
+            }
+            
+            .container {
+                padding: var(--md-spacing-4);
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                margin-top: calc(-1 * var(--md-spacing-6));
+            }
+            
+            .metric-value {
+                font-size: var(--md-headline-small);
+            }
+            
+            .button-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .md-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Material Design App Bar -->
+    <header class="md-app-bar">
+        <button class="md-icon-button" onclick="toggleMenu()">
+            <span class="material-icons">menu</span>
+        </button>
+        <h1 class="md-app-bar-title">Finnish Wealth Tracker</h1>
+        <div style="flex: 1;"></div>
+        <button class="md-icon-button" onclick="toggleTheme()">
+            <span class="material-icons">dark_mode</span>
+        </button>
+        <button class="md-icon-button">
+            <span class="material-icons">more_vert</span>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">Track Your Wealth Journey</h1>
+        <p class="hero-subtitle">Smart financial tracking for Indian investors in Finland</p>
+    </section>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Metrics -->
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <span class="material-icons">account_balance_wallet</span>
+                </div>
+                <div class="metric-label">Total Portfolio</div>
+                <div class="metric-value">€125,430</div>
+                <div class="metric-change">
+                    <span class="material-icons">trending_up</span>
+                    +12.5% this year
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <span class="material-icons">savings</span>
+                </div>
+                <div class="metric-label">Total Invested</div>
+                <div class="metric-value">€98,200</div>
+                <div class="metric-change">
+                    <span class="material-icons">add_circle</span>
+                    €2,000 this month
+                </div>
+            </div>
+            
+            <div class="metric-card success">
+                <div class="metric-icon">
+                    <span class="material-icons">trending_up</span>
+                </div>
+                <div class="metric-label">Unrealized Gains</div>
+                <div class="metric-value">€27,230</div>
+                <div class="metric-change">
+                    <span class="material-icons">info</span>
+                    Tax if sold: €8,169
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Section -->
+        <section class="feature-section">
+            <h2 class="section-title">Smart Features for Your Financial Success</h2>
+            <div class="feature-grid">
+                <div class="feature-card" onclick="navigateToFeature('tax-optimization')">
+                    <span class="material-icons feature-icon">calculate</span>
+                    <h3 class="feature-title">Tax Optimization</h3>
+                    <p class="feature-description">Navigate Finnish tax laws with OST account tracking and smart tax calculations</p>
+                </div>
+                
+                <div class="feature-card" onclick="navigateToFeature('bicultural-tracking')">
+                    <span class="material-icons feature-icon">language</span>
+                    <h3 class="feature-title">Bicultural Tracking</h3>
+                    <p class="feature-description">Manage investments in both EUR and INR with real-time exchange rates</p>
+                </div>
+                
+                <div class="feature-card" onclick="navigateToFeature('real-time-search')">
+                    <span class="material-icons feature-icon">search</span>
+                    <h3 class="feature-title">Stock Search</h3>
+                    <p class="feature-description">Find and add any stock with real-time prices and market data</p>
+                </div>
+                
+                <div class="feature-card" onclick="navigateToFeature('investment-bible')">
+                    <span class="material-icons feature-icon">menu_book</span>
+                    <h3 class="feature-title">Investment Bible</h3>
+                    <p class="feature-description">Finnish investment wisdom and strategies in one place</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="action-section">
+            <h2 class="action-title">Ready to Start Your Wealth Journey?</h2>
+            <p class="action-description">Join thousands of Indian investors successfully building wealth in Finland</p>
+            <div class="button-group">
+                <button class="md-button md-button-filled" onclick="startTracking()">
+                    <span class="material-icons">add</span>
+                    Add First Investment
+                </button>
+                <button class="md-button md-button-outlined" onclick="openDemo()">
+                    <span class="material-icons">play_circle</span>
+                    View Demo
+                </button>
+            </div>
+        </section>
+
+        <!-- Tax Optimization Cards -->
+        <section class="feature-section">
+            <h2 class="section-title">Finnish Tax Intelligence</h2>
+            <div class="dashboard-grid">
+                <div class="md-card md-elevation-1">
+                    <div class="metric-icon" style="background: rgba(33, 150, 243, 0.1); color: #2196F3;">
+                        <span class="material-icons">account_balance</span>
+                    </div>
+                    <h3 style="font-size: var(--md-title-medium); margin-bottom: var(--md-spacing-2);">OST Account Status</h3>
+                    <div class="md-progress-linear" style="margin-bottom: var(--md-spacing-3);">
+                        <div class="md-progress-linear-bar" style="width: 45%;"></div>
+                    </div>
+                    <p style="color: var(--md-on-surface-variant); font-size: var(--md-body-small);">€22,500 / €50,000 utilized</p>
+                    <p style="color: var(--md-primary); font-size: var(--md-label-large); margin-top: var(--md-spacing-2);">€27,500 tax-free space remaining</p>
+                </div>
+                
+                <div class="md-card md-elevation-1">
+                    <div class="metric-icon" style="background: rgba(76, 175, 80, 0.1); color: #4CAF50;">
+                        <span class="material-icons">insights</span>
+                    </div>
+                    <h3 style="font-size: var(--md-title-medium); margin-bottom: var(--md-spacing-2);">Tax Efficiency Score</h3>
+                    <div style="font-size: var(--md-display-small); color: var(--md-primary); margin: var(--md-spacing-3) 0;">8.5/10</div>
+                    <p style="color: var(--md-on-surface-variant); font-size: var(--md-body-small);">Great job using tax-deferred accounts!</p>
+                </div>
+                
+                <div class="md-card md-elevation-1">
+                    <div class="metric-icon" style="background: rgba(255, 152, 0, 0.1); color: #FF9800;">
+                        <span class="material-icons">flight_takeoff</span>
+                    </div>
+                    <h3 style="font-size: var(--md-title-medium); margin-bottom: var(--md-spacing-2);">Geo-Arbitrage Ready</h3>
+                    <div style="font-size: var(--md-headline-small); color: var(--md-on-surface); margin: var(--md-spacing-3) 0;">62%</div>
+                    <p style="color: var(--md-on-surface-variant); font-size: var(--md-body-small);">€74,570 more to unlock opportunities</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="md-fab" onclick="openAddInvestment()">
+        <span class="material-icons">add</span>
+    </button>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Add ripple effect to buttons
+        document.querySelectorAll('.md-button, .md-icon-button, .md-fab').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('md-ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Scroll effects for app bar
+        window.addEventListener('scroll', () => {
+            const appBar = document.querySelector('.md-app-bar');
+            if (window.scrollY > 50) {
+                appBar.classList.add('md-app-bar-scrolled');
+            } else {
+                appBar.classList.remove('md-app-bar-scrolled');
+            }
+        });
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update icon
+            const icon = document.querySelector('.md-icon-button:nth-child(4) .material-icons');
+            icon.textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+
+        // Demo functions
+        function startTracking() {
+            console.log('Opening investment modal...');
+        }
+
+        function openDemo() {
+            console.log('Starting demo...');
+        }
+
+        function navigateToFeature(feature) {
+            console.log('Navigating to:', feature);
+        }
+
+        function openAddInvestment() {
+            console.log('Opening add investment...');
+        }
+
+        function toggleMenu() {
+            console.log('Toggle menu...');
+        }
+
+        // Animate cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        entry.target.style.transition = 'all 0.6s ease-out';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.metric-card, .feature-card, .md-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

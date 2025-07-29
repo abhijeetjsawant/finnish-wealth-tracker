@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#1976d2">
+    <title>Portfolio - Finnish Wealth Tracker</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/material-design.css">
+    <link rel="stylesheet" href="css/material-portfolio.css">
+</head>
+<body>
+    <!-- Material Design App Bar -->
+    <header class="md-app-bar md-elevation-2">
+        <button class="md-icon-button" onclick="goBack()">
+            <span class="material-icons">arrow_back</span>
+        </button>
+        <h1 class="md-app-bar-title">Portfolio</h1>
+        <div style="flex: 1;"></div>
+        <button class="md-icon-button" onclick="filterPortfolio()">
+            <span class="material-icons">filter_list</span>
+        </button>
+        <button class="md-icon-button" onclick="sortPortfolio()">
+            <span class="material-icons">sort</span>
+        </button>
+        <button class="md-icon-button" onclick="exportPortfolio()">
+            <span class="material-icons">download</span>
+        </button>
+    </header>
+
+    <!-- Account Summary Cards -->
+    <section class="account-summary">
+        <div class="account-card ost">
+            <div class="account-header">
+                <div class="account-info">
+                    <h3>OST Account</h3>
+                    <p class="account-subtitle">Tax-deferred Equity Savings</p>
+                </div>
+                <span class="account-badge">Tax Free</span>
+            </div>
+            <div class="account-value">€22,500</div>
+            <div class="account-progress">
+                <div class="md-progress-linear">
+                    <div class="md-progress-linear-bar" style="width: 45%;"></div>
+                </div>
+                <div class="progress-info">
+                    <span>€27,500 remaining</span>
+                    <span>45% utilized</span>
+                </div>
+            </div>
+            <div class="account-stats">
+                <div class="stat">
+                    <span class="stat-label">Holdings</span>
+                    <span class="stat-value">5</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Returns</span>
+                    <span class="stat-value positive">+18.5%</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Deposited</span>
+                    <span class="stat-value">€19,000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-card aot">
+            <div class="account-header">
+                <div class="account-info">
+                    <h3>AOT Account</h3>
+                    <p class="account-subtitle">Regular Trading Account</p>
+                </div>
+                <span class="account-badge taxable">Taxable</span>
+            </div>
+            <div class="account-value">€102,930</div>
+            <div class="account-stats">
+                <div class="stat">
+                    <span class="stat-label">Holdings</span>
+                    <span class="stat-value">12</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Returns</span>
+                    <span class="stat-value positive">+12.8%</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Tax Impact</span>
+                    <span class="stat-value warning">€3,507</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <div class="md-tabs">
+        <div class="md-tabs-container">
+            <button class="md-tab active" onclick="switchTab('all')">
+                All Holdings
+                <span class="tab-count">17</span>
+            </button>
+            <button class="md-tab" onclick="switchTab('stocks')">
+                Stocks
+                <span class="tab-count">8</span>
+            </button>
+            <button class="md-tab" onclick="switchTab('etfs')">
+                ETFs
+                <span class="tab-count">4</span>
+            </button>
+            <button class="md-tab" onclick="switchTab('fixed')">
+                Fixed Deposits
+                <span class="tab-count">3</span>
+            </button>
+            <button class="md-tab" onclick="switchTab('other')">
+                Other
+                <span class="tab-count">2</span>
+            </button>
+        </div>
+        <div class="md-tab-indicator"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="md-content">
+        <!-- All Holdings Tab -->
+        <div id="all" class="tab-content active">
+            <!-- Stocks Section -->
+            <section class="holdings-section">
+                <h2 class="section-title">Stocks</h2>
+                <div class="holdings-list">
+                    <div class="holding-card md-card md-elevation-1">
+                        <div class="holding-header">
+                            <div class="holding-info">
+                                <div class="holding-symbol">MSFT</div>
+                                <div class="holding-name">Microsoft Corporation</div>
+                                <div class="holding-account">
+                                    <span class="account-tag ost">OST</span>
+                                </div>
+                            </div>
+                            <button class="md-icon-button">
+                                <span class="material-icons">more_vert</span>
+                            </button>
+                        </div>
+                        <div class="holding-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Shares</span>
+                                <span class="metric-value">100</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg Price</span>
+                                <span class="metric-value">€350.20</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Current</span>
+                                <span class="metric-value">€380.50</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Value</span>
+                                <span class="metric-value">€38,050</span>
+                            </div>
+                        </div>
+                        <div class="holding-performance">
+                            <div class="performance-value positive">
+                                <span class="material-icons">trending_up</span>
+                                €3,030 (+8.65%)
+                            </div>
+                            <div class="performance-chart">
+                                <canvas id="msft-sparkline"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="holding-card md-card md-elevation-1">
+                        <div class="holding-header">
+                            <div class="holding-info">
+                                <div class="holding-symbol">AAPL</div>
+                                <div class="holding-name">Apple Inc.</div>
+                                <div class="holding-account">
+                                    <span class="account-tag aot">AOT</span>
+                                </div>
+                            </div>
+                            <button class="md-icon-button">
+                                <span class="material-icons">more_vert</span>
+                            </button>
+                        </div>
+                        <div class="holding-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Shares</span>
+                                <span class="metric-value">150</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg Price</span>
+                                <span class="metric-value">€160.80</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Current</span>
+                                <span class="metric-value">€175.20</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Value</span>
+                                <span class="metric-value">€26,280</span>
+                            </div>
+                        </div>
+                        <div class="holding-performance">
+                            <div class="performance-value positive">
+                                <span class="material-icons">trending_up</span>
+                                €2,160 (+8.96%)
+                            </div>
+                            <div class="tax-info">
+                                <span class="material-icons">info</span>
+                                Tax if sold: €648
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ETFs Section -->
+            <section class="holdings-section">
+                <h2 class="section-title">ETFs & Funds</h2>
+                <div class="holdings-list">
+                    <div class="holding-card md-card md-elevation-1">
+                        <div class="holding-header">
+                            <div class="holding-info">
+                                <div class="holding-symbol">VWCE</div>
+                                <div class="holding-name">Vanguard FTSE All-World UCITS ETF</div>
+                                <div class="holding-account">
+                                    <span class="account-tag ost">OST</span>
+                                </div>
+                            </div>
+                            <button class="md-icon-button">
+                                <span class="material-icons">more_vert</span>
+                            </button>
+                        </div>
+                        <div class="holding-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Units</span>
+                                <span class="metric-value">120</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg NAV</span>
+                                <span class="metric-value">€98.50</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Current</span>
+                                <span class="metric-value">€105.80</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Value</span>
+                                <span class="metric-value">€12,696</span>
+                            </div>
+                        </div>
+                        <div class="holding-performance">
+                            <div class="performance-value positive">
+                                <span class="material-icons">trending_up</span>
+                                €876 (+7.41%)
+                            </div>
+                            <div class="fund-info">
+                                <span class="info-item">TER: 0.22%</span>
+                                <span class="info-item">Accumulating</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Stocks Tab -->
+        <div id="stocks" class="tab-content">
+            <!-- Stock holdings content -->
+        </div>
+
+        <!-- ETFs Tab -->
+        <div id="etfs" class="tab-content">
+            <!-- ETF holdings content -->
+        </div>
+
+        <!-- Fixed Deposits Tab -->
+        <div id="fixed" class="tab-content">
+            <!-- Fixed deposit content -->
+        </div>
+
+        <!-- Other Tab -->
+        <div id="other" class="tab-content">
+            <!-- Other assets content -->
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="md-fab md-elevation-3" onclick="addInvestment()">
+        <span class="material-icons">add</span>
+    </button>
+
+    <!-- Bottom Sheet for Actions -->
+    <div class="md-bottom-sheet" id="bottomSheet">
+        <div class="bottom-sheet-content">
+            <h3>Investment Actions</h3>
+            <button class="bottom-sheet-item" onclick="buyMore()">
+                <span class="material-icons">add_shopping_cart</span>
+                Buy More
+            </button>
+            <button class="bottom-sheet-item" onclick="sellShares()">
+                <span class="material-icons">sell</span>
+                Sell Shares
+            </button>
+            <button class="bottom-sheet-item" onclick="viewDetails()">
+                <span class="material-icons">info</span>
+                View Details
+            </button>
+            <button class="bottom-sheet-item" onclick="viewChart()">
+                <span class="material-icons">show_chart</span>
+                View Chart
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="md-bottom-nav">
+        <a href="dashboard-material.html" class="md-bottom-nav-item">
+            <span class="material-icons">dashboard</span>
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item active">
+            <span class="material-icons">pie_chart</span>
+            <span class="nav-label">Portfolio</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">insights</span>
+            <span class="nav-label">Analytics</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">more_horiz</span>
+            <span class="nav-label">More</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize ripple effects
+        document.querySelectorAll('.md-button, .md-icon-button, .md-fab, .holding-card').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('md-ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Tab functionality
+        function switchTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.md-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+
+            // Update indicator position
+            updateTabIndicator();
+        }
+
+        function updateTabIndicator() {
+            const activeTab = document.querySelector('.md-tab.active');
+            const indicator = document.querySelector('.md-tab-indicator');
+            if (activeTab && indicator) {
+                indicator.style.left = activeTab.offsetLeft + 'px';
+                indicator.style.width = activeTab.offsetWidth + 'px';
+            }
+        }
+
+        // Initialize tab indicator
+        updateTabIndicator();
+
+        // Bottom sheet functionality
+        function showBottomSheet() {
+            document.getElementById('bottomSheet').classList.add('show');
+        }
+
+        function hideBottomSheet() {
+            document.getElementById('bottomSheet').classList.remove('show');
+        }
+
+        // Add click handlers to holding cards
+        document.querySelectorAll('.holding-card').forEach(card => {
+            card.addEventListener('click', showBottomSheet);
+        });
+
+        // Close bottom sheet on outside click
+        document.getElementById('bottomSheet').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideBottomSheet();
+            }
+        });
+
+        // Initialize mini charts
+        const msftCtx = document.getElementById('msft-sparkline');
+        if (msftCtx) {
+            new Chart(msftCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['', '', '', '', '', '', ''],
+                    datasets: [{
+                        data: [350, 355, 360, 358, 365, 375, 380.5],
+                        borderColor: '#4caf50',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Navigation
+        function goBack() {
+            window.location.href = 'dashboard-material.html';
+        }
+    </script>
+</body>
+</html>

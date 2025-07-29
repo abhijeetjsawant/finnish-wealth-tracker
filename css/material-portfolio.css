@@ -1,0 +1,442 @@
+/* Material Design Portfolio Styles */
+
+/* Account Summary */
+.account-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--md-spacing-4);
+    padding: var(--md-spacing-5);
+    background: var(--md-surface-variant);
+}
+
+.account-card {
+    background: var(--md-surface);
+    border-radius: var(--md-radius-large);
+    padding: var(--md-spacing-5);
+    box-shadow: var(--md-elevation-1);
+    transition: all var(--md-transition-medium);
+}
+
+.account-card:hover {
+    box-shadow: var(--md-elevation-3);
+}
+
+.account-card.ost {
+    border-top: 4px solid var(--md-success);
+}
+
+.account-card.aot {
+    border-top: 4px solid var(--md-primary);
+}
+
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--md-spacing-4);
+}
+
+.account-info h3 {
+    font-size: var(--md-title-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-1) 0;
+}
+
+.account-subtitle {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    margin: 0;
+}
+
+.account-badge {
+    background: var(--md-success-container);
+    color: #1b5e20;
+    padding: var(--md-spacing-1) var(--md-spacing-2);
+    border-radius: var(--md-radius-small);
+    font-size: var(--md-label-small);
+    font-weight: 500;
+}
+
+.account-badge.taxable {
+    background: rgba(255, 152, 0, 0.1);
+    color: #e65100;
+}
+
+.account-value {
+    font-size: var(--md-display-small);
+    font-weight: 300;
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-4);
+}
+
+.account-progress {
+    margin-bottom: var(--md-spacing-4);
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--md-spacing-2);
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.account-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--md-spacing-3);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: var(--md-label-medium);
+    color: var(--md-on-surface-variant);
+    margin-bottom: var(--md-spacing-1);
+}
+
+.stat-value {
+    display: block;
+    font-size: var(--md-body-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+}
+
+.stat-value.positive {
+    color: var(--md-success);
+}
+
+.stat-value.warning {
+    color: #ff9800;
+}
+
+/* Tab Navigation */
+.md-tabs {
+    background: var(--md-surface);
+    box-shadow: var(--md-elevation-1);
+    position: sticky;
+    top: 64px;
+    z-index: 100;
+}
+
+.md-tabs-container {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.md-tabs-container::-webkit-scrollbar {
+    display: none;
+}
+
+.md-tab {
+    flex: 0 0 auto;
+    padding: var(--md-spacing-4) var(--md-spacing-5);
+    background: none;
+    border: none;
+    color: var(--md-on-surface-variant);
+    font-size: var(--md-label-large);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--md-transition-fast);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-2);
+    white-space: nowrap;
+}
+
+.md-tab:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.md-tab.active {
+    color: var(--md-primary);
+}
+
+.tab-count {
+    background: var(--md-surface-variant);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: var(--md-label-small);
+    font-weight: 400;
+}
+
+.md-tab.active .tab-count {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+}
+
+.md-tab-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background: var(--md-primary);
+    transition: all var(--md-transition-medium);
+}
+
+/* Holdings Section */
+.holdings-section {
+    margin-bottom: var(--md-spacing-6);
+}
+
+.holdings-section .section-title {
+    font-size: var(--md-title-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-4) 0;
+}
+
+.holdings-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-3);
+}
+
+/* Holding Card */
+.holding-card {
+    padding: var(--md-spacing-4);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+}
+
+.holding-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-1px);
+}
+
+.holding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--md-spacing-4);
+}
+
+.holding-info {
+    flex: 1;
+}
+
+.holding-symbol {
+    font-size: var(--md-headline-small);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-1);
+}
+
+.holding-name {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    margin-bottom: var(--md-spacing-2);
+}
+
+.holding-account {
+    display: inline-flex;
+    gap: var(--md-spacing-2);
+}
+
+.account-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--md-radius-small);
+    font-size: var(--md-label-small);
+    font-weight: 500;
+}
+
+.account-tag.ost {
+    background: var(--md-success-container);
+    color: #1b5e20;
+}
+
+.account-tag.aot {
+    background: rgba(25, 118, 210, 0.1);
+    color: var(--md-primary);
+}
+
+.holding-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--md-spacing-3);
+    margin-bottom: var(--md-spacing-4);
+}
+
+.metric {
+    text-align: center;
+}
+
+.metric-label {
+    display: block;
+    font-size: var(--md-label-small);
+    color: var(--md-on-surface-variant);
+    margin-bottom: var(--md-spacing-1);
+}
+
+.metric-value {
+    display: block;
+    font-size: var(--md-body-large);
+    font-weight: 500;
+    color: var(--md-on-surface);
+}
+
+.holding-performance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.performance-value {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-2);
+    font-size: var(--md-body-large);
+    font-weight: 500;
+}
+
+.performance-value.positive {
+    color: var(--md-success);
+}
+
+.performance-value.negative {
+    color: var(--md-error);
+}
+
+.performance-value .material-icons {
+    font-size: 20px;
+}
+
+.performance-chart {
+    width: 100px;
+    height: 40px;
+}
+
+.tax-info {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-1);
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.tax-info .material-icons {
+    font-size: 16px;
+    color: #ff9800;
+}
+
+.fund-info {
+    display: flex;
+    gap: var(--md-spacing-3);
+}
+
+.info-item {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+/* Bottom Sheet */
+.md-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--md-surface);
+    border-radius: var(--md-radius-large) var(--md-radius-large) 0 0;
+    box-shadow: var(--md-elevation-5);
+    transform: translateY(100%);
+    transition: transform var(--md-transition-medium);
+    z-index: 1000;
+}
+
+.md-bottom-sheet.show {
+    transform: translateY(0);
+}
+
+.bottom-sheet-content {
+    padding: var(--md-spacing-5);
+}
+
+.bottom-sheet-content h3 {
+    font-size: var(--md-title-large);
+    font-weight: 500;
+    margin: 0 0 var(--md-spacing-4) 0;
+    text-align: center;
+}
+
+.bottom-sheet-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-4);
+    padding: var(--md-spacing-4);
+    background: none;
+    border: none;
+    border-radius: var(--md-radius-medium);
+    font-size: var(--md-body-large);
+    color: var(--md-on-surface);
+    cursor: pointer;
+    transition: background var(--md-transition-fast);
+    text-align: left;
+}
+
+.bottom-sheet-item:hover {
+    background: var(--md-surface-variant);
+}
+
+.bottom-sheet-item .material-icons {
+    color: var(--md-on-surface-variant);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .account-summary {
+        padding: var(--md-spacing-4);
+        grid-template-columns: 1fr;
+    }
+    
+    .md-tabs {
+        top: 56px;
+    }
+    
+    .md-content {
+        padding: var(--md-spacing-4);
+    }
+    
+    .account-stats,
+    .holding-metrics {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--md-spacing-3);
+    }
+    
+    .holding-symbol {
+        font-size: var(--md-headline-small);
+    }
+    
+    .account-value {
+        font-size: var(--md-headline-large);
+    }
+    
+    .performance-chart {
+        display: none;
+    }
+}
+
+/* Dark Theme */
+[data-theme="dark"] .account-summary {
+    background: #121212;
+}
+
+[data-theme="dark"] .md-tabs {
+    background: #1c1b1f;
+}
+
+[data-theme="dark"] .md-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .bottom-sheet-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
