@@ -114,47 +114,56 @@
 
 .tax-card {
     background-color: var(--bg-primary);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: var(--card-shadow);
+    padding: var(--space-5);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
     text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.tax-card:hover {
+    border-color: var(--border-medium);
 }
 
 .tax-icon {
-    font-size: 32px;
-    margin-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: var(--space-3);
+    opacity: 0.8;
 }
 
 .tax-card h4 {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     color: var(--text-secondary);
-    margin-bottom: 10px;
+    margin-bottom: var(--space-2);
+    font-weight: 500;
 }
 
 .tax-value {
-    font-size: 20px;
+    font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 10px;
+    margin-bottom: var(--space-3);
 }
 
 .tax-progress {
-    height: 6px;
+    height: 4px;
     background: var(--bg-tertiary);
-    border-radius: 3px;
+    border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: var(--space-2);
 }
 
 .tax-progress-fill {
     height: 100%;
-    background: var(--success-color);
-    transition: width 0.5s ease;
+    background: var(--primary-color);
+    transition: width var(--transition-base);
+    border-radius: 2px;
 }
 
 .tax-tip {
-    font-size: 12px;
-    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    line-height: 1.4;
 }
 
 /* Morning Check-in Styles */
@@ -275,34 +284,48 @@
 .bible-modal-content {
     max-width: 900px;
     height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .bible-container {
-    padding: 40px;
+    padding: var(--space-6);
+    overflow-y: auto;
+    flex: 1;
 }
 
 .bible-nav {
     display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
+    gap: var(--space-1);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.bible-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .bible-nav-btn {
-    padding: 10px 20px;
+    padding: var(--space-3) var(--space-4);
     background: none;
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
+    font-size: var(--font-size-sm);
     font-weight: 500;
-    transition: color 0.3s;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-bottom: 2px solid transparent;
 }
 
 .bible-nav-btn.active {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
+    color: var(--text-primary);
+    border-bottom-color: var(--primary-color);
 }
 
 .bible-section {
@@ -314,35 +337,43 @@
 }
 
 .bible-quote {
-    background: var(--bg-secondary);
-    padding: 20px;
-    border-left: 4px solid var(--primary-color);
-    margin: 20px 0;
+    background: var(--bg-tertiary);
+    padding: var(--space-5);
+    border-left: 3px solid var(--primary-color);
+    margin: var(--space-5) 0;
     font-style: italic;
+    border-radius: 6px;
+    line-height: 1.7;
 }
 
 .commandment {
-    background: var(--bg-secondary);
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    background: var(--bg-primary);
+    padding: var(--space-5);
+    border-radius: 6px;
+    margin-bottom: var(--space-4);
+    border: 1px solid var(--border-color);
 }
 
 .commandment h4 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+    font-weight: 600;
+    font-size: var(--font-size-base);
 }
 
 .phase-guide {
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-    padding: 30px;
-    border-radius: 10px;
-    margin: 20px 0;
+    background: var(--bg-primary);
+    padding: var(--space-6);
+    border-radius: 6px;
+    margin: var(--space-5) 0;
+    border: 1px solid var(--border-color);
 }
 
 .phase-guide h3 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+    font-weight: 600;
+    font-size: var(--font-size-lg);
 }
 
 .phase-guide ul {
@@ -371,10 +402,92 @@
     }
     
     .phase-marker {
-        font-size: 12px;
+        font-size: var(--font-size-xs);
     }
     
     .marker-phase {
         font-size: 10px;
+    }
+    
+    /* Mobile Bible Modal - Full Screen */
+    .bible-modal-content {
+        height: 100vh;
+        max-width: 100%;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .modal-header {
+        position: sticky;
+        top: 0;
+        background: var(--bg-primary);
+        z-index: 100;
+    }
+    
+    .bible-container {
+        padding: var(--space-4);
+    }
+    
+    .bible-nav {
+        position: sticky;
+        top: 0;
+        background: var(--bg-primary);
+        z-index: 10;
+        margin-bottom: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        margin-left: calc(-1 * var(--space-4));
+        margin-right: calc(-1 * var(--space-4));
+        border-bottom: 1px solid var(--border-color);
+        /* Enable horizontal scrolling */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Add scroll hint gradient */
+    .bible-nav::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        background: linear-gradient(to right, transparent, var(--bg-primary));
+        pointer-events: none;
+    }
+    
+    .bible-nav-btn {
+        font-size: var(--font-size-sm);
+        padding: var(--space-2) var(--space-3);
+        min-height: 44px; /* Accessibility minimum */
+    }
+    
+    .bible-section {
+        padding: 0 var(--space-2);
+    }
+    
+    .bible-section h2 {
+        font-size: var(--font-size-xl);
+        margin-bottom: var(--space-4);
+    }
+    
+    .bible-section h3 {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--space-3);
+    }
+    
+    .commandment {
+        padding: var(--space-4);
+        margin-bottom: var(--space-3);
+    }
+    
+    .phase-guide {
+        padding: var(--space-4);
+        margin: var(--space-4) 0;
+    }
+    
+    .bible-quote {
+        padding: var(--space-4);
+        margin: var(--space-4) 0;
+        font-size: var(--font-size-sm);
     }
 }

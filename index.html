@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#2196F3">
+    <meta name="theme-color" content="#0066cc">
     <title>Finnish Wealth Tracker</title>
     
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- CSS Files -->
+    <link rel="stylesheet" href="css/modern-ui.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/finnish-features.css">
     <link rel="stylesheet" href="css/account-features.css">
@@ -19,7 +25,7 @@
 <body>
     <div class="container">
         <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">☰</button>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="Open menu">☰</button>
         
         <!-- Header -->
         <div class="header">
@@ -642,7 +648,7 @@
             <span class="nav-icon">💼</span>
             <span class="nav-label">Portfolio</span>
         </button>
-        <button class="nav-item nav-add" onclick="openAddInvestmentModal()">
+        <button class="nav-item nav-add" onclick="openAddInvestmentModal()" aria-label="Add Investment">
             <span class="nav-icon">+</span>
         </button>
         <button class="nav-item" onclick="showMobileSection('analytics')">
