@@ -1264,3 +1264,424 @@ body {
         width: 100%;
     }
 }
+
+/* Morning Check-in Styles */
+.checkin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--md-spacing-6);
+    padding: var(--md-spacing-5);
+    background: linear-gradient(135deg, var(--md-primary), #1565c0);
+    color: var(--md-on-primary);
+    border-radius: var(--md-radius-large);
+    box-shadow: var(--md-elevation-2);
+}
+
+.greeting-container {
+    flex: 1;
+}
+
+.greeting-title {
+    font-size: var(--md-headline-large);
+    font-weight: 400;
+    margin: 0 0 var(--md-spacing-2) 0;
+    color: var(--md-on-primary);
+}
+
+.greeting-subtitle {
+    font-size: var(--md-body-large);
+    opacity: 0.9;
+    margin: 0;
+    color: var(--md-on-primary);
+}
+
+.checkin-date {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-2);
+}
+
+.date-display {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-primary);
+}
+
+.streak-display {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-1);
+    font-size: var(--md-body-medium);
+    color: var(--md-on-primary);
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--md-spacing-1) var(--md-spacing-2);
+    border-radius: var(--md-radius-small);
+}
+
+.streak-display .material-icons {
+    color: #ff9800;
+    font-size: 20px;
+}
+
+/* Snapshot Cards */
+.snapshot-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.snapshot-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--md-primary);
+}
+
+.period-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-1);
+}
+
+.period-label {
+    font-size: var(--md-label-small);
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Insights Container */
+.insights-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--md-spacing-4);
+}
+
+.insight-card {
+    padding: var(--md-spacing-4);
+    transition: all var(--md-transition-medium);
+    cursor: pointer;
+    border-left: 4px solid transparent;
+}
+
+.insight-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-2px);
+}
+
+.insight-card.primary-insight {
+    border-left-color: var(--md-primary);
+}
+
+.insight-header {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-3);
+    margin-bottom: var(--md-spacing-3);
+}
+
+.insight-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.insight-icon {
+    background: var(--md-primary);
+}
+
+.insight-icon.warning {
+    background: #ff9800;
+}
+
+.insight-icon.info {
+    background: #03a9f4;
+}
+
+.insight-type {
+    font-size: var(--md-label-large);
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.insight-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-2) 0;
+    line-height: 1.3;
+}
+
+.insight-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 var(--md-spacing-3) 0;
+}
+
+.insight-action {
+    margin-top: var(--md-spacing-3);
+}
+
+/* Goals Container */
+.goals-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-4);
+}
+
+.goal-card {
+    padding: var(--md-spacing-4);
+    transition: all var(--md-transition-medium);
+    border-left: 4px solid var(--md-outline-variant);
+}
+
+.goal-card:hover {
+    box-shadow: var(--md-elevation-2);
+}
+
+.goal-card.completed {
+    border-left-color: var(--md-success);
+    background: rgba(76, 175, 80, 0.02);
+}
+
+.goal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--md-spacing-3);
+}
+
+.goal-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.goal-priority {
+    font-size: var(--md-label-small);
+    padding: var(--md-spacing-1) var(--md-spacing-2);
+    border-radius: var(--md-radius-small);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.goal-priority.high {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--md-error);
+}
+
+.goal-priority.medium {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+}
+
+.goal-priority.completed {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--md-success);
+}
+
+.goal-title {
+    font-size: var(--md-title-medium);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 var(--md-spacing-2) 0;
+}
+
+.goal-description {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 var(--md-spacing-3) 0;
+}
+
+.goal-progress {
+    margin-bottom: var(--md-spacing-3);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--md-surface-variant);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--md-spacing-2);
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--md-primary);
+    border-radius: 4px;
+    transition: width var(--md-transition-medium);
+}
+
+.progress-fill.success {
+    background: var(--md-success);
+}
+
+.progress-text {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+}
+
+.goal-actions {
+    display: flex;
+    gap: var(--md-spacing-2);
+}
+
+/* Quick Actions Grid */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--md-spacing-4);
+}
+
+.quick-action-card {
+    padding: var(--md-spacing-4);
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-4);
+    cursor: pointer;
+    transition: all var(--md-transition-medium);
+    border: none;
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+    text-align: left;
+    border-radius: var(--md-radius-medium);
+}
+
+.quick-action-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-2px);
+    background: var(--md-surface-variant);
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.action-icon.primary {
+    background: var(--md-primary);
+}
+
+.action-icon.warning {
+    background: #ff9800;
+}
+
+.action-icon.success {
+    background: var(--md-success);
+}
+
+.action-icon.info {
+    background: #03a9f4;
+}
+
+.action-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-1);
+}
+
+.action-title {
+    font-size: var(--md-title-small);
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0;
+}
+
+.action-subtitle {
+    font-size: var(--md-body-small);
+    color: var(--md-on-surface-variant);
+    margin: 0;
+}
+
+/* Motivation Card */
+.motivation-card {
+    padding: var(--md-spacing-6);
+    text-align: center;
+    background: linear-gradient(135deg, var(--md-surface), var(--md-surface-variant));
+    border: 1px solid var(--md-outline-variant);
+}
+
+.motivation-content {
+    margin-bottom: var(--md-spacing-4);
+}
+
+.quote-icon {
+    color: var(--md-primary);
+    font-size: 36px;
+    margin-bottom: var(--md-spacing-3);
+}
+
+.motivation-quote {
+    font-size: var(--md-title-medium);
+    font-style: italic;
+    color: var(--md-on-surface);
+    line-height: 1.4;
+    margin: 0 0 var(--md-spacing-3) 0;
+    font-weight: 400;
+}
+
+.motivation-author {
+    font-size: var(--md-body-medium);
+    color: var(--md-on-surface-variant);
+    font-style: normal;
+    line-height: 1.5;
+}
+
+/* Mobile Responsive for Morning Check-in */
+@media (max-width: 768px) {
+    .checkin-header {
+        flex-direction: column;
+        gap: var(--md-spacing-4);
+        text-align: center;
+    }
+    
+    .checkin-date {
+        text-align: center;
+    }
+    
+    .insights-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .goal-card {
+        padding: var(--md-spacing-3);
+    }
+    
+    .goal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--md-spacing-2);
+    }
+    
+    .goal-actions {
+        flex-direction: column;
+    }
+    
+    .goal-actions .md-button {
+        width: 100%;
+    }
+}

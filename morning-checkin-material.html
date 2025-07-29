@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#1976d2">
+    <title>Morning Check-in - Finnish Wealth Tracker</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/material-design.css">
+    <link rel="stylesheet" href="css/material-forms.css">
+    <link rel="stylesheet" href="css/material-dashboard.css">
+</head>
+<body>
+    <!-- Material Design App Bar -->
+    <header class="md-app-bar md-elevation-2">
+        <button class="md-icon-button" onclick="toggleDrawer()">
+            <span class="material-icons">menu</span>
+        </button>
+        <h1 class="md-app-bar-title">Morning Check-in</h1>
+        <div style="flex: 1;"></div>
+        <button class="md-icon-button" onclick="toggleSearch()">
+            <span class="material-icons">search</span>
+        </button>
+        <button class="md-icon-button" onclick="showNotifications()">
+            <span class="material-icons">notifications</span>
+        </button>
+        <button class="md-icon-button" onclick="toggleTheme()">
+            <span class="material-icons">dark_mode</span>
+        </button>
+    </header>
+
+    <!-- Search Bar (Hidden by default) -->
+    <div class="md-search-bar" id="searchBar" style="display: none;">
+        <div class="md-search-container">
+            <span class="material-icons">search</span>
+            <input type="text" placeholder="Search insights, goals, habits..." class="md-search-input">
+            <button class="md-icon-button" onclick="toggleSearch()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Drawer -->
+    <nav class="md-drawer" id="drawer">
+        <div class="md-drawer-header">
+            <img src="https://ui-avatars.com/api/?name=FW&background=1976d2&color=fff&size=64" alt="Avatar" class="drawer-avatar">
+            <div class="drawer-user-info">
+                <div class="drawer-user-name">Finnish Wealth Tracker</div>
+                <div class="drawer-user-email">Building wealth in Finland</div>
+            </div>
+        </div>
+        <div class="md-drawer-content">
+            <a href="dashboard-material.html" class="md-drawer-item">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">account_balance_wallet</span>
+                Portfolio
+            </a>
+            <a href="tax-analytics-material.html" class="md-drawer-item">
+                <span class="material-icons">analytics</span>
+                Tax Analytics
+            </a>
+            <a href="#" class="md-drawer-item active">
+                <span class="material-icons">wb_sunny</span>
+                Morning Check-in
+            </a>
+            <div class="md-drawer-divider"></div>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">menu_book</span>
+                Investment Bible
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">language</span>
+                Bicultural Mode
+            </a>
+            <div class="md-drawer-divider"></div>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">settings</span>
+                Settings
+            </a>
+            <a href="#" class="md-drawer-item">
+                <span class="material-icons">help</span>
+                Help & Support
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="md-content">
+        <!-- Welcome Section -->
+        <section class="dashboard-section">
+            <div class="checkin-header">
+                <div class="greeting-container">
+                    <h2 class="greeting-title" id="greetingTitle">Good morning! 🌅</h2>
+                    <p class="greeting-subtitle" id="greetingSubtitle">Let's start your day with a financial wellness check</p>
+                </div>
+                <div class="checkin-date">
+                    <div class="date-display" id="currentDate"></div>
+                    <div class="streak-display">
+                        <span class="material-icons">local_fire_department</span>
+                        <span id="streakCount">7</span> day streak
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Snapshot -->
+        <section class="dashboard-section">
+            <h2 class="section-title">
+                <span class="material-icons">account_balance_wallet</span>
+                Portfolio Snapshot
+            </h2>
+            <div class="metric-grid">
+                <div class="md-card md-elevation-1 metric-card snapshot-card">
+                    <div class="metric-header">
+                        <div class="metric-icon primary">
+                            <span class="material-icons">trending_up</span>
+                        </div>
+                        <div class="period-selector">
+                            <span class="period-label">vs Yesterday</span>
+                        </div>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">Total Portfolio</div>
+                        <div class="metric-value" id="totalPortfolio">€125,430</div>
+                        <div class="metric-change positive" id="portfolioChange">
+                            <span class="material-icons">trending_up</span>
+                            +€1,234 (+0.99%)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 metric-card snapshot-card">
+                    <div class="metric-header">
+                        <div class="metric-icon success">
+                            <span class="material-icons">account_balance</span>
+                        </div>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">OST Account</div>
+                        <div class="metric-value" id="ostValue">€22,500</div>
+                        <div class="metric-subvalue">45% of limit used</div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 metric-card snapshot-card">
+                    <div class="metric-header">
+                        <div class="metric-icon warning">
+                            <span class="material-icons">savings</span>
+                        </div>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-label">Tax Efficiency</div>
+                        <div class="metric-value">8.5/10</div>
+                        <div class="metric-change positive">
+                            <span class="material-icons">trending_up</span>
+                            +0.2 this week
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Insights -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="material-icons">insights</span>
+                    Today's Market Insights
+                </h2>
+                <button class="md-button md-button-text" onclick="refreshInsights()">
+                    <span class="material-icons">refresh</span>
+                    Refresh
+                </button>
+            </div>
+            <div class="insights-container">
+                <div class="md-card md-elevation-1 insight-card primary-insight">
+                    <div class="insight-header">
+                        <div class="insight-icon">
+                            <span class="material-icons">show_chart</span>
+                        </div>
+                        <div class="insight-type">Market Alert</div>
+                    </div>
+                    <div class="insight-content">
+                        <h3 class="insight-title">Helsinki Stock Exchange Opening Strong</h3>
+                        <p class="insight-description">
+                            OMX Helsinki up 0.8% in early trading. Finnish banking sector leading gains with Nordea up 1.2%.
+                        </p>
+                        <div class="insight-action">
+                            <button class="md-button md-button-text">
+                                <span class="material-icons">open_in_new</span>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 insight-card">
+                    <div class="insight-header">
+                        <div class="insight-icon warning">
+                            <span class="material-icons">monetization_on</span>
+                        </div>
+                        <div class="insight-type">Currency</div>
+                    </div>
+                    <div class="insight-content">
+                        <h3 class="insight-title">EUR/USD Stable at 1.0892</h3>
+                        <p class="insight-description">
+                            Good time for US stock purchases. Consider your international allocation today.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 insight-card">
+                    <div class="insight-header">
+                        <div class="insight-icon info">
+                            <span class="material-icons">apartment</span>
+                        </div>
+                        <div class="insight-type">Real Estate</div>
+                    </div>
+                    <div class="insight-content">
+                        <h3 class="insight-title">Finnish Housing Market Update</h3>
+                        <p class="insight-description">
+                            Average home prices in Helsinki up 2.1% YoY. Consider REITs for real estate exposure.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Goals -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="material-icons">flag</span>
+                    Today's Financial Goals
+                </h2>
+                <button class="md-button md-button-text" onclick="addNewGoal()">
+                    <span class="material-icons">add</span>
+                    Add Goal
+                </button>
+            </div>
+            <div class="goals-container">
+                <div class="md-card md-elevation-1 goal-card">
+                    <div class="goal-header">
+                        <div class="goal-checkbox">
+                            <input type="checkbox" id="goal1" class="md-checkbox-input" onchange="updateGoalProgress(1)">
+                            <label for="goal1" class="md-checkbox-mark"></label>
+                        </div>
+                        <div class="goal-priority high">High Priority</div>
+                    </div>
+                    <div class="goal-content">
+                        <h3 class="goal-title">Review Monthly Expenses</h3>
+                        <p class="goal-description">
+                            Analyze last month's spending patterns and identify optimization opportunities.
+                        </p>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <span class="progress-text">0% complete</span>
+                        </div>
+                    </div>
+                    <div class="goal-actions">
+                        <button class="md-button md-button-outlined" onclick="startGoal(1)">
+                            <span class="material-icons">play_arrow</span>
+                            Start Now
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 goal-card">
+                    <div class="goal-header">
+                        <div class="goal-checkbox">
+                            <input type="checkbox" id="goal2" class="md-checkbox-input" onchange="updateGoalProgress(2)">
+                            <label for="goal2" class="md-checkbox-mark"></label>
+                        </div>
+                        <div class="goal-priority medium">Medium Priority</div>
+                    </div>
+                    <div class="goal-content">
+                        <h3 class="goal-title">Research New ETF Options</h3>
+                        <p class="goal-description">
+                            Explore European ETF options for diversification beyond current VWCE holdings.
+                        </p>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%;"></div>
+                            </div>
+                            <span class="progress-text">25% complete</span>
+                        </div>
+                    </div>
+                    <div class="goal-actions">
+                        <button class="md-button md-button-text" onclick="continueGoal(2)">
+                            Continue Research
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md-card md-elevation-1 goal-card completed">
+                    <div class="goal-header">
+                        <div class="goal-checkbox">
+                            <input type="checkbox" id="goal3" class="md-checkbox-input" checked onchange="updateGoalProgress(3)">
+                            <label for="goal3" class="md-checkbox-mark"></label>
+                        </div>
+                        <div class="goal-priority completed">Completed</div>
+                    </div>
+                    <div class="goal-content">
+                        <h3 class="goal-title">Update Investment Tracking</h3>
+                        <p class="goal-description">
+                            Log yesterday's investment transactions and update portfolio balances.
+                        </p>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill success" style="width: 100%;"></div>
+                            </div>
+                            <span class="progress-text">✓ Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="dashboard-section">
+            <h2 class="section-title">
+                <span class="material-icons">flash_on</span>
+                Quick Actions
+            </h2>
+            <div class="quick-actions-grid">
+                <button class="md-card md-elevation-1 quick-action-card" onclick="quickAddInvestment()">
+                    <div class="action-icon primary">
+                        <span class="material-icons">add_circle</span>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">Add Investment</h3>
+                        <p class="action-subtitle">Log new purchase</p>
+                    </div>
+                </button>
+
+                <button class="md-card md-elevation-1 quick-action-card" onclick="checkTaxOptimization()">
+                    <div class="action-icon warning">
+                        <span class="material-icons">analytics</span>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">Tax Check</h3>
+                        <p class="action-subtitle">Review optimization</p>
+                    </div>
+                </button>
+
+                <button class="md-card md-elevation-1 quick-action-card" onclick="reviewBudget()">
+                    <div class="action-icon success">
+                        <span class="material-icons">account_balance</span>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">Budget Review</h3>
+                        <p class="action-subtitle">Check spending</p>
+                    </div>
+                </button>
+
+                <button class="md-card md-elevation-1 quick-action-card" onclick="setReminder()">
+                    <div class="action-icon info">
+                        <span class="material-icons">alarm</span>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">Set Reminder</h3>
+                        <p class="action-subtitle">Financial task</p>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Motivational Quote -->
+        <section class="dashboard-section">
+            <div class="md-card md-elevation-1 motivation-card">
+                <div class="motivation-content">
+                    <div class="quote-icon">
+                        <span class="material-icons">format_quote</span>
+                    </div>
+                    <blockquote class="motivation-quote" id="dailyQuote">
+                        "Säästäminen on tulojen ja menojen välinen erotus. Mitä suurempi erotus, sitä parempi tulevaisuus."
+                    </blockquote>
+                    <cite class="motivation-author" id="quoteAuthor">
+                        Finnish saying about saving - "Saving is the difference between income and expenses. The greater the difference, the better the future."
+                    </cite>
+                </div>
+                <button class="md-button md-button-outlined" onclick="getNewQuote()">
+                    <span class="material-icons">refresh</span>
+                    New Quote
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="md-bottom-nav">
+        <a href="dashboard-material.html" class="md-bottom-nav-item">
+            <span class="material-icons">dashboard</span>
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item">
+            <span class="material-icons">pie_chart</span>
+            <span class="nav-label">Portfolio</span>
+        </a>
+        <a href="tax-analytics-material.html" class="md-bottom-nav-item">
+            <span class="material-icons">insights</span>
+            <span class="nav-label">Analytics</span>
+        </a>
+        <a href="#" class="md-bottom-nav-item active">
+            <span class="material-icons">wb_sunny</span>
+            <span class="nav-label">Check-in</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize ripple effects
+        document.querySelectorAll('.md-button, .md-icon-button, .goal-card, .quick-action-card').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('md-ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Drawer functionality
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            drawer.classList.toggle('open');
+            
+            // Add overlay
+            let overlay = document.querySelector('.drawer-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'drawer-overlay';
+                overlay.onclick = toggleDrawer;
+                document.body.appendChild(overlay);
+            }
+            overlay.classList.toggle('show');
+        }
+
+        // Search functionality
+        function toggleSearch() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
+            if (searchBar.style.display === 'block') {
+                searchBar.querySelector('input').focus();
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update icon
+            const icon = document.querySelector('.md-app-bar .md-icon-button:nth-last-child(1) .material-icons');
+            icon.textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+
+        // Notifications placeholder
+        function showNotifications() {
+            alert('Notifications coming soon!');
+        }
+
+        // Morning Check-in Functions
+        class MorningCheckin {
+            constructor() {
+                this.initializeDate();
+                this.loadPortfolioData();
+                this.loadGoals();
+                this.initializeGreeting();
+            }
+
+            initializeDate() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+            }
+
+            initializeGreeting() {
+                const hour = new Date().getHours();
+                let greeting, subtitle;
+
+                if (hour < 12) {
+                    greeting = "Good morning! 🌅";
+                    subtitle = "Let's start your day with a financial wellness check";
+                } else if (hour < 17) {
+                    greeting = "Good afternoon! ☀️";
+                    subtitle = "Time for a midday financial review";
+                } else {
+                    greeting = "Good evening! 🌆";
+                    subtitle = "Let's review your financial progress today";
+                }
+
+                document.getElementById('greetingTitle').textContent = greeting;
+                document.getElementById('greetingSubtitle').textContent = subtitle;
+            }
+
+            loadPortfolioData() {
+                // Get investment data from localStorage (Phase 1 integration)
+                const investmentData = this.getInvestmentData();
+                
+                // Calculate totals
+                const ostTotal = investmentData.ostInvestments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
+                const aotTotal = investmentData.aotInvestments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
+                const totalPortfolio = ostTotal + aotTotal;
+
+                // Update display
+                document.getElementById('totalPortfolio').textContent = `€${totalPortfolio.toLocaleString()}`;
+                document.getElementById('ostValue').textContent = `€${ostTotal.toLocaleString()}`;
+
+                // Simulate daily change (in real app, this would come from market data)
+                const dailyChangePercent = (Math.random() - 0.5) * 0.04; // -2% to +2%
+                const dailyChangeAmount = totalPortfolio * dailyChangePercent;
+                
+                const changeElement = document.getElementById('portfolioChange');
+                const isPositive = dailyChangeAmount >= 0;
+                
+                changeElement.className = `metric-change ${isPositive ? 'positive' : 'negative'}`;
+                changeElement.innerHTML = `
+                    <span class="material-icons">${isPositive ? 'trending_up' : 'trending_down'}</span>
+                    ${isPositive ? '+' : ''}€${Math.abs(dailyChangeAmount).toLocaleString()} (${dailyChangePercent > 0 ? '+' : ''}${(dailyChangePercent * 100).toFixed(2)}%)
+                `;
+            }
+
+            getInvestmentData() {
+                const defaultData = {
+                    ostInvestments: [
+                        { type: 'etf', symbol: 'VWCE', amount: 15000, currentValue: 16800 },
+                        { type: 'stock', symbol: 'MSFT', amount: 7500, currentValue: 8200 }
+                    ],
+                    aotInvestments: [
+                        { type: 'etf', symbol: 'VTI', amount: 45000, currentValue: 52000 },
+                        { type: 'stock', symbol: 'AAPL', amount: 25000, currentValue: 28500 },
+                        { type: 'stock', symbol: 'GOOGL', amount: 18000, currentValue: 19800 }
+                    ]
+                };
+
+                try {
+                    return JSON.parse(localStorage.getItem('investmentData')) || defaultData;
+                } catch {
+                    return defaultData;
+                }
+            }
+
+            loadGoals() {
+                // Load goals from localStorage or use defaults
+                const goals = this.getStoredGoals();
+                // Goals are already rendered in HTML, this would update them dynamically
+            }
+
+            getStoredGoals() {
+                const defaultGoals = [
+                    { id: 1, title: 'Review Monthly Expenses', progress: 0, completed: false, priority: 'high' },
+                    { id: 2, title: 'Research New ETF Options', progress: 25, completed: false, priority: 'medium' },
+                    { id: 3, title: 'Update Investment Tracking', progress: 100, completed: true, priority: 'completed' }
+                ];
+
+                try {
+                    return JSON.parse(localStorage.getItem('dailyGoals')) || defaultGoals;
+                } catch {
+                    return defaultGoals;
+                }
+            }
+
+            saveGoals(goals) {
+                localStorage.setItem('dailyGoals', JSON.stringify(goals));
+            }
+        }
+
+        // Goal Management Functions
+        function updateGoalProgress(goalId) {
+            const checkbox = document.getElementById(`goal${goalId}`);
+            const goalCard = checkbox.closest('.goal-card');
+            const progressFill = goalCard.querySelector('.progress-fill');
+            const progressText = goalCard.querySelector('.progress-text');
+            
+            if (checkbox.checked) {
+                goalCard.classList.add('completed');
+                progressFill.style.width = '100%';
+                progressFill.classList.add('success');
+                progressText.textContent = '✓ Completed';
+                
+                // Add completion animation
+                setTimeout(() => {
+                    goalCard.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        goalCard.style.transform = 'scale(1)';
+                    }, 200);
+                }, 100);
+            } else {
+                goalCard.classList.remove('completed');
+                progressFill.style.width = '0%';
+                progressFill.classList.remove('success');
+                progressText.textContent = '0% complete';
+            }
+        }
+
+        function startGoal(goalId) {
+            alert(`Starting goal ${goalId} - This would open the relevant task or guide.`);
+        }
+
+        function continueGoal(goalId) {
+            alert(`Continuing goal ${goalId} - This would resume the previous session.`);
+        }
+
+        function addNewGoal() {
+            alert('Add new goal - This would open a goal creation modal.');
+        }
+
+        // Quick Action Functions
+        function quickAddInvestment() {
+            // Route to dashboard investment modal
+            window.location.href = 'dashboard-material.html?openModal=investment';
+        }
+
+        function checkTaxOptimization() {
+            window.location.href = 'tax-analytics-material.html';
+        }
+
+        function reviewBudget() {
+            alert('Budget review - This would open budget analysis.');
+        }
+
+        function setReminder() {
+            alert('Set reminder - This would open reminder creation.');
+        }
+
+        // Insights Functions
+        function refreshInsights() {
+            // Simulate insight refresh
+            const insights = document.querySelectorAll('.insight-card');
+            insights.forEach(card => {
+                card.style.opacity = '0.5';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                }, 500);
+            });
+        }
+
+        // Motivational Quote Functions
+        const finnishQuotes = [
+            {
+                quote: "Säästäminen on tulojen ja menojen välinen erotus. Mitä suurempi erotus, sitä parempi tulevaisuus.",
+                translation: "Saving is the difference between income and expenses. The greater the difference, the better the future."
+            },
+            {
+                quote: "Raha ei tee onnelliseksi, mutta se antaa vapauden valita.",
+                translation: "Money doesn't make you happy, but it gives you the freedom to choose."
+            },
+            {
+                quote: "Sijoittaminen on kuin puun istuttamista - paras aika oli 20 vuotta sitten, toiseksi paras aika on nyt.",
+                translation: "Investing is like planting a tree - the best time was 20 years ago, the second best time is now."
+            },
+            {
+                quote: "Älä laita kaikkia munia samaan koriin.",
+                translation: "Don't put all your eggs in one basket. (Finnish investment wisdom)"
+            }
+        ];
+
+        function getNewQuote() {
+            const randomQuote = finnishQuotes[Math.floor(Math.random() * finnishQuotes.length)];
+            document.getElementById('dailyQuote').textContent = randomQuote.quote;
+            document.getElementById('quoteAuthor').textContent = randomQuote.translation;
+        }
+
+        // Initialize morning check-in
+        const morningCheckin = new MorningCheckin();
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any additional initialization here
+        });
+
+        // Scroll effects
+        window.addEventListener('scroll', () => {
+            const appBar = document.querySelector('.md-app-bar');
+            if (window.scrollY > 0) {
+                appBar.classList.add('md-elevation-4');
+            } else {
+                appBar.classList.remove('md-elevation-4');
+            }
+        });
+    </script>
+</body>
+</html>
