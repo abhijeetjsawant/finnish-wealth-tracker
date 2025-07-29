@@ -1,0 +1,183 @@
+/* Account Type Badges and Tax Analytics Styles */
+
+/* Account Badges */
+.account-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-left: 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.account-badge.ost {
+    background: #4CAF50;
+    color: white;
+}
+
+.account-badge.aot {
+    background: #2196F3;
+    color: white;
+}
+
+/* Tax Analytics Grid */
+.tax-analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tax-card.detailed {
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.tax-card.detailed h3 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.account-section {
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+}
+
+.account-section h4 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.account-section p {
+    margin: 5px 0;
+    color: var(--text-secondary);
+}
+
+.tax-warning {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.tax-info {
+    color: #4CAF50;
+    font-style: italic;
+}
+
+/* Tax Scenarios */
+.scenario {
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+}
+
+.scenario h4 {
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.scenario .total {
+    font-weight: bold;
+    color: #ff5252;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.scenario .after-tax {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 1.1em;
+    margin-top: 5px;
+}
+
+/* Optimization Tips */
+.optimization-tips {
+    list-style: none;
+    padding: 0;
+}
+
+.optimization-tips li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.optimization-tips li:last-child {
+    border-bottom: none;
+}
+
+/* Toast Notifications */
+.error-toast, .success-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+}
+
+.error-toast {
+    background: #f44336;
+    color: white;
+}
+
+.success-toast {
+    background: #4CAF50;
+    color: white;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from { 
+        transform: translateX(100%); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+}
+
+@keyframes slideOut {
+    from { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+    to { 
+        transform: translateX(100%); 
+        opacity: 0; 
+    }
+}
+
+/* Account Type Hint in Modal */
+#accountTypeHint {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .tax-card.detailed {
+    background: #1e1e1e;
+    border-color: #333;
+}
+
+[data-theme="dark"] .account-section {
+    background: #2a2a2a;
+}
+
+[data-theme="dark"] .scenario {
+    background: #2a2a2a;
+}
+
+[data-theme="dark"] .optimization-tips li {
+    border-color: #333;
+}

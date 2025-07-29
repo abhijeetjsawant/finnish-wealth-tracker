@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#2196F3">
+    <title>Finnish Wealth Tracker</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/finnish-features.css">
+    <link rel="stylesheet" href="css/account-features.css">
+    <link rel="stylesheet" href="css/bicultural-features.css">
+    <link rel="stylesheet" href="css/stock-search.css">
+    <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">☰</button>
+        
+        <!-- Header -->
+        <div class="header">
+            <h1>💶 Finnish Wealth Tracker</h1>
+            <div class="header-controls" id="headerControls">
+                <button class="btn btn-primary" onclick="openAddInvestmentModal()">
+                    + Add Investment
+                </button>
+                <button class="bicultural-toggle-btn" onclick="toggleBiculturalView()">
+                    🇮🇳🇫🇮 Bicultural
+                </button>
+                <button class="btn btn-secondary" onclick="showMorningCheckIn()">
+                    ☀️ Check-in
+                </button>
+                <button class="btn btn-secondary" onclick="showInvestmentBible()">
+                    📖 Bible
+                </button>
+                <button class="btn btn-secondary" onclick="exportData()">
+                    📥 Export
+                </button>
+                <button class="btn btn-secondary" onclick="importData()">
+                    📤 Import
+                </button>
+                <input type="file" id="importFile" style="display: none;" accept=".json" onchange="handleImport(event)">
+                <div class="theme-toggle" onclick="toggleTheme()" id="themeToggle"></div>
+            </div>
+        </div>
+
+        <!-- Wealth Phase Indicator -->
+        <div class="wealth-phase-section">
+            <div class="phase-progress">
+                <div class="phase-header">
+                    <h2>Your Wealth Journey</h2>
+                    <span class="phase-subtitle" id="phaseSubtitle">Building wealth despite 30%+ taxes</span>
+                </div>
+                <div class="phase-indicator">
+                    <div class="phase-bar">
+                        <div class="phase-fill" id="phaseFill"></div>
+                        <div class="phase-markers">
+                            <div class="phase-marker" style="left: 0%">
+                                <span class="marker-label">€0</span>
+                                <span class="marker-phase">Foundation</span>
+                            </div>
+                            <div class="phase-marker" style="left: 33%">
+                                <span class="marker-label">€50k</span>
+                                <span class="marker-phase">Growth</span>
+                            </div>
+                            <div class="phase-marker" style="left: 66%">
+                                <span class="marker-label">€200k</span>
+                                <span class="marker-phase">Optimization</span>
+                            </div>
+                            <div class="phase-marker" style="left: 100%">
+                                <span class="marker-label">€500k+</span>
+                                <span class="marker-phase">Freedom</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="current-phase-info">
+                        <h3 id="currentPhaseTitle">Foundation Phase</h3>
+                        <p id="currentPhaseDesc">Focus: Emergency fund + OST account + Low-cost index funds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finnish Tax Optimization Cards -->
+        <div class="tax-optimization-grid">
+            <div class="tax-card">
+                <div class="tax-icon">🏦</div>
+                <h4>OST Status</h4>
+                <div class="tax-value" id="ostValue">€0 / €50,000</div>
+                <div class="tax-progress">
+                    <div class="tax-progress-fill" id="ostProgress" style="width: 0%"></div>
+                </div>
+                <small class="tax-tip">Tax-deferred growth opportunity</small>
+            </div>
+            <div class="tax-card">
+                <div class="tax-icon">💸</div>
+                <h4>Effective Tax Rate</h4>
+                <div class="tax-value" id="effectiveTaxRate">0%</div>
+                <small class="tax-tip">Capital gains: 30-34%</small>
+            </div>
+            <div class="tax-card">
+                <div class="tax-icon">📊</div>
+                <h4>Tax Efficiency Score</h4>
+                <div class="tax-value" id="taxEfficiencyScore">0/10</div>
+                <small class="tax-tip">Higher = Better optimized</small>
+            </div>
+            <div class="tax-card">
+                <div class="tax-icon">✈️</div>
+                <h4>Geo-Arbitrage Ready</h4>
+                <div class="tax-value" id="geoArbitrageStatus">Not Yet</div>
+                <small class="tax-tip">€200k+ unlocks options</small>
+            </div>
+        </div>
+
+        <!-- Bicultural Dashboard -->
+        <div class="bicultural-dashboard" id="biculturalDashboard" style="display: none;">
+            <div class="bicultural-header">
+                <h3>🇮🇳🇫🇮 Bicultural Wealth View</h3>
+                <div class="currency-toggle">
+                    <button class="currency-btn active" onclick="toggleCurrency('EUR')">EUR</button>
+                    <button class="currency-btn" onclick="toggleCurrency('INR')">INR</button>
+                    <button class="currency-btn" onclick="toggleCurrency('BOTH')">Both</button>
+                </div>
+            </div>
+            <div class="bicultural-grid">
+                <div class="bicultural-card">
+                    <div class="card-icon">💱</div>
+                    <h4>Exchange Rate</h4>
+                    <div class="exchange-value" id="currentExchangeRate">Loading...</div>
+                    <div class="exchange-nudge" id="exchangeNudge"></div>
+                </div>
+                <div class="bicultural-card">
+                    <div class="card-icon">🏠</div>
+                    <h4>Family Wealth</h4>
+                    <div class="family-value" id="familyWealth">€0</div>
+                    <small>Personal + Family Assets</small>
+                </div>
+                <div class="bicultural-card">
+                    <div class="card-icon">🎯</div>
+                    <h4>Next Goal</h4>
+                    <div class="goal-value" id="nextGoal">-</div>
+                    <div class="goal-progress" id="goalProgress"></div>
+                </div>
+                <div class="bicultural-card">
+                    <div class="card-icon">📅</div>
+                    <h4>Festival Savings</h4>
+                    <div class="festival-value" id="festivalSavings">-</div>
+                    <small id="nextFestival">Next: -</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <h3>Total Portfolio Value</h3>
+                <div class="value" id="totalValue">€0</div>
+                <div class="change positive" id="totalChange">+0%</div>
+            </div>
+            <div class="metric-card">
+                <h3>Total Investment</h3>
+                <div class="value" id="totalInvestment">€0</div>
+            </div>
+            <div class="metric-card">
+                <h3>Unrealized Gains</h3>
+                <div class="value" id="totalReturns">€0</div>
+                <div class="change" id="returnPercentage">0%</div>
+            </div>
+            <div class="metric-card">
+                <h3>Best Performer</h3>
+                <div class="value" id="bestPerformer">-</div>
+                <div class="change positive" id="bestPerformerReturn">0%</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab" onclick="switchTab('stocks')">Stocks</button>
+            <button class="tab" onclick="switchTab('mutual-funds')">ETFs & Funds</button>
+            <button class="tab" onclick="switchTab('fixed-deposits')">Fixed Deposits</button>
+            <button class="tab" onclick="switchTab('other-assets')">Other Assets</button>
+            <button class="tab" onclick="switchTab('analytics')">Tax Analytics</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div id="overview" class="tab-content active">
+            <div class="section-card">
+                <h2>Portfolio Overview</h2>
+                <div class="allocation-chart">
+                    <canvas id="allocationChart"></canvas>
+                </div>
+                <div class="summary-grid" id="assetSummary">
+                </div>
+            </div>
+            <div class="section-card">
+                <h2>Performance History</h2>
+                <div class="performance-chart">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="stocks" class="tab-content">
+            <div class="section-card">
+                <h2>Stock Holdings</h2>
+                <div class="table-container">
+                    <table id="stocksTable">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Buy Price</th>
+                                <th>Current Price</th>
+                                <th>Investment</th>
+                                <th>Current Value</th>
+                                <th>Returns</th>
+                                <th>Return %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="mutual-funds" class="tab-content">
+            <div class="section-card">
+                <h2>ETF & Fund Holdings</h2>
+                <div class="table-container">
+                    <table id="mutualFundsTable">
+                        <thead>
+                            <tr>
+                                <th>Fund Name</th>
+                                <th>Category</th>
+                                <th>Units</th>
+                                <th>Buy NAV</th>
+                                <th>Current NAV</th>
+                                <th>Investment</th>
+                                <th>Current Value</th>
+                                <th>Returns</th>
+                                <th>XIRR %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="fixed-deposits" class="tab-content">
+            <div class="section-card">
+                <h2>Fixed Deposits</h2>
+                <div class="table-container">
+                    <table id="fixedDepositsTable">
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>Principal</th>
+                                <th>Interest Rate</th>
+                                <th>Start Date</th>
+                                <th>Maturity Date</th>
+                                <th>Days Remaining</th>
+                                <th>Maturity Value</th>
+                                <th>Interest Earned</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="other-assets" class="tab-content">
+            <div class="section-card">
+                <h2>Other Assets</h2>
+                <div class="asset-type-selector">
+                    <button class="asset-type-btn active" onclick="filterOtherAssets('all')">All</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('gold')">Gold</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('real-estate')">Real Estate</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('bonds')">Bonds</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('crypto')">Crypto</button>
+                </div>
+                <div class="table-container">
+                    <table id="otherAssetsTable">
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Type</th>
+                                <th>Quantity/Area</th>
+                                <th>Purchase Price</th>
+                                <th>Current Value</th>
+                                <th>Returns</th>
+                                <th>Return %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="analytics" class="tab-content">
+            <div class="section-card">
+                <h2>Portfolio Analytics</h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <h4>Average Return</h4>
+                        <p id="avgReturn">0%</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Risk Score</h4>
+                        <p id="riskScore">Low</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Diversification Score</h4>
+                        <p id="diversificationScore">0/10</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Liquidity Ratio</h4>
+                        <p id="liquidityRatio">0%</p>
+                    </div>
+                </div>
+                <div class="section-card" style="margin-top: 20px;">
+                    <h3>Sector Allocation</h3>
+                    <canvas id="sectorChart"></canvas>
+                </div>
+                <div class="section-card" style="margin-top: 20px;">
+                    <h3>Investment Timeline</h3>
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Morning Check-in Modal -->
+    <div id="morningCheckInModal" class="modal">
+        <div class="modal-content morning-checkin-content">
+            <div class="morning-checkin">
+                <h2>Good Morning! ☀️</h2>
+                <div class="overnight-summary">
+                    <p class="sleep-gains" id="sleepGains">Loading your portfolio...</p>
+                </div>
+                
+                <div class="worry-meter">
+                    <label>Your worry-free score today</label>
+                    <div class="score-bar">
+                        <div class="score-fill" id="worryScoreFill"></div>
+                    </div>
+                    <span class="score-text" id="worryScoreText">0/10</span>
+                </div>
+                
+                <div class="quick-insights" id="quickInsights">
+                    <!-- Insights will be dynamically generated -->
+                </div>
+                
+                <button onclick="startDay()" class="btn-start-day">
+                    Start My Day 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment Modal -->
+    <div id="investmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Investment</h2>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="investmentForm" onsubmit="saveInvestment(event)">
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select class="form-control" id="accountType" onchange="updateAccountTypeOptions()" required>
+                        <option value="">Select Account</option>
+                        <option value="aot">AOT - Regular Trading Account</option>
+                        <option value="ost">OST - Equity Savings Account (Tax-deferred)</option>
+                    </select>
+                    <small class="form-text" id="accountTypeHint"></small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Investment Type</label>
+                    <select class="form-control" id="investmentType" onchange="updateFormFields()" required>
+                        <option value="">Select Type</option>
+                        <option value="stock">Stock</option>
+                        <option value="mutual-fund">ETF/Fund</option>
+                        <option value="fixed-deposit">Fixed Deposit</option>
+                        <option value="indian-fd">Indian Fixed Deposit (NRI)</option>
+                        <option value="gold">Gold</option>
+                        <option value="real-estate">Real Estate</option>
+                        <option value="bonds">Bonds</option>
+                        <option value="crypto">Cryptocurrency</option>
+                    </select>
+                </div>
+
+                <div id="dynamicFields"></div>
+
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary">Save Investment</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Investment Bible Modal -->
+    <div id="investmentBibleModal" class="modal">
+        <div class="modal-content bible-modal-content">
+            <div class="modal-header">
+                <h2>📖 The Finnish Investment Bible</h2>
+                <span class="modal-close" onclick="closeBibleModal()">&times;</span>
+            </div>
+            <div class="bible-container">
+                <div class="bible-nav">
+                    <button class="bible-nav-btn active" onclick="switchBibleSection('reality')">Finnish Reality</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('commandments')">10 Commandments</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('phases')">Wealth Phases</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('psychology')">Psychology</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('tactics')">Tax Tactics</button>
+                </div>
+
+                <div id="reality" class="bible-section active">
+                    <h2>🇫🇮 The Finnish Financial Reality</h2>
+                    <div class="bible-quote">
+                        "In Finland, avoiding taxes legally is the highest return investment. Everything else comes second."
+                    </div>
+                    
+                    <h3>Your Unique Challenge</h3>
+                    <ul>
+                        <li><strong>Income Tax:</strong> Up to 57.5% (national + municipal + church)</li>
+                        <li><strong>Capital Gains:</strong> 30-34% (no tax-free allowances)</li>
+                        <li><strong>VAT:</strong> 24% on everything</li>
+                        <li><strong>Reality:</strong> You need 2x gross returns to match US net returns</li>
+                    </ul>
+
+                    <h3>The Brutal Math</h3>
+                    <p>To get €1,000 after-tax passive income:</p>
+                    <ol>
+                        <li>Need €1,470 in gains (after 32% avg tax)</li>
+                        <li>At 7% return = €21,000 invested</li>
+                        <li>To save €21k at 45% tax rate = €38,000 gross salary</li>
+                        <li><strong>Reality: Work €38k → €1k passive income</strong></li>
+                    </ol>
+                </div>
+
+                <div id="commandments" class="bible-section">
+                    <h2>📜 The 10 Commandments for Finnish Investors</h2>
+                    
+                    <div class="commandment">
+                        <h4>1. 🏦 Max Out OST First</h4>
+                        <p>Only tax-deferred vehicle available - use all €50,000</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>2. 📊 Accumulating > Distributing ETFs</h4>
+                        <p>Defer taxes as long as possible</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>3. 🏠 House = Forced Savings</h4>
+                        <p>Not investment (but no capital gains tax!)</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>4. 💶 Think After-Tax Always</h4>
+                        <p>€100 gain = €66-70 actual</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>5. 🌍 Global > Finnish</h4>
+                        <p>Avoid country concentration risk</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>6. 📅 Hold Forever</h4>
+                        <p>Selling = 30%+ tax haircut</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>7. 🚫 No US-Domiciled ETFs</h4>
+                        <p>UCITS only due to PRIIPS</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>8. 💰 Low-Cost Everything</h4>
+                        <p>Fees compound tax pain</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>9. 📱 Nordnet/Degiro Only</h4>
+                        <p>Avoid Finnish bank fees</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>10. 🎯 Simple = Survivable</h4>
+                        <p>Complex = tax nightmare</p>
+                    </div>
+                </div>
+
+                <div id="phases" class="bible-section">
+                    <h2>🎯 Your Wealth Building Phases</h2>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 1: Foundation (€0 - €50k)</h3>
+                        <ul>
+                            <li>Build 6-month emergency fund (yes, negative rates)</li>
+                            <li>Open and max OST account</li>
+                            <li>Start with €100+/month minimum</li>
+                            <li>100% global equity ETF (IWDA/VWCE)</li>
+                            <li>Automate everything</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 2: Growth (€50k - €200k)</h3>
+                        <ul>
+                            <li>Increase to 10-20% of gross salary</li>
+                            <li>Add second ETF (Europe/EM)</li>
+                            <li>Consider property savings (ASP)</li>
+                            <li>Start tax-loss harvesting</li>
+                            <li>Track behavior patterns</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 3: Optimization (€200k - €500k)</h3>
+                        <ul>
+                            <li>Diversify across asset classes</li>
+                            <li>Consider investment property</li>
+                            <li>Plan geographic arbitrage</li>
+                            <li>Forest investment option</li>
+                            <li>Investment loan strategy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 4: Freedom (€500k+)</h3>
+                        <ul>
+                            <li>Holding company structure</li>
+                            <li>International diversification</li>
+                            <li>Tax residency optimization</li>
+                            <li>Estate planning</li>
+                            <li>Wealth preservation focus</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="psychology" class="bible-section">
+                    <h2>🧠 The Psychology of Finnish Investing</h2>
+                    
+                    <h3>Your Brain's Investment Bugs</h3>
+                    <ul>
+                        <li><strong>Nokia Trauma:</strong> "What if it crashes 95% again?"</li>
+                        <li><strong>Tax Aversion:</strong> "30% gone immediately!"</li>
+                        <li><strong>Tall Poppy:</strong> "Don't stand out with wealth"</li>
+                        <li><strong>Safety Bias:</strong> "Just keep it in the bank"</li>
+                    </ul>
+                    
+                    <h3>The Graveyard Nobody Shows You</h3>
+                    <ul>
+                        <li>Finnish Day Traders: 89% lose (Nordnet data)</li>
+                        <li>Forex Traders: 96% lose everything</li>
+                        <li>Crypto investors: Many owe more tax than crypto worth</li>
+                        <li>Bank savings: Lost 20% to inflation over 10 years</li>
+                    </ul>
+                    
+                    <h3>Your Defense System</h3>
+                    <div class="commandment">
+                        <h4>Monthly Ritual (30 min max)</h4>
+                        <ul>
+                            <li>Check portfolio value</li>
+                            <li>Verify automatic investments</li>
+                            <li>Write one observation</li>
+                            <li>Close laptop</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>When Markets Crash</h4>
+                        <ul>
+                            <li>Remember 1990s: Finland survived -50% GDP</li>
+                            <li>Sisu mentality: This is where Finns excel</li>
+                            <li>Keep contributing to OST</li>
+                            <li>No panic tax-loss selling</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tactics" class="bible-section">
+                    <h2>💡 Advanced Tax Tactics</h2>
+                    
+                    <h3>Legal Tax Optimization</h3>
+                    <ul>
+                        <li><strong>December Harvest:</strong> Sell losers, rebuy in January</li>
+                        <li><strong>OST Strategy:</strong> High-growth assets only</li>
+                        <li><strong>Accumulating ETFs:</strong> No annual tax events</li>
+                        <li><strong>Investment Loan:</strong> Deductible interest (risky)</li>
+                    </ul>
+                    
+                    <h3>Geographic Arbitrage Options</h3>
+                    <ul>
+                        <li><strong>Portugal:</strong> NHR program, 10 years benefits</li>
+                        <li><strong>Malta:</strong> 15% tax on foreign income</li>
+                        <li><strong>Estonia:</strong> E-residency, clear crypto rules</li>
+                        <li><strong>Spain:</strong> Beckham law for high earners</li>
+                    </ul>
+                    
+                    <h3>Never Do This</h3>
+                    <ul>
+                        <li>Finnish "wealth managers" (2%+ fees)</li>
+                        <li>Complex products you don't understand</li>
+                        <li>"Tax-free" schemes (they're not)</li>
+                        <li>Day trading (89% lose)</li>
+                        <li>Timing the market</li>
+                    </ul>
+                    
+                    <div class="bible-quote">
+                        "Your tax rate is your biggest enemy. Geographic arbitrage is your secret weapon."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <button class="nav-item active" onclick="showMobileSection('dashboard')">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Dashboard</span>
+        </button>
+        <button class="nav-item" onclick="showMobileSection('portfolio')">
+            <span class="nav-icon">💼</span>
+            <span class="nav-label">Portfolio</span>
+        </button>
+        <button class="nav-item nav-add" onclick="openAddInvestmentModal()">
+            <span class="nav-icon">+</span>
+        </button>
+        <button class="nav-item" onclick="showMobileSection('analytics')">
+            <span class="nav-icon">📈</span>
+            <span class="nav-label">Analytics</span>
+        </button>
+        <button class="nav-item" onclick="showMobileSection('more')">
+            <span class="nav-icon">⋯</span>
+            <span class="nav-label">More</span>
+        </button>
+    </nav>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- JavaScript Files -->
+    <script src="js/utils.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/portfolio.js"></script>
+    <script src="js/finnish-features.js"></script>
+    <script src="js/bicultural-features.js"></script>
+    <script src="js/morning-checkin.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/stock-search.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/tables.js"></script>
+    <script src="js/mobile.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

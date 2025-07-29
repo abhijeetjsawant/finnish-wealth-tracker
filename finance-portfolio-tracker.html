@@ -1,0 +1,2692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Portfolio Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #7c3aed;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --bg-tertiary: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #d1d5db;
+            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border-color: #4b5563;
+            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: var(--bg-primary);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: var(--primary-color);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background-color: var(--bg-primary);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .metric-card h3 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .metric-card .value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-card .change {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .positive {
+            color: var(--success-color);
+        }
+
+        .negative {
+            color: var(--danger-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-card {
+            background-color: var(--bg-primary);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        tr:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        input[type="date"] {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background-color: var(--text-primary);
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .allocation-chart {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background-color: var(--bg-tertiary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle.dark {
+            background-color: var(--primary-color);
+        }
+
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle.dark::after {
+            transform: translateX(25px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        /* Morning Check-in Styles */
+        .morning-checkin-content {
+            background: transparent;
+            box-shadow: none;
+            max-width: 500px;
+        }
+
+        .morning-checkin {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .morning-checkin h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .overnight-summary {
+            margin: 20px 0;
+        }
+
+        .sleep-gains {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .sleep-gains .amount {
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        .worry-meter {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .worry-meter label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .score-bar {
+            height: 24px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: #10b981;
+            transition: width 1.5s ease;
+            border-radius: 12px;
+        }
+
+        .score-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .quick-insights {
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .insight-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .insight-icon {
+            font-size: 24px;
+        }
+
+        .insight-text {
+            flex: 1;
+            font-size: 15px;
+            opacity: 0.95;
+        }
+
+        .btn-start-day {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-start-day:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Softer colors for positive/negative */
+        .positive {
+            color: #059669;
+        }
+
+        .negative {
+            color: #dc2626;
+            opacity: 0.85;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .section-card {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+
+        .performance-chart {
+            margin: 20px 0;
+        }
+
+        .asset-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .asset-type-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .asset-type-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .summary-item {
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .summary-item h4 {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .summary-item p {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Wealth Phase Styles */
+        .wealth-phase-section {
+            background-color: var(--bg-primary);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .phase-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .phase-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .phase-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .phase-indicator {
+            margin-bottom: 20px;
+        }
+
+        .phase-bar {
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .phase-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #2563eb 50%, #7c3aed 100%);
+            border-radius: 20px;
+            transition: width 1.5s ease;
+            position: relative;
+        }
+
+        .phase-markers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .phase-marker {
+            position: absolute;
+            top: -30px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateX(-50%);
+        }
+
+        .marker-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .marker-phase {
+            font-size: 12px;
+            color: var(--text-secondary);
+            position: absolute;
+            bottom: -25px;
+            white-space: nowrap;
+        }
+
+        .phase-marker::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 2px;
+            height: 40px;
+            background: var(--border-color);
+        }
+
+        .current-phase-info {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+
+        .current-phase-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .current-phase-info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Tax Optimization Grid */
+        .tax-optimization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tax-card {
+            background-color: var(--bg-primary);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .tax-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .tax-card h4 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .tax-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .tax-progress {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .tax-progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            transition: width 0.5s ease;
+        }
+
+        .tax-tip {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Investment Bible Styles */
+        .bible-modal-content {
+            max-width: 900px;
+            height: 90vh;
+            overflow-y: auto;
+        }
+
+        .bible-container {
+            padding: 40px;
+        }
+
+        .bible-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .bible-nav-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .bible-nav-btn.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .bible-section {
+            display: none;
+        }
+
+        .bible-section.active {
+            display: block;
+        }
+
+        .bible-quote {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-left: 4px solid var(--primary-color);
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .commandment {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .commandment h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .phase-guide {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .phase-guide h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .phase-guide ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .phase-guide li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .phase-guide li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tax-optimization-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .phase-marker {
+                font-size: 12px;
+            }
+            
+            .marker-phase {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💶 Finnish Wealth Tracker</h1>
+            <div class="header-controls">
+                <button class="btn btn-primary" onclick="openAddInvestmentModal()">
+                    + Add Investment
+                </button>
+                <button class="btn btn-secondary" onclick="showMorningCheckIn()">
+                    ☀️ Check-in
+                </button>
+                <button class="btn btn-secondary" onclick="showInvestmentBible()">
+                    📖 Bible
+                </button>
+                <button class="btn btn-secondary" onclick="exportData()">
+                    📥 Export
+                </button>
+                <button class="btn btn-secondary" onclick="importData()">
+                    📤 Import
+                </button>
+                <input type="file" id="importFile" style="display: none;" accept=".json" onchange="handleImport(event)">
+                <div class="theme-toggle" onclick="toggleTheme()" id="themeToggle"></div>
+            </div>
+        </div>
+
+        <!-- Wealth Phase Indicator -->
+        <div class="wealth-phase-section">
+            <div class="phase-progress">
+                <div class="phase-header">
+                    <h2>Your Wealth Journey</h2>
+                    <span class="phase-subtitle" id="phaseSubtitle">Building wealth despite 30%+ taxes</span>
+                </div>
+                <div class="phase-indicator">
+                    <div class="phase-bar">
+                        <div class="phase-fill" id="phaseFill"></div>
+                        <div class="phase-markers">
+                            <div class="phase-marker" style="left: 0%">
+                                <span class="marker-label">€0</span>
+                                <span class="marker-phase">Foundation</span>
+                            </div>
+                            <div class="phase-marker" style="left: 33%">
+                                <span class="marker-label">€50k</span>
+                                <span class="marker-phase">Growth</span>
+                            </div>
+                            <div class="phase-marker" style="left: 66%">
+                                <span class="marker-label">€200k</span>
+                                <span class="marker-phase">Optimization</span>
+                            </div>
+                            <div class="phase-marker" style="left: 100%">
+                                <span class="marker-label">€500k+</span>
+                                <span class="marker-phase">Freedom</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="current-phase-info">
+                        <h3 id="currentPhaseTitle">Foundation Phase</h3>
+                        <p id="currentPhaseDesc">Focus: Emergency fund + OST account + Low-cost index funds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finnish Tax Optimization Cards -->
+        <div class="tax-optimization-grid">
+            <div class="tax-card">
+                <div class="tax-icon">🏦</div>
+                <h4>OST Status</h4>
+                <div class="tax-value" id="ostValue">€0 / €50,000</div>
+                <div class="tax-progress">
+                    <div class="tax-progress-fill" id="ostProgress" style="width: 0%"></div>
+                </div>
+                <small class="tax-tip">Tax-deferred growth opportunity</small>
+            </div>
+            <div class="tax-card">
+                <div class="tax-icon">💸</div>
+                <h4>Effective Tax Rate</h4>
+                <div class="tax-value" id="effectiveTaxRate">0%</div>
+                <small class="tax-tip">Capital gains: 30-34%</small>
+            </div>
+            <div class="tax-card">
+                <div class="tax-icon">📊</div>
+                <h4>Tax Efficiency Score</h4>
+                <div class="tax-value" id="taxEfficiencyScore">0/10</div>
+                <small class="tax-tip">Higher = Better optimized</small>
+            </div>
+            <div class="tax-card">
+                <div class="tax-icon">✈️</div>
+                <h4>Geo-Arbitrage Ready</h4>
+                <div class="tax-value" id="geoArbitrageStatus">Not Yet</div>
+                <small class="tax-tip">€200k+ unlocks options</small>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <h3>Total Portfolio Value</h3>
+                <div class="value" id="totalValue">€0</div>
+                <div class="change positive" id="totalChange">+0%</div>
+            </div>
+            <div class="metric-card">
+                <h3>Total Investment</h3>
+                <div class="value" id="totalInvestment">€0</div>
+            </div>
+            <div class="metric-card">
+                <h3>After-Tax Returns</h3>
+                <div class="value" id="totalReturns">€0</div>
+                <div class="change" id="returnPercentage">0%</div>
+            </div>
+            <div class="metric-card">
+                <h3>Best Performer</h3>
+                <div class="value" id="bestPerformer">-</div>
+                <div class="change positive" id="bestPerformerReturn">0%</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab" onclick="switchTab('stocks')">Stocks</button>
+            <button class="tab" onclick="switchTab('mutual-funds')">ETFs & Funds</button>
+            <button class="tab" onclick="switchTab('fixed-deposits')">Fixed Deposits</button>
+            <button class="tab" onclick="switchTab('other-assets')">Other Assets</button>
+            <button class="tab" onclick="switchTab('analytics')">Tax Analytics</button>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="section-card">
+                <h2>Portfolio Overview</h2>
+                <div class="allocation-chart">
+                    <canvas id="allocationChart"></canvas>
+                </div>
+                <div class="summary-grid" id="assetSummary">
+                </div>
+            </div>
+            <div class="section-card">
+                <h2>Performance History</h2>
+                <div class="performance-chart">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="stocks" class="tab-content">
+            <div class="section-card">
+                <h2>Stock Holdings</h2>
+                <div class="table-container">
+                    <table id="stocksTable">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Buy Price</th>
+                                <th>Current Price</th>
+                                <th>Investment</th>
+                                <th>Current Value</th>
+                                <th>Returns</th>
+                                <th>Return %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="mutual-funds" class="tab-content">
+            <div class="section-card">
+                <h2>Mutual Fund Holdings</h2>
+                <div class="table-container">
+                    <table id="mutualFundsTable">
+                        <thead>
+                            <tr>
+                                <th>Fund Name</th>
+                                <th>Category</th>
+                                <th>Units</th>
+                                <th>Buy NAV</th>
+                                <th>Current NAV</th>
+                                <th>Investment</th>
+                                <th>Current Value</th>
+                                <th>Returns</th>
+                                <th>XIRR %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="fixed-deposits" class="tab-content">
+            <div class="section-card">
+                <h2>Fixed Deposits</h2>
+                <div class="table-container">
+                    <table id="fixedDepositsTable">
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>Principal</th>
+                                <th>Interest Rate</th>
+                                <th>Start Date</th>
+                                <th>Maturity Date</th>
+                                <th>Days Remaining</th>
+                                <th>Maturity Value</th>
+                                <th>Interest Earned</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="other-assets" class="tab-content">
+            <div class="section-card">
+                <h2>Other Assets</h2>
+                <div class="asset-type-selector">
+                    <button class="asset-type-btn active" onclick="filterOtherAssets('all')">All</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('gold')">Gold</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('real-estate')">Real Estate</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('bonds')">Bonds</button>
+                    <button class="asset-type-btn" onclick="filterOtherAssets('crypto')">Crypto</button>
+                </div>
+                <div class="table-container">
+                    <table id="otherAssetsTable">
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Type</th>
+                                <th>Quantity/Area</th>
+                                <th>Purchase Price</th>
+                                <th>Current Value</th>
+                                <th>Returns</th>
+                                <th>Return %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="analytics" class="tab-content">
+            <div class="section-card">
+                <h2>Portfolio Analytics</h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <h4>Average Return</h4>
+                        <p id="avgReturn">0%</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Risk Score</h4>
+                        <p id="riskScore">Low</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Diversification Score</h4>
+                        <p id="diversificationScore">0/10</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Liquidity Ratio</h4>
+                        <p id="liquidityRatio">0%</p>
+                    </div>
+                </div>
+                <div class="section-card" style="margin-top: 20px;">
+                    <h3>Sector Allocation</h3>
+                    <canvas id="sectorChart"></canvas>
+                </div>
+                <div class="section-card" style="margin-top: 20px;">
+                    <h3>Investment Timeline</h3>
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Morning Check-in Modal -->
+    <div id="morningCheckInModal" class="modal">
+        <div class="modal-content morning-checkin-content">
+            <div class="morning-checkin">
+                <h2>Good Morning! ☀️</h2>
+                <div class="overnight-summary">
+                    <p class="sleep-gains" id="sleepGains">Loading your portfolio...</p>
+                </div>
+                
+                <div class="worry-meter">
+                    <label>Your worry-free score today</label>
+                    <div class="score-bar">
+                        <div class="score-fill" id="worryScoreFill"></div>
+                    </div>
+                    <span class="score-text" id="worryScoreText">0/10</span>
+                </div>
+                
+                <div class="quick-insights" id="quickInsights">
+                    <!-- Insights will be dynamically generated -->
+                </div>
+                
+                <button onclick="startDay()" class="btn-start-day">
+                    Start My Day 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="investmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Investment</h2>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="investmentForm" onsubmit="saveInvestment(event)">
+                <div class="form-group">
+                    <label>Investment Type</label>
+                    <select class="form-control" id="investmentType" onchange="updateFormFields()" required>
+                        <option value="">Select Type</option>
+                        <option value="stock">Stock</option>
+                        <option value="mutual-fund">Mutual Fund</option>
+                        <option value="fixed-deposit">Fixed Deposit</option>
+                        <option value="gold">Gold</option>
+                        <option value="real-estate">Real Estate</option>
+                        <option value="bonds">Bonds</option>
+                        <option value="crypto">Cryptocurrency</option>
+                    </select>
+                </div>
+
+                <div id="dynamicFields"></div>
+
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary">Save Investment</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Investment Bible Modal -->
+    <div id="investmentBibleModal" class="modal">
+        <div class="modal-content bible-modal-content">
+            <div class="modal-header">
+                <h2>📖 The Finnish Investment Bible</h2>
+                <span class="modal-close" onclick="closeBibleModal()">&times;</span>
+            </div>
+            <div class="bible-container">
+                <div class="bible-nav">
+                    <button class="bible-nav-btn active" onclick="switchBibleSection('reality')">Finnish Reality</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('commandments')">10 Commandments</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('phases')">Wealth Phases</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('psychology')">Psychology</button>
+                    <button class="bible-nav-btn" onclick="switchBibleSection('tactics')">Tax Tactics</button>
+                </div>
+
+                <div id="reality" class="bible-section active">
+                    <h2>🇫🇮 The Finnish Financial Reality</h2>
+                    <div class="bible-quote">
+                        "In Finland, avoiding taxes legally is the highest return investment. Everything else comes second."
+                    </div>
+                    
+                    <h3>Your Unique Challenge</h3>
+                    <ul>
+                        <li><strong>Income Tax:</strong> Up to 57.5% (national + municipal + church)</li>
+                        <li><strong>Capital Gains:</strong> 30-34% (no tax-free allowances)</li>
+                        <li><strong>VAT:</strong> 24% on everything</li>
+                        <li><strong>Reality:</strong> You need 2x gross returns to match US net returns</li>
+                    </ul>
+
+                    <h3>The Brutal Math</h3>
+                    <p>To get €1,000 after-tax passive income:</p>
+                    <ol>
+                        <li>Need €1,470 in gains (after 32% avg tax)</li>
+                        <li>At 7% return = €21,000 invested</li>
+                        <li>To save €21k at 45% tax rate = €38,000 gross salary</li>
+                        <li><strong>Reality: Work €38k → €1k passive income</strong></li>
+                    </ol>
+                </div>
+
+                <div id="commandments" class="bible-section">
+                    <h2>📜 The 10 Commandments for Finnish Investors</h2>
+                    
+                    <div class="commandment">
+                        <h4>1. 🏦 Max Out OST First</h4>
+                        <p>Only tax-deferred vehicle available - use all €50,000</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>2. 📊 Accumulating > Distributing ETFs</h4>
+                        <p>Defer taxes as long as possible</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>3. 🏠 House = Forced Savings</h4>
+                        <p>Not investment (but no capital gains tax!)</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>4. 💶 Think After-Tax Always</h4>
+                        <p>€100 gain = €66-70 actual</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>5. 🌍 Global > Finnish</h4>
+                        <p>Avoid country concentration risk</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>6. 📅 Hold Forever</h4>
+                        <p>Selling = 30%+ tax haircut</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>7. 🚫 No US-Domiciled ETFs</h4>
+                        <p>UCITS only due to PRIIPS</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>8. 💰 Low-Cost Everything</h4>
+                        <p>Fees compound tax pain</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>9. 📱 Nordnet/Degiro Only</h4>
+                        <p>Avoid Finnish bank fees</p>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>10. 🎯 Simple = Survivable</h4>
+                        <p>Complex = tax nightmare</p>
+                    </div>
+                </div>
+
+                <div id="phases" class="bible-section">
+                    <h2>🎯 Your Wealth Building Phases</h2>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 1: Foundation (€0 - €50k)</h3>
+                        <ul>
+                            <li>Build 6-month emergency fund (yes, negative rates)</li>
+                            <li>Open and max OST account</li>
+                            <li>Start with €100+/month minimum</li>
+                            <li>100% global equity ETF (IWDA/VWCE)</li>
+                            <li>Automate everything</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 2: Growth (€50k - €200k)</h3>
+                        <ul>
+                            <li>Increase to 10-20% of gross salary</li>
+                            <li>Add second ETF (Europe/EM)</li>
+                            <li>Consider property savings (ASP)</li>
+                            <li>Start tax-loss harvesting</li>
+                            <li>Track behavior patterns</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 3: Optimization (€200k - €500k)</h3>
+                        <ul>
+                            <li>Diversify across asset classes</li>
+                            <li>Consider investment property</li>
+                            <li>Plan geographic arbitrage</li>
+                            <li>Forest investment option</li>
+                            <li>Investment loan strategy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-guide">
+                        <h3>Phase 4: Freedom (€500k+)</h3>
+                        <ul>
+                            <li>Holding company structure</li>
+                            <li>International diversification</li>
+                            <li>Tax residency optimization</li>
+                            <li>Estate planning</li>
+                            <li>Wealth preservation focus</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="psychology" class="bible-section">
+                    <h2>🧠 The Psychology of Finnish Investing</h2>
+                    
+                    <h3>Your Brain's Investment Bugs</h3>
+                    <ul>
+                        <li><strong>Nokia Trauma:</strong> "What if it crashes 95% again?"</li>
+                        <li><strong>Tax Aversion:</strong> "30% gone immediately!"</li>
+                        <li><strong>Tall Poppy:</strong> "Don't stand out with wealth"</li>
+                        <li><strong>Safety Bias:</strong> "Just keep it in the bank"</li>
+                    </ul>
+                    
+                    <h3>The Graveyard Nobody Shows You</h3>
+                    <ul>
+                        <li>Finnish Day Traders: 89% lose (Nordnet data)</li>
+                        <li>Forex Traders: 96% lose everything</li>
+                        <li>Crypto investors: Many owe more tax than crypto worth</li>
+                        <li>Bank savings: Lost 20% to inflation over 10 years</li>
+                    </ul>
+                    
+                    <h3>Your Defense System</h3>
+                    <div class="commandment">
+                        <h4>Monthly Ritual (30 min max)</h4>
+                        <ul>
+                            <li>Check portfolio value</li>
+                            <li>Verify automatic investments</li>
+                            <li>Write one observation</li>
+                            <li>Close laptop</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="commandment">
+                        <h4>When Markets Crash</h4>
+                        <ul>
+                            <li>Remember 1990s: Finland survived -50% GDP</li>
+                            <li>Sisu mentality: This is where Finns excel</li>
+                            <li>Keep contributing to OST</li>
+                            <li>No panic tax-loss selling</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tactics" class="bible-section">
+                    <h2>💡 Advanced Tax Tactics</h2>
+                    
+                    <h3>Legal Tax Optimization</h3>
+                    <ul>
+                        <li><strong>December Harvest:</strong> Sell losers, rebuy in January</li>
+                        <li><strong>OST Strategy:</strong> High-growth assets only</li>
+                        <li><strong>Accumulating ETFs:</strong> No annual tax events</li>
+                        <li><strong>Investment Loan:</strong> Deductible interest (risky)</li>
+                    </ul>
+                    
+                    <h3>Geographic Arbitrage Options</h3>
+                    <ul>
+                        <li><strong>Portugal:</strong> NHR program, 10 years benefits</li>
+                        <li><strong>Malta:</strong> 15% tax on foreign income</li>
+                        <li><strong>Estonia:</strong> E-residency, clear crypto rules</li>
+                        <li><strong>Spain:</strong> Beckham law for high earners</li>
+                    </ul>
+                    
+                    <h3>Never Do This</h3>
+                    <ul>
+                        <li>Finnish "wealth managers" (2%+ fees)</li>
+                        <li>Complex products you don't understand</li>
+                        <li>"Tax-free" schemes (they're not)</li>
+                        <li>Day trading (89% lose)</li>
+                        <li>Timing the market</li>
+                    </ul>
+                    
+                    <div class="bible-quote">
+                        "Your tax rate is your biggest enemy. Geographic arbitrage is your secret weapon."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let portfolio = {
+            stocks: [],
+            mutualFunds: [],
+            fixedDeposits: [],
+            otherAssets: []
+        };
+
+        let charts = {};
+        let editingId = null;
+        let editingType = null;
+
+        function initializeApp() {
+            loadPortfolio();
+            updateDashboard();
+            updateWealthPhase();
+            updateTaxOptimization();
+            renderAllTables();
+            initializeCharts();
+            updateTheme();
+            checkMorningCheckIn();
+        }
+
+        // Morning Check-in Functions
+        function checkMorningCheckIn() {
+            const lastCheckIn = localStorage.getItem('lastCheckIn');
+            const today = new Date().toDateString();
+            
+            if (!lastCheckIn || lastCheckIn !== today) {
+                setTimeout(() => {
+                    showMorningCheckIn();
+                }, 1000); // Show after 1 second
+            }
+        }
+
+        function showMorningCheckIn() {
+            const portfolio = calculatePortfolioSummary();
+            const worryScore = calculateWorryFreeScore();
+            const insights = generateQuickInsights();
+            
+            // Update modal content
+            const sleepGainsElement = document.getElementById('sleepGains');
+            const overnightGain = Math.random() * 500 - 100; // Simulated for now
+            
+            if (overnightGain >= 0) {
+                sleepGainsElement.innerHTML = `Your portfolio grew <span class="amount">€${Math.abs(overnightGain).toLocaleString('fi-FI')}</span> while you slept 😴`;
+            } else {
+                sleepGainsElement.innerHTML = `Market movements overnight: <span class="amount">€${Math.abs(overnightGain).toLocaleString('fi-FI')}</span> - perfectly normal volatility`;
+            }
+            
+            // Update worry score
+            document.getElementById('worryScoreFill').style.width = `${worryScore * 10}%`;
+            document.getElementById('worryScoreText').textContent = `${worryScore}/10`;
+            
+            // Update insights
+            document.getElementById('quickInsights').innerHTML = insights;
+            
+            // Show modal
+            document.getElementById('morningCheckInModal').style.display = 'block';
+        }
+
+        function calculateWorryFreeScore() {
+            let score = 5; // Baseline score
+            
+            // Check portfolio diversity
+            const assetTypes = new Set();
+            if (portfolio.stocks.length > 0) assetTypes.add('stocks');
+            if (portfolio.mutualFunds.length > 0) assetTypes.add('mf');
+            if (portfolio.fixedDeposits.length > 0) assetTypes.add('fd');
+            if (portfolio.otherAssets.length > 0) assetTypes.add('other');
+            
+            if (assetTypes.size >= 3) score += 2;
+            else if (assetTypes.size >= 2) score += 1;
+            
+            // Check if has fixed deposits (emergency fund proxy)
+            if (portfolio.fixedDeposits.length > 0) score += 1;
+            
+            // Check portfolio size
+            const totalValue = calculateTotalValue();
+            if (totalValue > 500000) score += 1;
+            if (totalValue > 1000000) score += 1;
+            
+            return Math.min(score, 10);
+        }
+
+        function calculateTotalValue() {
+            let total = 0;
+            
+            portfolio.stocks.forEach(stock => {
+                total += stock.quantity * stock.currentPrice;
+            });
+            
+            portfolio.mutualFunds.forEach(mf => {
+                total += mf.units * mf.currentNAV;
+            });
+            
+            portfolio.fixedDeposits.forEach(fd => {
+                total += calculateMaturityValue(fd);
+            });
+            
+            portfolio.otherAssets.forEach(asset => {
+                total += asset.currentValue;
+            });
+            
+            return total;
+        }
+
+        function generateQuickInsights() {
+            const insights = [];
+            const totalValue = calculateTotalValue();
+            
+            // Best performer
+            let bestPerformer = null;
+            let bestReturn = -Infinity;
+            
+            portfolio.stocks.forEach(stock => {
+                const returnPercent = ((stock.currentPrice - stock.buyPrice) / stock.buyPrice) * 100;
+                if (returnPercent > bestReturn) {
+                    bestReturn = returnPercent;
+                    bestPerformer = { name: stock.symbol, return: returnPercent, type: 'stock' };
+                }
+            });
+            
+            portfolio.mutualFunds.forEach(mf => {
+                const returnPercent = ((mf.currentNAV - mf.buyNAV) / mf.buyNAV) * 100;
+                if (returnPercent > bestReturn) {
+                    bestReturn = returnPercent;
+                    bestPerformer = { name: mf.name, return: returnPercent, type: 'mf' };
+                }
+            });
+            
+            if (bestPerformer && bestReturn > 0) {
+                insights.push({
+                    icon: '⭐',
+                    text: `${bestPerformer.name} is your star performer (+${bestReturn.toFixed(1)}%)`
+                });
+            }
+            
+            // Diversification insight
+            const assetTypes = new Set();
+            if (portfolio.stocks.length > 0) assetTypes.add('stocks');
+            if (portfolio.mutualFunds.length > 0) assetTypes.add('mf');
+            if (portfolio.fixedDeposits.length > 0) assetTypes.add('fd');
+            if (portfolio.otherAssets.length > 0) assetTypes.add('other');
+            
+            if (assetTypes.size >= 3) {
+                insights.push({
+                    icon: '🛡️',
+                    text: 'Well diversified portfolio - you\'re protected!'
+                });
+            } else {
+                insights.push({
+                    icon: '💡',
+                    text: 'Consider diversifying into more asset types'
+                });
+            }
+            
+            // Action needed
+            const hasRedInvestments = portfolio.stocks.some(s => s.currentPrice < s.buyPrice) ||
+                                     portfolio.mutualFunds.some(mf => mf.currentNAV < mf.buyNAV);
+            
+            if (!hasRedInvestments) {
+                insights.push({
+                    icon: '✨',
+                    text: 'No action needed today - enjoy your day!'
+                });
+            } else {
+                insights.push({
+                    icon: '💪',
+                    text: 'Some investments are down - stay the course!'
+                });
+            }
+            
+            return insights.map(insight => `
+                <div class="insight-item">
+                    <span class="insight-icon">${insight.icon}</span>
+                    <span class="insight-text">${insight.text}</span>
+                </div>
+            `).join('');
+        }
+
+        function calculatePortfolioSummary() {
+            // This would calculate real portfolio metrics
+            return {
+                totalValue: calculateTotalValue(),
+                totalInvestment: 0, // Calculate from portfolio
+                dayChange: 0 // Calculate from portfolio
+            };
+        }
+
+        function startDay() {
+            // Save check-in date
+            localStorage.setItem('lastCheckIn', new Date().toDateString());
+            
+            // Close modal
+            document.getElementById('morningCheckInModal').style.display = 'none';
+            
+            // Track behavior
+            trackBehavior('morning-checkin-completed');
+        }
+
+        function trackBehavior(action) {
+            // Enhanced behavior tracking
+            const behaviors = JSON.parse(localStorage.getItem('behaviors') || '[]');
+            behaviors.push({
+                action: action,
+                timestamp: new Date().toISOString(),
+                portfolioValue: calculateTotalValue()
+            });
+            localStorage.setItem('behaviors', JSON.stringify(behaviors));
+        }
+
+        // Finnish-specific functions
+        function updateWealthPhase() {
+            const totalValue = calculateTotalValue();
+            let phase, phasePercent, phaseTitle, phaseDesc;
+            
+            if (totalValue < 50000) {
+                phase = 1;
+                phasePercent = (totalValue / 50000) * 33;
+                phaseTitle = "Foundation Phase";
+                phaseDesc = "Focus: Emergency fund + OST account + Low-cost index funds";
+            } else if (totalValue < 200000) {
+                phase = 2;
+                phasePercent = 33 + ((totalValue - 50000) / 150000) * 33;
+                phaseTitle = "Growth Phase";
+                phaseDesc = "Focus: Diversification + Tax optimization + Income growth";
+            } else if (totalValue < 500000) {
+                phase = 3;
+                phasePercent = 66 + ((totalValue - 200000) / 300000) * 34;
+                phaseTitle = "Optimization Phase";
+                phaseDesc = "Focus: Geographic arbitrage planning + Alternative investments";
+            } else {
+                phase = 4;
+                phasePercent = 100;
+                phaseTitle = "Freedom Phase";
+                phaseDesc = "Focus: Wealth preservation + International diversification";
+            }
+            
+            document.getElementById('phaseFill').style.width = `${phasePercent}%`;
+            document.getElementById('currentPhaseTitle').textContent = phaseTitle;
+            document.getElementById('currentPhaseDesc').textContent = phaseDesc;
+            
+            // Update geo-arbitrage status
+            const geoStatus = totalValue >= 200000 ? "Ready to explore" : "Not Yet";
+            document.getElementById('geoArbitrageStatus').textContent = geoStatus;
+        }
+        
+        function updateTaxOptimization() {
+            const totalValue = calculateTotalValue();
+            const totalInvestment = calculateTotalInvestment();
+            const totalReturns = totalValue - totalInvestment;
+            
+            // Calculate OST value (simplified - you'd track this separately in real app)
+            const ostValue = Math.min(totalValue * 0.3, 50000); // Assume 30% in OST
+            const ostPercent = (ostValue / 50000) * 100;
+            
+            document.getElementById('ostValue').textContent = `€${formatNumber(ostValue)} / €50,000`;
+            document.getElementById('ostProgress').style.width = `${ostPercent}%`;
+            
+            // Calculate effective tax rate
+            const capitalGainsTax = totalReturns > 30000 ? 34 : 30;
+            const afterTaxReturns = totalReturns * (1 - capitalGainsTax / 100);
+            const effectiveTaxRate = totalReturns > 0 ? ((totalReturns - afterTaxReturns) / totalReturns * 100) : 0;
+            
+            document.getElementById('effectiveTaxRate').textContent = `${effectiveTaxRate.toFixed(1)}%`;
+            
+            // Tax efficiency score
+            let taxScore = 5; // Base score
+            if (ostValue >= 50000) taxScore += 2;
+            if (hasAccumulatingETFs()) taxScore += 2;
+            if (hasLowCostFunds()) taxScore += 1;
+            
+            document.getElementById('taxEfficiencyScore').textContent = `${taxScore}/10`;
+        }
+        
+        function hasAccumulatingETFs() {
+            // Check if portfolio has accumulating ETFs (simplified)
+            return portfolio.mutualFunds.some(mf => 
+                mf.name.toLowerCase().includes('acc') || 
+                mf.name.toLowerCase().includes('accumulating')
+            );
+        }
+        
+        function hasLowCostFunds() {
+            // Check if funds have low expense ratios (simplified)
+            return true; // Simplified for demo
+        }
+        
+        function calculateTotalInvestment() {
+            let total = 0;
+            
+            portfolio.stocks.forEach(stock => {
+                total += stock.quantity * stock.buyPrice;
+            });
+            
+            portfolio.mutualFunds.forEach(mf => {
+                total += mf.units * mf.buyNAV;
+            });
+            
+            portfolio.fixedDeposits.forEach(fd => {
+                total += fd.principal;
+            });
+            
+            portfolio.otherAssets.forEach(asset => {
+                total += asset.purchasePrice;
+            });
+            
+            return total;
+        }
+        
+        function showInvestmentBible() {
+            document.getElementById('investmentBibleModal').style.display = 'block';
+        }
+        
+        function closeBibleModal() {
+            document.getElementById('investmentBibleModal').style.display = 'none';
+        }
+        
+        function switchBibleSection(section) {
+            document.querySelectorAll('.bible-nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.bible-section').forEach(sec => sec.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(section).classList.add('active');
+        }
+
+        function loadPortfolio() {
+            const saved = localStorage.getItem('portfolio');
+            if (saved) {
+                portfolio = JSON.parse(saved);
+            }
+        }
+
+        function savePortfolio() {
+            localStorage.setItem('portfolio', JSON.stringify(portfolio));
+        }
+
+        function updateDashboard() {
+            let totalInvestment = 0;
+            let totalCurrentValue = 0;
+            let bestPerformer = { name: '-', return: 0 };
+
+            // Calculate stocks
+            portfolio.stocks.forEach(stock => {
+                const investment = stock.quantity * stock.buyPrice;
+                const currentValue = stock.quantity * stock.currentPrice;
+                const returnPercent = ((currentValue - investment) / investment) * 100;
+                
+                totalInvestment += investment;
+                totalCurrentValue += currentValue;
+                
+                if (returnPercent > bestPerformer.return) {
+                    bestPerformer = { name: stock.symbol, return: returnPercent };
+                }
+            });
+
+            // Calculate mutual funds
+            portfolio.mutualFunds.forEach(mf => {
+                const investment = mf.units * mf.buyNAV;
+                const currentValue = mf.units * mf.currentNAV;
+                const returnPercent = ((currentValue - investment) / investment) * 100;
+                
+                totalInvestment += investment;
+                totalCurrentValue += currentValue;
+                
+                if (returnPercent > bestPerformer.return) {
+                    bestPerformer = { name: mf.name, return: returnPercent };
+                }
+            });
+
+            // Calculate fixed deposits
+            portfolio.fixedDeposits.forEach(fd => {
+                const maturityValue = calculateMaturityValue(fd);
+                totalInvestment += fd.principal;
+                totalCurrentValue += maturityValue;
+            });
+
+            // Calculate other assets
+            portfolio.otherAssets.forEach(asset => {
+                const returnPercent = ((asset.currentValue - asset.purchasePrice) / asset.purchasePrice) * 100;
+                
+                totalInvestment += asset.purchasePrice;
+                totalCurrentValue += asset.currentValue;
+                
+                if (returnPercent > bestPerformer.return) {
+                    bestPerformer = { name: asset.name, return: returnPercent };
+                }
+            });
+
+            const totalReturns = totalCurrentValue - totalInvestment;
+            const totalReturnPercent = totalInvestment > 0 ? (totalReturns / totalInvestment) * 100 : 0;
+
+            // Calculate after-tax returns for Finnish taxes
+            const capitalGainsTax = totalReturns > 30000 ? 0.34 : 0.30;
+            const afterTaxReturns = totalReturns > 0 ? totalReturns * (1 - capitalGainsTax) : totalReturns;
+            
+            document.getElementById('totalValue').textContent = '€' + formatNumber(totalCurrentValue);
+            document.getElementById('totalInvestment').textContent = '€' + formatNumber(totalInvestment);
+            document.getElementById('totalReturns').textContent = '€' + formatNumber(afterTaxReturns);
+            document.getElementById('totalChange').textContent = (totalReturns >= 0 ? '+' : '') + totalReturnPercent.toFixed(2) + '%';
+            document.getElementById('totalChange').className = 'change ' + (totalReturns >= 0 ? 'positive' : 'negative');
+            document.getElementById('returnPercentage').textContent = (totalReturns >= 0 ? '+' : '') + totalReturnPercent.toFixed(2) + '% (after tax)';
+            document.getElementById('returnPercentage').className = 'change ' + (totalReturns >= 0 ? 'positive' : 'negative');
+            document.getElementById('bestPerformer').textContent = bestPerformer.name;
+            document.getElementById('bestPerformerReturn').textContent = '+' + bestPerformer.return.toFixed(2) + '%';
+
+            updateCharts();
+            updateAssetSummary();
+            updateAnalytics();
+            updateWealthPhase();
+            updateTaxOptimization();
+        }
+
+        function updateAssetSummary() {
+            const summary = {
+                stocks: { count: 0, value: 0, investment: 0 },
+                mutualFunds: { count: 0, value: 0, investment: 0 },
+                fixedDeposits: { count: 0, value: 0, investment: 0 },
+                otherAssets: { count: 0, value: 0, investment: 0 }
+            };
+
+            portfolio.stocks.forEach(stock => {
+                summary.stocks.count++;
+                summary.stocks.investment += stock.quantity * stock.buyPrice;
+                summary.stocks.value += stock.quantity * stock.currentPrice;
+            });
+
+            portfolio.mutualFunds.forEach(mf => {
+                summary.mutualFunds.count++;
+                summary.mutualFunds.investment += mf.units * mf.buyNAV;
+                summary.mutualFunds.value += mf.units * mf.currentNAV;
+            });
+
+            portfolio.fixedDeposits.forEach(fd => {
+                summary.fixedDeposits.count++;
+                summary.fixedDeposits.investment += fd.principal;
+                summary.fixedDeposits.value += calculateMaturityValue(fd);
+            });
+
+            portfolio.otherAssets.forEach(asset => {
+                summary.otherAssets.count++;
+                summary.otherAssets.investment += asset.purchasePrice;
+                summary.otherAssets.value += asset.currentValue;
+            });
+
+            const summaryHtml = `
+                <div class="summary-item">
+                    <h4>Stocks (${summary.stocks.count})</h4>
+                    <p>€${formatNumber(summary.stocks.value)}</p>
+                    <small class="${summary.stocks.value >= summary.stocks.investment ? 'positive' : 'negative'}">
+                        ${((summary.stocks.value - summary.stocks.investment) / summary.stocks.investment * 100).toFixed(2)}%
+                    </small>
+                </div>
+                <div class="summary-item">
+                    <h4>ETFs/Funds (${summary.mutualFunds.count})</h4>
+                    <p>€${formatNumber(summary.mutualFunds.value)}</p>
+                    <small class="${summary.mutualFunds.value >= summary.mutualFunds.investment ? 'positive' : 'negative'}">
+                        ${((summary.mutualFunds.value - summary.mutualFunds.investment) / summary.mutualFunds.investment * 100).toFixed(2)}%
+                    </small>
+                </div>
+                <div class="summary-item">
+                    <h4>Fixed Deposits (${summary.fixedDeposits.count})</h4>
+                    <p>€${formatNumber(summary.fixedDeposits.value)}</p>
+                    <small class="positive">
+                        ${((summary.fixedDeposits.value - summary.fixedDeposits.investment) / summary.fixedDeposits.investment * 100).toFixed(2)}%
+                    </small>
+                </div>
+                <div class="summary-item">
+                    <h4>Other Assets (${summary.otherAssets.count})</h4>
+                    <p>€${formatNumber(summary.otherAssets.value)}</p>
+                    <small class="${summary.otherAssets.value >= summary.otherAssets.investment ? 'positive' : 'negative'}">
+                        ${((summary.otherAssets.value - summary.otherAssets.investment) / summary.otherAssets.investment * 100).toFixed(2)}%
+                    </small>
+                </div>
+            `;
+
+            document.getElementById('assetSummary').innerHTML = summaryHtml;
+        }
+
+        function updateAnalytics() {
+            let totalReturns = 0;
+            let totalInvestment = 0;
+            let riskScore = 0;
+            let liquidAssets = 0;
+
+            // Calculate returns and risk
+            portfolio.stocks.forEach(stock => {
+                const investment = stock.quantity * stock.buyPrice;
+                const currentValue = stock.quantity * stock.currentPrice;
+                totalReturns += currentValue - investment;
+                totalInvestment += investment;
+                liquidAssets += currentValue;
+                riskScore += 3; // Stocks have higher risk
+            });
+
+            portfolio.mutualFunds.forEach(mf => {
+                const investment = mf.units * mf.buyNAV;
+                const currentValue = mf.units * mf.currentNAV;
+                totalReturns += currentValue - investment;
+                totalInvestment += investment;
+                liquidAssets += currentValue;
+                riskScore += mf.category.includes('Equity') ? 2.5 : 1.5;
+            });
+
+            portfolio.fixedDeposits.forEach(fd => {
+                const maturityValue = calculateMaturityValue(fd);
+                totalReturns += maturityValue - fd.principal;
+                totalInvestment += fd.principal;
+                riskScore += 0.5; // FDs have low risk
+            });
+
+            portfolio.otherAssets.forEach(asset => {
+                totalReturns += asset.currentValue - asset.purchasePrice;
+                totalInvestment += asset.purchasePrice;
+                if (asset.type === 'gold' || asset.type === 'bonds') {
+                    liquidAssets += asset.currentValue;
+                    riskScore += 1;
+                } else if (asset.type === 'crypto') {
+                    liquidAssets += asset.currentValue;
+                    riskScore += 4;
+                } else {
+                    riskScore += 2;
+                }
+            });
+
+            const avgReturn = totalInvestment > 0 ? (totalReturns / totalInvestment) * 100 : 0;
+            const totalAssets = portfolio.stocks.length + portfolio.mutualFunds.length + 
+                              portfolio.fixedDeposits.length + portfolio.otherAssets.length;
+            const avgRisk = totalAssets > 0 ? riskScore / totalAssets : 0;
+            const liquidityRatio = totalInvestment > 0 ? (liquidAssets / (totalInvestment + totalReturns)) * 100 : 0;
+
+            // Calculate diversification score
+            const assetTypes = new Set();
+            if (portfolio.stocks.length > 0) assetTypes.add('stocks');
+            if (portfolio.mutualFunds.length > 0) assetTypes.add('mutualFunds');
+            if (portfolio.fixedDeposits.length > 0) assetTypes.add('fixedDeposits');
+            portfolio.otherAssets.forEach(asset => assetTypes.add(asset.type));
+            const diversificationScore = Math.min(assetTypes.size * 2, 10);
+
+            document.getElementById('avgReturn').textContent = avgReturn.toFixed(2) + '%';
+            document.getElementById('riskScore').textContent = avgRisk < 1.5 ? 'Low' : avgRisk < 2.5 ? 'Medium' : 'High';
+            document.getElementById('diversificationScore').textContent = diversificationScore + '/10';
+            document.getElementById('liquidityRatio').textContent = liquidityRatio.toFixed(1) + '%';
+        }
+
+        function initializeCharts() {
+            // Allocation Chart
+            const allocationCtx = document.getElementById('allocationChart').getContext('2d');
+            charts.allocation = new Chart(allocationCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            '#2563eb', '#7c3aed', '#10b981', '#f59e0b', 
+                            '#ef4444', '#8b5cf6', '#3b82f6', '#14b8a6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            charts.performance = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + formatNumber(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Sector Chart
+            const sectorCtx = document.getElementById('sectorChart').getContext('2d');
+            charts.sector = new Chart(sectorCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sector Allocation',
+                        data: [],
+                        backgroundColor: '#7c3aed'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Timeline Chart
+            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+            charts.timeline = new Chart(timelineCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Monthly Investment',
+                        data: [],
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            // Update Allocation Chart
+            const allocationData = {};
+            let totalValue = 0;
+
+            portfolio.stocks.forEach(stock => {
+                const value = stock.quantity * stock.currentPrice;
+                allocationData['Stocks'] = (allocationData['Stocks'] || 0) + value;
+                totalValue += value;
+            });
+
+            portfolio.mutualFunds.forEach(mf => {
+                const value = mf.units * mf.currentNAV;
+                allocationData['Mutual Funds'] = (allocationData['Mutual Funds'] || 0) + value;
+                totalValue += value;
+            });
+
+            portfolio.fixedDeposits.forEach(fd => {
+                const value = calculateMaturityValue(fd);
+                allocationData['Fixed Deposits'] = (allocationData['Fixed Deposits'] || 0) + value;
+                totalValue += value;
+            });
+
+            portfolio.otherAssets.forEach(asset => {
+                allocationData[asset.type] = (allocationData[asset.type] || 0) + asset.currentValue;
+                totalValue += asset.currentValue;
+            });
+
+            charts.allocation.data.labels = Object.keys(allocationData);
+            charts.allocation.data.datasets[0].data = Object.values(allocationData);
+            charts.allocation.update();
+
+            // Update Performance Chart (Mock data for demo)
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const performanceData = months.map((_, i) => totalValue * (0.9 + i * 0.02 + Math.random() * 0.1));
+            
+            charts.performance.data.labels = months;
+            charts.performance.data.datasets[0].data = performanceData;
+            charts.performance.update();
+
+            // Update Sector Chart (for stocks)
+            const sectorData = {};
+            portfolio.stocks.forEach(stock => {
+                const sector = stock.sector || 'Others';
+                const value = stock.quantity * stock.currentPrice;
+                sectorData[sector] = (sectorData[sector] || 0) + value;
+            });
+
+            charts.sector.data.labels = Object.keys(sectorData);
+            charts.sector.data.datasets[0].data = Object.values(sectorData);
+            charts.sector.update();
+
+            // Update Timeline Chart
+            const timelineData = {};
+            const allInvestments = [
+                ...portfolio.stocks.map(s => ({ date: s.purchaseDate, value: s.quantity * s.buyPrice })),
+                ...portfolio.mutualFunds.map(mf => ({ date: mf.purchaseDate, value: mf.units * mf.buyNAV })),
+                ...portfolio.fixedDeposits.map(fd => ({ date: fd.startDate, value: fd.principal })),
+                ...portfolio.otherAssets.map(a => ({ date: a.purchaseDate, value: a.purchasePrice }))
+            ];
+
+            allInvestments.forEach(inv => {
+                if (inv.date) {
+                    const month = new Date(inv.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                    timelineData[month] = (timelineData[month] || 0) + inv.value;
+                }
+            });
+
+            charts.timeline.data.labels = Object.keys(timelineData).slice(-6);
+            charts.timeline.data.datasets[0].data = Object.values(timelineData).slice(-6);
+            charts.timeline.update();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function openAddInvestmentModal() {
+            editingId = null;
+            editingType = null;
+            document.getElementById('modalTitle').textContent = 'Add Investment';
+            document.getElementById('investmentForm').reset();
+            document.getElementById('investmentType').value = '';
+            document.getElementById('dynamicFields').innerHTML = '';
+            document.getElementById('investmentModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('investmentModal').style.display = 'none';
+        }
+
+        function updateFormFields() {
+            const type = document.getElementById('investmentType').value;
+            const fieldsContainer = document.getElementById('dynamicFields');
+            
+            let fieldsHTML = '';
+            
+            switch(type) {
+                case 'stock':
+                    fieldsHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Stock Symbol</label>
+                                <input type="text" class="form-control" name="symbol" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" class="form-control" name="quantity" step="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Buy Price</label>
+                                <input type="number" class="form-control" name="buyPrice" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Current Price</label>
+                                <input type="number" class="form-control" name="currentPrice" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Purchase Date</label>
+                                <input type="date" class="form-control" name="purchaseDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Sector</label>
+                            <select class="form-control" name="sector">
+                                <option value="Technology">Technology</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Consumer">Consumer</option>
+                                <option value="Energy">Energy</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'mutual-fund':
+                    fieldsHTML = `
+                        <div class="form-group">
+                            <label>Fund Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select class="form-control" name="category" required>
+                                    <option value="Equity - Large Cap">Equity - Large Cap</option>
+                                    <option value="Equity - Mid Cap">Equity - Mid Cap</option>
+                                    <option value="Equity - Small Cap">Equity - Small Cap</option>
+                                    <option value="Debt">Debt</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="ELSS">ELSS</option>
+                                    <option value="Index">Index</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Purchase Date</label>
+                                <input type="date" class="form-control" name="purchaseDate" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Units</label>
+                                <input type="number" class="form-control" name="units" step="0.001" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Buy NAV</label>
+                                <input type="number" class="form-control" name="buyNAV" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Current NAV</label>
+                            <input type="number" class="form-control" name="currentNAV" step="0.01" required>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'fixed-deposit':
+                    fieldsHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Bank Name</label>
+                                <input type="text" class="form-control" name="bank" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Principal Amount</label>
+                                <input type="number" class="form-control" name="principal" step="1000" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Interest Rate (%)</label>
+                                <input type="number" class="form-control" name="interestRate" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Compounding</label>
+                                <select class="form-control" name="compounding" required>
+                                    <option value="yearly">Yearly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Maturity Date</label>
+                                <input type="date" class="form-control" name="maturityDate" required>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'gold':
+                case 'real-estate':
+                case 'bonds':
+                case 'crypto':
+                    fieldsHTML = `
+                        <div class="form-group">
+                            <label>Asset Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>${type === 'real-estate' ? 'Area (sq ft)' : 'Quantity'}</label>
+                                <input type="number" class="form-control" name="quantity" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Purchase Date</label>
+                                <input type="date" class="form-control" name="purchaseDate" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Purchase Price</label>
+                                <input type="number" class="form-control" name="purchasePrice" step="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Current Value</label>
+                                <input type="number" class="form-control" name="currentValue" step="100" required>
+                            </div>
+                        </div>
+                        ${type === 'real-estate' ? `
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" class="form-control" name="location">
+                            </div>
+                        ` : ''}
+                    `;
+                    break;
+            }
+            
+            fieldsContainer.innerHTML = fieldsHTML;
+        }
+
+        function saveInvestment(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const type = document.getElementById('investmentType').value;
+            const investment = { id: editingId || Date.now().toString() };
+            
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'investmentType') {
+                    // Handle different input types properly
+                    if (key.includes('Date')) {
+                        // Keep date fields as strings
+                        investment[key] = value;
+                    } else if (value.includes('.') || key.includes('Price') || key.includes('NAV') || key.includes('Rate') || key === 'principal' || key === 'currentValue' || key === 'purchasePrice') {
+                        // Parse as float for decimal values
+                        investment[key] = parseFloat(value);
+                    } else if (!isNaN(value) && value !== '') {
+                        // Parse as integer for whole numbers
+                        investment[key] = parseInt(value);
+                    } else {
+                        // Keep as string for text values
+                        investment[key] = value;
+                    }
+                }
+            }
+            
+            switch(type) {
+                case 'stock':
+                    if (editingId) {
+                        const index = portfolio.stocks.findIndex(s => s.id === editingId);
+                        portfolio.stocks[index] = investment;
+                    } else {
+                        portfolio.stocks.push(investment);
+                    }
+                    break;
+                    
+                case 'mutual-fund':
+                    if (editingId) {
+                        const index = portfolio.mutualFunds.findIndex(mf => mf.id === editingId);
+                        portfolio.mutualFunds[index] = investment;
+                    } else {
+                        portfolio.mutualFunds.push(investment);
+                    }
+                    break;
+                    
+                case 'fixed-deposit':
+                    if (editingId) {
+                        const index = portfolio.fixedDeposits.findIndex(fd => fd.id === editingId);
+                        portfolio.fixedDeposits[index] = investment;
+                    } else {
+                        portfolio.fixedDeposits.push(investment);
+                    }
+                    break;
+                    
+                default:
+                    investment.type = type;
+                    if (editingId) {
+                        const index = portfolio.otherAssets.findIndex(a => a.id === editingId);
+                        portfolio.otherAssets[index] = investment;
+                    } else {
+                        portfolio.otherAssets.push(investment);
+                    }
+            }
+            
+            savePortfolio();
+            closeModal();
+            updateDashboard();
+            renderAllTables();
+        }
+
+        function editInvestment(type, id) {
+            editingId = id;
+            editingType = type;
+            
+            let investment;
+            switch(type) {
+                case 'stock':
+                    investment = portfolio.stocks.find(s => s.id === id);
+                    break;
+                case 'mutual-fund':
+                    investment = portfolio.mutualFunds.find(mf => mf.id === id);
+                    break;
+                case 'fixed-deposit':
+                    investment = portfolio.fixedDeposits.find(fd => fd.id === id);
+                    break;
+                default:
+                    investment = portfolio.otherAssets.find(a => a.id === id);
+                    type = investment.type;
+            }
+            
+            document.getElementById('modalTitle').textContent = 'Edit Investment';
+            document.getElementById('investmentType').value = type;
+            updateFormFields();
+            
+            setTimeout(() => {
+                for (let key in investment) {
+                    if (key !== 'id' && key !== 'type') {
+                        const input = document.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            input.value = investment[key];
+                        }
+                    }
+                }
+            }, 100);
+            
+            document.getElementById('investmentModal').style.display = 'block';
+        }
+
+        function deleteInvestment(type, id) {
+            if (!confirm('Are you sure you want to delete this investment?')) return;
+            
+            switch(type) {
+                case 'stock':
+                    portfolio.stocks = portfolio.stocks.filter(s => s.id !== id);
+                    break;
+                case 'mutual-fund':
+                    portfolio.mutualFunds = portfolio.mutualFunds.filter(mf => mf.id !== id);
+                    break;
+                case 'fixed-deposit':
+                    portfolio.fixedDeposits = portfolio.fixedDeposits.filter(fd => fd.id !== id);
+                    break;
+                default:
+                    portfolio.otherAssets = portfolio.otherAssets.filter(a => a.id !== id);
+            }
+            
+            savePortfolio();
+            updateDashboard();
+            renderAllTables();
+        }
+
+        function renderAllTables() {
+            renderStocksTable();
+            renderMutualFundsTable();
+            renderFixedDepositsTable();
+            renderOtherAssetsTable();
+        }
+
+        function renderStocksTable() {
+            const tbody = document.querySelector('#stocksTable tbody');
+            tbody.innerHTML = '';
+            
+            portfolio.stocks.forEach(stock => {
+                const investment = stock.quantity * stock.buyPrice;
+                const currentValue = stock.quantity * stock.currentPrice;
+                const returns = currentValue - investment;
+                const returnPercent = (returns / investment) * 100;
+                
+                const row = `
+                    <tr>
+                        <td>${stock.symbol}</td>
+                        <td>${stock.name}</td>
+                        <td>${stock.quantity}</td>
+                        <td>€${formatNumber(stock.buyPrice)}</td>
+                        <td>€${formatNumber(stock.currentPrice)}</td>
+                        <td>€${formatNumber(investment)}</td>
+                        <td>€${formatNumber(currentValue)}</td>
+                        <td class="${returns >= 0 ? 'positive' : 'negative'}">€${formatNumber(returns)}</td>
+                        <td class="${returns >= 0 ? 'positive' : 'negative'}">${returnPercent.toFixed(2)}%</td>
+                        <td class="action-buttons">
+                            <button class="btn icon-btn btn-secondary" onclick="editInvestment('stock', '${stock.id}')">✏️</button>
+                            <button class="btn icon-btn btn-danger" onclick="deleteInvestment('stock', '${stock.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function renderMutualFundsTable() {
+            const tbody = document.querySelector('#mutualFundsTable tbody');
+            tbody.innerHTML = '';
+            
+            portfolio.mutualFunds.forEach(mf => {
+                const investment = mf.units * mf.buyNAV;
+                const currentValue = mf.units * mf.currentNAV;
+                const returns = currentValue - investment;
+                const xirr = calculateXIRR(mf);
+                
+                const row = `
+                    <tr>
+                        <td>${mf.name}</td>
+                        <td>${mf.category}</td>
+                        <td>${mf.units}</td>
+                        <td>€${formatNumber(mf.buyNAV)}</td>
+                        <td>€${formatNumber(mf.currentNAV)}</td>
+                        <td>€${formatNumber(investment)}</td>
+                        <td>€${formatNumber(currentValue)}</td>
+                        <td class="${returns >= 0 ? 'positive' : 'negative'}">€${formatNumber(returns)}</td>
+                        <td class="${xirr >= 0 ? 'positive' : 'negative'}">${xirr.toFixed(2)}%</td>
+                        <td class="action-buttons">
+                            <button class="btn icon-btn btn-secondary" onclick="editInvestment('mutual-fund', '${mf.id}')">✏️</button>
+                            <button class="btn icon-btn btn-danger" onclick="deleteInvestment('mutual-fund', '${mf.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function renderFixedDepositsTable() {
+            const tbody = document.querySelector('#fixedDepositsTable tbody');
+            tbody.innerHTML = '';
+            
+            portfolio.fixedDeposits.forEach(fd => {
+                const maturityValue = calculateMaturityValue(fd);
+                const interestEarned = maturityValue - fd.principal;
+                const daysRemaining = Math.max(0, Math.ceil((new Date(fd.maturityDate) - new Date()) / (1000 * 60 * 60 * 24)));
+                
+                const row = `
+                    <tr>
+                        <td>${fd.bank}</td>
+                        <td>€${formatNumber(fd.principal)}</td>
+                        <td>${fd.interestRate}%</td>
+                        <td>${formatDate(fd.startDate)}</td>
+                        <td>${formatDate(fd.maturityDate)}</td>
+                        <td>${daysRemaining} days</td>
+                        <td>€${formatNumber(maturityValue)}</td>
+                        <td class="positive">€${formatNumber(interestEarned)}</td>
+                        <td class="action-buttons">
+                            <button class="btn icon-btn btn-secondary" onclick="editInvestment('fixed-deposit', '${fd.id}')">✏️</button>
+                            <button class="btn icon-btn btn-danger" onclick="deleteInvestment('fixed-deposit', '${fd.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function renderOtherAssetsTable(filter = 'all') {
+            const tbody = document.querySelector('#otherAssetsTable tbody');
+            tbody.innerHTML = '';
+            
+            const assets = filter === 'all' 
+                ? portfolio.otherAssets 
+                : portfolio.otherAssets.filter(a => a.type === filter);
+            
+            assets.forEach(asset => {
+                const returns = asset.currentValue - asset.purchasePrice;
+                const returnPercent = (returns / asset.purchasePrice) * 100;
+                
+                const row = `
+                    <tr>
+                        <td>${asset.name}</td>
+                        <td>${asset.type}</td>
+                        <td>${asset.quantity}${asset.type === 'real-estate' ? ' sq ft' : ''}</td>
+                        <td>€${formatNumber(asset.purchasePrice)}</td>
+                        <td>€${formatNumber(asset.currentValue)}</td>
+                        <td class="${returns >= 0 ? 'positive' : 'negative'}">€${formatNumber(returns)}</td>
+                        <td class="${returns >= 0 ? 'positive' : 'negative'}">${returnPercent.toFixed(2)}%</td>
+                        <td class="action-buttons">
+                            <button class="btn icon-btn btn-secondary" onclick="editInvestment('${asset.type}', '${asset.id}')">✏️</button>
+                            <button class="btn icon-btn btn-danger" onclick="deleteInvestment('${asset.type}', '${asset.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function filterOtherAssets(type) {
+            document.querySelectorAll('.asset-type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderOtherAssetsTable(type);
+        }
+
+        function calculateMaturityValue(fd) {
+            const principal = fd.principal;
+            const rate = fd.interestRate / 100;
+            const years = (new Date(fd.maturityDate) - new Date(fd.startDate)) / (365 * 24 * 60 * 60 * 1000);
+            
+            let n = 1; // Yearly
+            if (fd.compounding === 'quarterly') n = 4;
+            else if (fd.compounding === 'monthly') n = 12;
+            
+            return principal * Math.pow(1 + rate/n, n * years);
+        }
+
+        function calculateXIRR(mf) {
+            // Simplified XIRR calculation
+            const investment = mf.units * mf.buyNAV;
+            const currentValue = mf.units * mf.currentNAV;
+            const years = (new Date() - new Date(mf.purchaseDate)) / (365 * 24 * 60 * 60 * 1000);
+            
+            if (years <= 0) return 0;
+            
+            return ((Math.pow(currentValue / investment, 1 / years) - 1) * 100);
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('fi-FI').format(Math.round(num));
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(portfolio, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'portfolio_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    portfolio = imported;
+                    savePortfolio();
+                    updateDashboard();
+                    renderAllTables();
+                    alert('Portfolio imported successfully!');
+                } catch (error) {
+                    alert('Error importing file. Please ensure it\'s a valid portfolio JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const toggle = document.getElementById('themeToggle');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                toggle.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                toggle.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function updateTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const toggle = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                toggle.classList.add('dark');
+            }
+        }
+
+        // Initialize app on load
+        window.onload = initializeApp;
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const investmentModal = document.getElementById('investmentModal');
+            const morningModal = document.getElementById('morningCheckInModal');
+            const bibleModal = document.getElementById('investmentBibleModal');
+            
+            if (event.target === investmentModal) {
+                closeModal();
+            } else if (event.target === morningModal) {
+                morningModal.style.display = 'none';
+            } else if (event.target === bibleModal) {
+                bibleModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
