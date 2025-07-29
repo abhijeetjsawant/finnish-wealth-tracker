@@ -483,21 +483,297 @@
         });
 
         // Tax Analytics Functions
-        function updateOSTStatus() {
-            const utilized = 22500;
-            const total = 50000;
-            const remaining = total - utilized;
-            const percentage = (utilized / total * 100).toFixed(0);
+        class FinnishTaxCalculator {
+            constructor() {
+                this.OST_LIMIT = 50000; // Annual OST contribution limit
+                this.CAPITAL_GAINS_TAX_RATE = 0.30; // 30% capital gains tax
+                this.DIVIDEND_TAX_RATE = 0.30; // 30% dividend tax
+                this.OST_TAX_RATE = 0.15; // 15% tax on OST withdrawals after age 68
+                this.currentYear = new Date().getFullYear();
+            }
+
+            // Get investment data from localStorage (Phase 1 integration)
+            getInvestmentData() {
+                const defaultData = {
+                    ostInvestments: [
+                        { type: 'etf', symbol: 'VWCE', amount: 15000, purchaseDate: '2024-01-15', currentValue: 16800 },
+                        { type: 'stock', symbol: 'MSFT', amount: 7500, purchaseDate: '2024-03-20', currentValue: 8200 }
+                    ],
+                    aotInvestments: [
+                        { type: 'etf', symbol: 'VTI', amount: 45000, purchaseDate: '2023-06-10', currentValue: 52000 },
+                        { type: 'stock', symbol: 'AAPL', amount: 25000, purchaseDate: '2023-09-15', currentValue: 28500 },
+                        { type: 'stock', symbol: 'GOOGL', amount: 18000, purchaseDate: '2024-02-01', currentValue: 19800 },
+                        { type: 'fixed-deposit', bank: 'Nordea', amount: 5000, rate: 3.2, maturityDate: '2025-01-01' }
+                    ]
+                };
+
+                try {
+                    return JSON.parse(localStorage.getItem('investmentData')) || defaultData;
+                } catch {
+                    return defaultData;
+                }
+            }
+
+            // Calculate OST utilization
+            calculateOSTStatus() {
+                const data = this.getInvestmentData();
+                const ostTotal = data.ostInvestments.reduce((sum, inv) => sum + inv.amount, 0);
+                const remaining = this.OST_LIMIT - ostTotal;
+                const percentage = (ostTotal / this.OST_LIMIT * 100);
+
+                return {
+                    utilized: ostTotal,
+                    remaining: Math.max(0, remaining),
+                    percentage: Math.min(100, percentage),
+                    currentValue: data.ostInvestments.reduce((sum, inv) => sum + inv.currentValue, 0)
+                };
+            }
+
+            // Calculate AOT summary
+            calculateAOTStatus() {
+                const data = this.getInvestmentData();
+                const aotTotal = data.aotInvestments.reduce((sum, inv) => sum + inv.amount, 0);
+                const currentValue = data.aotInvestments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
+                const unrealizedGains = currentValue - aotTotal;
+                const annualTaxBurden = this.calculateAnnualTax(data.aotInvestments);
+
+                return {
+                    invested: aotTotal,
+                    currentValue: currentValue,
+                    unrealizedGains: unrealizedGains,
+                    annualTax: annualTaxBurden,
+                    effectiveTaxRate: aotTotal > 0 ? (annualTaxBurden / aotTotal * 100) : 0
+                };
+            }
+
+            // Calculate annual tax burden for AOT investments
+            calculateAnnualTax(aotInvestments) {
+                let totalTax = 0;
+                
+                aotInvestments.forEach(investment => {
+                    if (investment.currentValue && investment.amount) {
+                        // Calculate unrealized gains tax (simplified)
+                        const gains = investment.currentValue - investment.amount;
+                        if (gains > 0) {
+                            totalTax += gains * this.CAPITAL_GAINS_TAX_RATE;
+                        }
+                    }
+                    
+                    // Add estimated dividend tax for stocks/ETFs
+                    if (investment.type === 'stock' || investment.type === 'etf') {
+                        const estimatedDividendYield = 0.02; // 2% average dividend yield
+                        const estimatedDividends = investment.currentValue * estimatedDividendYield;
+                        totalTax += estimatedDividends * this.DIVIDEND_TAX_RATE;
+                    }
+                });
+
+                return totalTax;
+            }
+
+            // Calculate tax efficiency score (0-10)
+            calculateTaxEfficiency() {
+                const ostStatus = this.calculateOSTStatus();
+                const aotStatus = this.calculateAOTStatus();
+                const totalPortfolio = ostStatus.currentValue + aotStatus.currentValue;
+                
+                if (totalPortfolio === 0) return 0;
+
+                // Factors for tax efficiency
+                const ostUtilizationScore = Math.min(10, (ostStatus.percentage / 100) * 10); // Max 10 points for full OST utilization
+                const ostAllocationScore = (ostStatus.currentValue / totalPortfolio) * 5; // Max 5 points for OST allocation
+                const taxBurdenScore = Math.max(0, 5 - (aotStatus.annualTax / totalPortfolio * 100)); // Max 5 points for low tax burden
+
+                const totalScore = ostUtilizationScore + ostAllocationScore + taxBurdenScore;
+                return Math.min(10, Math.max(0, totalScore));
+            }
+
+            // Calculate potential tax savings with optimization
+            calculatePotentialSavings() {
+                const ostStatus = this.calculateOSTStatus();
+                const aotStatus = this.calculateAOTStatus();
+                
+                let potentialSavings = 0;
+
+                // Savings from maximizing OST
+                if (ostStatus.remaining > 0) {
+                    const potentialOSTContribution = Math.min(ostStatus.remaining, aotStatus.currentValue * 0.5);
+                    potentialSavings += potentialOSTContribution * this.CAPITAL_GAINS_TAX_RATE;
+                }
+
+                // Savings from tax-loss harvesting (estimated)
+                const aotGains = aotStatus.unrealizedGains;
+                if (aotGains > 0) {
+                    const potentialLossHarvesting = aotGains * 0.1; // Assume 10% can be offset
+                    potentialSavings += potentialLossHarvesting * this.CAPITAL_GAINS_TAX_RATE;
+                }
+
+                return potentialSavings;
+            }
+
+            // Generate personalized recommendations
+            generateRecommendations() {
+                const ostStatus = this.calculateOSTStatus();
+                const aotStatus = this.calculateAOTStatus();
+                const recommendations = [];
+
+                // OST maximization recommendation
+                if (ostStatus.remaining > 1000) {
+                    const potential = Math.min(ostStatus.remaining, 10000);
+                    const savings = potential * this.CAPITAL_GAINS_TAX_RATE;
+                    recommendations.push({
+                        type: 'high-impact',
+                        title: 'Maximize OST Contribution',
+                        description: `You have €${ostStatus.remaining.toLocaleString()} remaining in your OST allowance. Consider moving high-growth investments to OST for tax-deferred growth.`,
+                        savings: savings,
+                        action: 'Add OST Investment'
+                    });
+                }
+
+                // Tax-loss harvesting
+                if (aotStatus.unrealizedGains > 2000) {
+                    const harvestable = aotStatus.unrealizedGains * 0.15;
+                    const savings = harvestable * this.CAPITAL_GAINS_TAX_RATE;
+                    recommendations.push({
+                        type: 'medium-impact',
+                        title: 'Tax-Loss Harvesting',
+                        description: 'Consider selling underperforming AOT investments to offset capital gains and reduce your tax burden.',
+                        savings: savings,
+                        action: 'Analyze Holdings'
+                    });
+                }
+
+                // Dividend optimization
+                if (aotStatus.currentValue > 50000) {
+                    const dividendTax = aotStatus.currentValue * 0.02 * this.DIVIDEND_TAX_RATE;
+                    const savings = dividendTax * 0.2;
+                    recommendations.push({
+                        type: 'low-impact',
+                        title: 'Dividend Timing',
+                        description: 'Consider timing dividend-paying stock purchases to optimize tax efficiency across tax years.',
+                        savings: savings,
+                        action: 'View Calendar'
+                    });
+                }
+
+                return recommendations;
+            }
+        }
+
+        // Initialize tax calculator
+        const taxCalculator = new FinnishTaxCalculator();
+
+        function updateTaxAnalytics() {
+            // Update OST status
+            const ostStatus = taxCalculator.calculateOSTStatus();
+            document.getElementById('ostUtilized').textContent = `€${ostStatus.utilized.toLocaleString()}`;
+            document.getElementById('ostRemaining').textContent = `€${ostStatus.remaining.toLocaleString()} remaining`;
+            document.getElementById('ostProgressBar').style.width = `${ostStatus.percentage.toFixed(0)}%`;
+            document.getElementById('ostProgressLabel').textContent = `${ostStatus.percentage.toFixed(0)}% of €${taxCalculator.OST_LIMIT.toLocaleString()} limit`;
+
+            // Update AOT status
+            const aotStatus = taxCalculator.calculateAOTStatus();
+            document.getElementById('aotValue').textContent = `€${aotStatus.currentValue.toLocaleString()}`;
             
-            document.getElementById('ostUtilized').textContent = `€${utilized.toLocaleString()}`;
-            document.getElementById('ostRemaining').textContent = `€${remaining.toLocaleString()} remaining`;
-            document.getElementById('ostProgressBar').style.width = `${percentage}%`;
-            document.getElementById('ostProgressLabel').textContent = `${percentage}% of €${total.toLocaleString()} limit`;
+            // Update tax efficiency
+            const efficiency = taxCalculator.calculateTaxEfficiency();
+            document.querySelector('.metric-card:nth-child(3) .metric-value').textContent = `${efficiency.toFixed(1)}/10`;
+            
+            // Update potential savings
+            const savings = taxCalculator.calculatePotentialSavings();
+            document.querySelector('.metric-card:nth-child(4) .metric-value').textContent = `€${savings.toLocaleString()}`;
+
+            // Update recommendations
+            updateRecommendations();
+
+            // Update chart with real data
+            updateTaxChart(ostStatus, aotStatus);
+        }
+
+        function updateRecommendations() {
+            const recommendations = taxCalculator.generateRecommendations();
+            const container = document.querySelector('.recommendations-grid');
+            
+            container.innerHTML = recommendations.map((rec, index) => `
+                <div class="md-card md-elevation-1 recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon ${rec.type}">
+                            <span class="material-icons">${rec.type === 'high-impact' ? 'priority_high' : rec.type === 'medium-impact' ? 'trending_up' : 'info'}</span>
+                        </div>
+                        <div class="recommendation-priority">${rec.type.replace('-', ' ')}</div>
+                    </div>
+                    <div class="recommendation-content">
+                        <h3 class="recommendation-title">${rec.title}</h3>
+                        <p class="recommendation-description">${rec.description}</p>
+                        <div class="recommendation-savings">
+                            <span class="material-icons">savings</span>
+                            Potential savings: €${rec.savings.toLocaleString()}/year
+                        </div>
+                    </div>
+                    <div class="recommendation-actions">
+                        <button class="md-button ${rec.type === 'high-impact' ? 'md-button-filled' : 'md-button-outlined'}">
+                            <span class="material-icons">${rec.type === 'high-impact' ? 'add' : rec.type === 'medium-impact' ? 'analytics' : 'schedule'}</span>
+                            ${rec.action}
+                        </button>
+                        <button class="md-button md-button-text">Learn More</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateTaxChart(ostStatus, aotStatus) {
+            const ctx = document.getElementById('taxBreakdownChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.taxChart) {
+                window.taxChart.destroy();
+            }
+            
+            window.taxChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['OST (Tax-deferred)', 'AOT (Taxable)', 'Annual Tax Burden', 'Tax Savings (OST)'],
+                    datasets: [{
+                        data: [
+                            ostStatus.currentValue,
+                            aotStatus.currentValue,
+                            aotStatus.annualTax,
+                            ostStatus.currentValue * 0.15 // Estimated OST tax savings
+                        ],
+                        backgroundColor: ['#1976d2', '#00897b', '#f57c00', '#7b1fa2'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Update legend with real data
+            const legendItems = document.querySelectorAll('.tax-legend .legend-item');
+            const values = [
+                `€${ostStatus.currentValue.toLocaleString()}`,
+                `€${aotStatus.currentValue.toLocaleString()}`,
+                `€${aotStatus.annualTax.toLocaleString()}`,
+                `€${(ostStatus.currentValue * 0.15).toLocaleString()}`
+            ];
+            legendItems.forEach((item, index) => {
+                const valueSpan = item.querySelector('.legend-value');
+                if (valueSpan) valueSpan.textContent = values[index];
+            });
         }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            updateOSTStatus();
+            updateTaxAnalytics();
+            
+            // Update every 5 minutes to reflect any changes
+            setInterval(updateTaxAnalytics, 300000);
         });
 
         // Scroll effects

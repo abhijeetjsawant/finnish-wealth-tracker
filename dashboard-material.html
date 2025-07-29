@@ -857,6 +857,34 @@
             document.getElementById('stockResults').style.display = 'none';
         }
 
+        // Investment data storage
+        function saveInvestmentData(investmentData) {
+            try {
+                let existingData = JSON.parse(localStorage.getItem('investmentData')) || {
+                    ostInvestments: [],
+                    aotInvestments: []
+                };
+                
+                const targetArray = investmentData.accountType === 'ost' ? 
+                    existingData.ostInvestments : existingData.aotInvestments;
+                
+                targetArray.push({
+                    type: investmentData.investmentType,
+                    symbol: investmentData.symbol || investmentData.name,
+                    amount: parseFloat(investmentData.amount) || 0,
+                    purchaseDate: investmentData.purchaseDate || new Date().toISOString().split('T')[0],
+                    currentValue: parseFloat(investmentData.amount) || 0, // Initial value same as amount
+                    ...investmentData // Include any additional fields
+                });
+                
+                localStorage.setItem('investmentData', JSON.stringify(existingData));
+                return true;
+            } catch (error) {
+                console.error('Error saving investment data:', error);
+                return false;
+            }
+        }
+
         // Form submission
         document.getElementById('investmentForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -866,14 +894,47 @@
                 return;
             }
             
-            console.log('Form submitted with:', {
+            // Collect form data
+            const formData = new FormData(this);
+            const investmentData = {
                 accountType: selectedAccountType,
-                investmentType: selectedInvestmentType
+                investmentType: selectedInvestmentType,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Extract form fields based on investment type
+            const inputs = this.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                if (input.value && input.name) {
+                    investmentData[input.name] = input.value;
+                } else if (input.value) {
+                    // Try to infer field purpose from label
+                    const label = input.parentNode?.querySelector('label')?.textContent || '';
+                    if (label.includes('Amount') || label.includes('Price') || label.includes('Principal')) {
+                        investmentData.amount = input.value;
+                    } else if (label.includes('Symbol') || label.includes('Name')) {
+                        investmentData.symbol = input.value;
+                    } else if (label.includes('Date')) {
+                        investmentData.purchaseDate = input.value;
+                    }
+                }
             });
             
-            // Here you would normally process the form data
-            alert('Investment added successfully!');
-            closeInvestmentModal();
+            console.log('Form submitted with:', investmentData);
+            
+            // Save to localStorage
+            if (saveInvestmentData(investmentData)) {
+                alert('Investment added successfully! Check Tax Analytics for updated calculations.');
+                closeInvestmentModal();
+                
+                // Reset form
+                this.reset();
+                selectedAccountType = '';
+                selectedInvestmentType = '';
+                updateDynamicFields();
+            } else {
+                alert('Error saving investment data. Please try again.');
+            }
         });
     </script>
 </body>
