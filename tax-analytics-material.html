@@ -395,6 +395,15 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Market Data Services -->
+    <script src="js/api-cache.js"></script>
+    <script src="js/rate-limiter.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script src="js/alpha-vantage-api.js"></script>
+    <script src="js/iex-cloud-api.js"></script>
+    <script src="js/yahoo-finance-api.js"></script>
+    <script src="js/market-data-service.js"></script>
+    <script src="js/portfolio-manager.js"></script>
     <script>
         // Initialize ripple effects
         document.querySelectorAll('.md-button, .md-icon-button, .recommendation-card').forEach(element => {
@@ -484,16 +493,52 @@
 
         // Tax Analytics Functions
         class FinnishTaxCalculator {
-            constructor() {
+            constructor(portfolioManager = null) {
                 this.OST_LIMIT = 50000; // Annual OST contribution limit
                 this.CAPITAL_GAINS_TAX_RATE = 0.30; // 30% capital gains tax
                 this.DIVIDEND_TAX_RATE = 0.30; // 30% dividend tax
                 this.OST_TAX_RATE = 0.15; // 15% tax on OST withdrawals after age 68
                 this.currentYear = new Date().getFullYear();
+                this.portfolioManager = portfolioManager;
+                this.realTimeData = null;
             }
 
-            // Get investment data from localStorage (Phase 1 integration)
+            // Set real-time portfolio data
+            setRealTimeData(performanceData) {
+                this.realTimeData = performanceData;
+            }
+
+            // Get investment data - prioritize real-time data if available
             getInvestmentData() {
+                if (this.realTimeData) {
+                    // Convert real-time portfolio data to expected format
+                    return {
+                        ostInvestments: this.realTimeData.ostAccount.holdings.map(holding => ({
+                            type: holding.type,
+                            symbol: holding.symbol,
+                            amount: holding.totalInvested,
+                            purchaseDate: holding.purchaseDate,
+                            currentValue: holding.currentValue,
+                            shares: holding.shares,
+                            avgPrice: holding.avgPrice,
+                            gainLoss: holding.gainLoss,
+                            returnPercent: holding.returnPercent
+                        })),
+                        aotInvestments: this.realTimeData.aotAccount.holdings.map(holding => ({
+                            type: holding.type,
+                            symbol: holding.symbol,
+                            amount: holding.totalInvested,
+                            purchaseDate: holding.purchaseDate,
+                            currentValue: holding.currentValue,
+                            shares: holding.shares,
+                            avgPrice: holding.avgPrice,
+                            gainLoss: holding.gainLoss,
+                            returnPercent: holding.returnPercent
+                        }))
+                    };
+                }
+
+                // Fallback to stored data
                 const defaultData = {
                     ostInvestments: [
                         { type: 'etf', symbol: 'VWCE', amount: 15000, purchaseDate: '2024-01-15', currentValue: 16800 },
@@ -660,33 +705,100 @@
         }
 
         // Initialize tax calculator
-        const taxCalculator = new FinnishTaxCalculator();
+        // Global variables for tax analytics
+        let marketDataService = null;
+        let portfolioManager = null;
+        let taxCalculator = null;
+        let currentPerformance = null;
 
-        function updateTaxAnalytics() {
-            // Update OST status
-            const ostStatus = taxCalculator.calculateOSTStatus();
-            document.getElementById('ostUtilized').textContent = `€${ostStatus.utilized.toLocaleString()}`;
-            document.getElementById('ostRemaining').textContent = `€${ostStatus.remaining.toLocaleString()} remaining`;
-            document.getElementById('ostProgressBar').style.width = `${ostStatus.percentage.toFixed(0)}%`;
-            document.getElementById('ostProgressLabel').textContent = `${ostStatus.percentage.toFixed(0)}% of €${taxCalculator.OST_LIMIT.toLocaleString()} limit`;
+        async function initializeTaxAnalytics() {
+            try {
+                console.log('🚀 Initializing tax analytics with real market data...');
+                
+                // Initialize market data service
+                marketDataService = new MarketDataService();
+                
+                // Wait for service initialization
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Initialize portfolio manager
+                portfolioManager = new PortfolioManager(marketDataService);
+                
+                // Initialize tax calculator
+                taxCalculator = new FinnishTaxCalculator(portfolioManager);
+                
+                // Load real-time tax analytics
+                await updateTaxAnalytics();
+                
+                console.log('✅ Tax analytics initialized with real data');
+                
+            } catch (error) {
+                console.warn('⚠️ Failed to initialize real-time data, using fallback:', error);
+                taxCalculator = new FinnishTaxCalculator();
+                updateTaxAnalytics();
+            }
+        }
 
-            // Update AOT status
-            const aotStatus = taxCalculator.calculateAOTStatus();
-            document.getElementById('aotValue').textContent = `€${aotStatus.currentValue.toLocaleString()}`;
-            
-            // Update tax efficiency
-            const efficiency = taxCalculator.calculateTaxEfficiency();
-            document.querySelector('.metric-card:nth-child(3) .metric-value').textContent = `${efficiency.toFixed(1)}/10`;
-            
-            // Update potential savings
-            const savings = taxCalculator.calculatePotentialSavings();
-            document.querySelector('.metric-card:nth-child(4) .metric-value').textContent = `€${savings.toLocaleString()}`;
+        async function updateTaxAnalytics() {
+            try {
+                // Get real-time performance data if available
+                if (portfolioManager) {
+                    console.log('📊 Updating tax analytics with real-time data...');
+                    currentPerformance = await portfolioManager.getRealTimePerformance();
+                    taxCalculator.setRealTimeData(currentPerformance);
+                }
 
-            // Update recommendations
-            updateRecommendations();
+                // Update OST status
+                const ostStatus = taxCalculator.calculateOSTStatus();
+                document.getElementById('ostUtilized').textContent = `€${ostStatus.utilized.toLocaleString()}`;
+                document.getElementById('ostRemaining').textContent = `€${ostStatus.remaining.toLocaleString()} remaining`;
+                document.getElementById('ostProgressBar').style.width = `${ostStatus.percentage.toFixed(0)}%`;
+                document.getElementById('ostProgressLabel').textContent = `${ostStatus.percentage.toFixed(0)}% of €${taxCalculator.OST_LIMIT.toLocaleString()} limit`;
 
-            // Update chart with real data
-            updateTaxChart(ostStatus, aotStatus);
+                // Update AOT status
+                const aotStatus = taxCalculator.calculateAOTStatus();
+                document.getElementById('aotValue').textContent = `€${aotStatus.currentValue.toLocaleString()}`;
+                
+                // Update tax efficiency
+                const efficiency = taxCalculator.calculateTaxEfficiency();
+                document.querySelector('.metric-card:nth-child(3) .metric-value').textContent = `${efficiency.toFixed(1)}/10`;
+                
+                // Update potential savings
+                const savings = taxCalculator.calculatePotentialSavings();
+                document.querySelector('.metric-card:nth-child(4) .metric-value').textContent = `€${savings.toLocaleString()}`;
+
+                // Update recommendations
+                updateRecommendations();
+
+                // Update chart with real data
+                updateTaxChart(ostStatus, aotStatus);
+
+                // Update real-time tax implications if available
+                if (currentPerformance) {
+                    updateRealTimeTaxImplications(currentPerformance.taxImplications);
+                }
+
+                console.log('✅ Tax analytics updated successfully');
+
+            } catch (error) {
+                console.error('❌ Failed to update tax analytics:', error);
+            }
+        }
+
+        function updateRealTimeTaxImplications(taxImplications) {
+            // Update tax implication displays with real data
+            if (taxImplications) {
+                // Update AOT potential tax liability
+                const potentialTaxElement = document.querySelector('.metric-card:last-child .metric-value');
+                if (potentialTaxElement && taxImplications.totalPotentialTax) {
+                    potentialTaxElement.textContent = `€${Math.round(taxImplications.totalPotentialTax).toLocaleString()}`;
+                }
+
+                // Show tax efficiency recommendation
+                if (taxImplications.taxEfficiency && taxImplications.taxEfficiency.recommendation) {
+                    console.log('💡 Tax efficiency recommendation:', taxImplications.taxEfficiency.recommendation);
+                }
+            }
         }
 
         function updateRecommendations() {
@@ -1009,7 +1121,7 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            updateTaxAnalytics();
+            initializeTaxAnalytics();
             
             // Update every 5 minutes to reflect any changes
             setInterval(updateTaxAnalytics, 300000);

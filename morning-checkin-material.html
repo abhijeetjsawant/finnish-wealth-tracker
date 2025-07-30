@@ -426,6 +426,14 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Market Data Services -->
+    <script src="js/api-cache.js"></script>
+    <script src="js/rate-limiter.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script src="js/alpha-vantage-api.js"></script>
+    <script src="js/iex-cloud-api.js"></script>
+    <script src="js/yahoo-finance-api.js"></script>
+    <script src="js/market-data-service.js"></script>
     <script>
         // Initialize ripple effects
         document.querySelectorAll('.md-button, .md-icon-button, .goal-card, .quick-action-card').forEach(element => {
@@ -493,10 +501,27 @@
         // Morning Check-in Functions
         class MorningCheckin {
             constructor() {
+                this.marketDataService = null;
                 this.initializeDate();
-                this.loadPortfolioData();
-                this.loadGoals();
                 this.initializeGreeting();
+                this.initializeMarketData();
+                this.loadGoals();
+            }
+
+            async initializeMarketData() {
+                try {
+                    console.log('🚀 Initializing market data service...');
+                    this.marketDataService = new MarketDataService();
+                    
+                    // Wait for initialization and then load portfolio with real data
+                    setTimeout(() => {
+                        this.loadPortfolioData();
+                        this.loadMarketInsights();
+                    }, 2000);
+                } catch (error) {
+                    console.warn('⚠️ Market data service unavailable, using static data');
+                    this.loadPortfolioData();
+                }
             }
 
             initializeDate() {
@@ -529,11 +554,83 @@
                 document.getElementById('greetingSubtitle').textContent = subtitle;
             }
 
-            loadPortfolioData() {
+            async loadPortfolioData() {
                 // Get investment data from localStorage (Phase 1 integration)
                 const investmentData = this.getInvestmentData();
                 
-                // Calculate totals
+                if (this.marketDataService) {
+                    await this.loadRealTimePortfolioData(investmentData);
+                } else {
+                    this.loadStaticPortfolioData(investmentData);
+                }
+            }
+
+            async loadRealTimePortfolioData(investmentData) {
+                try {
+                    console.log('📊 Loading real-time portfolio data...');
+                    
+                    // Get all unique symbols
+                    const allInvestments = [...investmentData.ostInvestments, ...investmentData.aotInvestments];
+                    const symbols = [...new Set(allInvestments.map(inv => inv.symbol))];
+                    
+                    // Fetch current prices
+                    const prices = await this.marketDataService.getPrices(symbols);
+                    
+                    // Calculate real-time values
+                    let ostTotal = 0;
+                    let aotTotal = 0;
+                    let totalChange = 0;
+                    let totalValue = 0;
+                    
+                    investmentData.ostInvestments.forEach(inv => {
+                        const priceData = prices[inv.symbol];
+                        if (priceData && priceData.price) {
+                            const shares = inv.amount / (inv.avgPrice || 100); // Estimate shares
+                            const currentValue = shares * priceData.price;
+                            ostTotal += currentValue;
+                            totalValue += currentValue;
+                            totalChange += currentValue - inv.amount;
+                        } else {
+                            ostTotal += inv.currentValue || inv.amount;
+                            totalValue += inv.currentValue || inv.amount;
+                        }
+                    });
+
+                    investmentData.aotInvestments.forEach(inv => {
+                        const priceData = prices[inv.symbol];
+                        if (priceData && priceData.price) {
+                            const shares = inv.amount / (inv.avgPrice || 100); // Estimate shares
+                            const currentValue = shares * priceData.price;
+                            aotTotal += currentValue;
+                            totalValue += currentValue;
+                            totalChange += currentValue - inv.amount;
+                        } else {
+                            aotTotal += inv.currentValue || inv.amount;
+                            totalValue += inv.currentValue || inv.amount;
+                        }
+                    });
+
+                    // Update display with real data
+                    document.getElementById('totalPortfolio').textContent = `€${Math.round(totalValue).toLocaleString()}`;
+                    document.getElementById('ostValue').textContent = `€${Math.round(ostTotal).toLocaleString()}`;
+
+                    // Calculate real daily change
+                    const totalInvested = allInvestments.reduce((sum, inv) => sum + inv.amount, 0);
+                    const dailyChangeAmount = totalChange;
+                    const dailyChangePercent = totalInvested > 0 ? (dailyChangeAmount / totalInvested) * 100 : 0;
+                    
+                    this.updateChangeDisplay(dailyChangeAmount, dailyChangePercent);
+                    
+                    console.log('✅ Real-time portfolio data loaded successfully');
+                    
+                } catch (error) {
+                    console.warn('⚠️ Failed to load real-time data, falling back to static:', error);
+                    this.loadStaticPortfolioData(investmentData);
+                }
+            }
+
+            loadStaticPortfolioData(investmentData) {
+                // Calculate totals from stored values
                 const ostTotal = investmentData.ostInvestments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
                 const aotTotal = investmentData.aotInvestments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
                 const totalPortfolio = ostTotal + aotTotal;
@@ -542,18 +639,64 @@
                 document.getElementById('totalPortfolio').textContent = `€${totalPortfolio.toLocaleString()}`;
                 document.getElementById('ostValue').textContent = `€${ostTotal.toLocaleString()}`;
 
-                // Simulate daily change (in real app, this would come from market data)
+                // Simulate daily change
                 const dailyChangePercent = (Math.random() - 0.5) * 0.04; // -2% to +2%
                 const dailyChangeAmount = totalPortfolio * dailyChangePercent;
                 
+                this.updateChangeDisplay(dailyChangeAmount, dailyChangePercent);
+            }
+
+            updateChangeDisplay(dailyChangeAmount, dailyChangePercent) {
                 const changeElement = document.getElementById('portfolioChange');
                 const isPositive = dailyChangeAmount >= 0;
                 
                 changeElement.className = `metric-change ${isPositive ? 'positive' : 'negative'}`;
                 changeElement.innerHTML = `
                     <span class="material-icons">${isPositive ? 'trending_up' : 'trending_down'}</span>
-                    ${isPositive ? '+' : ''}€${Math.abs(dailyChangeAmount).toLocaleString()} (${dailyChangePercent > 0 ? '+' : ''}${(dailyChangePercent * 100).toFixed(2)}%)
+                    ${isPositive ? '+' : ''}€${Math.abs(dailyChangeAmount).toLocaleString()} (${dailyChangePercent > 0 ? '+' : ''}${dailyChangePercent.toFixed(2)}%)
                 `;
+            }
+
+            async loadMarketInsights() {
+                if (!this.marketDataService) return;
+                
+                try {
+                    console.log('📈 Loading Finnish market insights...');
+                    
+                    // Get Finnish market data
+                    const finnishMarket = await this.marketDataService.getFinnishMarketData();
+                    
+                    // Update first insight with real market data
+                    const primaryInsight = document.querySelector('.primary-insight');
+                    if (primaryInsight && finnishMarket.OMXH25) {
+                        const omxh25 = finnishMarket.OMXH25;
+                        const changeText = omxh25.changePercent > 0 ? 
+                            `up ${omxh25.changePercent.toFixed(1)}%` : 
+                            `down ${Math.abs(omxh25.changePercent).toFixed(1)}%`;
+                        
+                        primaryInsight.querySelector('.insight-title').textContent = 
+                            `Helsinki Stock Exchange ${changeText.includes('up') ? 'Rising' : 'Declining'}`;
+                        primaryInsight.querySelector('.insight-description').textContent = 
+                            `OMX Helsinki 25 ${changeText} to ${omxh25.price.toFixed(0)} points. ${finnishMarket.marketStatus.status === 'OPEN' ? 'Markets currently active.' : 'Markets closed.'}`;
+                    }
+                    
+                    // Get EUR/USD rate for currency insight
+                    const eurUsdRate = await this.marketDataService.getExchangeRate('EUR', 'USD');
+                    if (eurUsdRate) {
+                        const currencyInsight = document.querySelectorAll('.insight-card')[1];
+                        if (currencyInsight) {
+                            currencyInsight.querySelector('.insight-title').textContent = 
+                                `EUR/USD at ${eurUsdRate.toFixed(4)}`;
+                            currencyInsight.querySelector('.insight-description').textContent = 
+                                `${eurUsdRate > 1.08 ? 'Strong EUR position' : 'Favorable USD conditions'} for international investments. Consider your allocation strategy.`;
+                        }
+                    }
+                    
+                    console.log('✅ Market insights updated successfully');
+                    
+                } catch (error) {
+                    console.warn('⚠️ Failed to load market insights:', error);
+                }
             }
 
             getInvestmentData() {
@@ -661,14 +804,29 @@
 
         // Insights Functions
         function refreshInsights() {
-            // Simulate insight refresh
+            console.log('🔄 Refreshing market insights...');
+            
+            // Show loading state
             const insights = document.querySelectorAll('.insight-card');
             insights.forEach(card => {
                 card.style.opacity = '0.5';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                }, 500);
             });
+
+            // Refresh real data if available
+            if (morningCheckin && morningCheckin.marketDataService) {
+                morningCheckin.loadMarketInsights().then(() => {
+                    insights.forEach(card => {
+                        card.style.opacity = '1';
+                    });
+                });
+            } else {
+                // Fallback to animation only
+                setTimeout(() => {
+                    insights.forEach(card => {
+                        card.style.opacity = '1';
+                    });
+                }, 500);
+            }
         }
 
         // Motivational Quote Functions

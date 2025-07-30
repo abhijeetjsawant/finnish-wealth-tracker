@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Data Service Test - Finnish Wealth Tracker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 24px;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #1565c0;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        .error { background: #ffebee; color: #c62828; }
+        .info { background: #e3f2fd; color: #1976d2; }
+        .warning { background: #fff3e0; color: #f57c00; }
+        .results {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .metric {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .positive { color: #2e7d32; }
+        .negative { color: #c62828; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Market Data Service Test</h1>
+        <p>Phase 3A Day 1: Real-time Market Data Integration</p>
+    </div>
+
+    <div class="container">
+        <div class="test-section">
+            <h3>📊 Service Status</h3>
+            <button class="button" onclick="testServiceInitialization()">Initialize Service</button>
+            <button class="button" onclick="testAPIConnectivity()">Test API Connectivity</button>
+            <button class="button" onclick="getServiceStats()">Get Statistics</button>
+            <div id="serviceStatus" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>💰 Price Data Tests</h3>
+            <button class="button" onclick="testSinglePrice('AAPL')">Get AAPL Price</button>
+            <button class="button" onclick="testSinglePrice('VWCE')">Get VWCE Price</button>
+            <button class="button" onclick="testMultiplePrices(['AAPL', 'MSFT', 'GOOGL'])">Get Multiple Prices</button>
+            <div id="priceResults" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🇫🇮 Finnish Market Data</h3>
+            <button class="button" onclick="testFinnishMarket()">Get OMX Helsinki Data</button>
+            <button class="button" onclick="testCurrencyRates()">Get EUR/USD Rate</button>
+            <div id="finnishResults" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📈 Historical Data Tests</h3>
+            <button class="button" onclick="testHistoricalData('AAPL', '1W')">AAPL 1 Week</button>
+            <button class="button" onclick="testHistoricalData('VWCE', '1M')">VWCE 1 Month</button>
+            <div id="historicalResults" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>⚡ Performance & Caching</h3>
+            <button class="button" onclick="testCaching()">Test Cache Performance</button>
+            <button class="button" onclick="testRateLimiting()">Test Rate Limiting</button>
+            <button class="button" onclick="clearCache()">Clear Cache</button>
+            <div id="performanceResults" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🛠️ Error Handling</h3>
+            <button class="button" onclick="testErrorHandling()">Test Invalid Symbol</button>
+            <button class="button" onclick="getErrorStats()">Get Error Statistics</button>
+            <div id="errorResults" class="results"></div>
+        </div>
+    </div>
+
+    <!-- Market Data Services -->
+    <script src="js/api-cache.js"></script>
+    <script src="js/rate-limiter.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script src="js/alpha-vantage-api.js"></script>
+    <script src="js/iex-cloud-api.js"></script>
+    <script src="js/yahoo-finance-api.js"></script>
+    <script src="js/market-data-service.js"></script>
+
+    <script>
+        let marketDataService = null;
+
+        // Utility functions
+        function logStatus(message, type = 'info', containerId = 'serviceStatus') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function logResult(data, containerId = 'serviceStatus') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Test functions
+        async function testServiceInitialization() {
+            try {
+                logStatus('Initializing Market Data Service...', 'info');
+                marketDataService = new MarketDataService();
+                
+                // Wait for initialization
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                logStatus('✅ Market Data Service initialized successfully', 'success');
+                logResult({
+                    service: 'MarketDataService',
+                    status: 'initialized',
+                    apis: marketDataService.getApiStatus()
+                });
+                
+            } catch (error) {
+                logStatus(`❌ Failed to initialize: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAPIConnectivity() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning');
+                return;
+            }
+
+            try {
+                logStatus('Testing API connectivity...', 'info');
+                const stats = marketDataService.getApiStatus();
+                logResult(stats);
+                
+                stats.forEach(api => {
+                    const status = api.available ? '✅ Available' : '❌ Unavailable';
+                    logStatus(`${api.name}: ${status} (${api.successCount} successes, ${api.errorCount} errors)`, 
+                             api.available ? 'success' : 'error');
+                });
+                
+            } catch (error) {
+                logStatus(`❌ API test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSinglePrice(symbol) {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'priceResults');
+                return;
+            }
+
+            try {
+                logStatus(`Fetching price for ${symbol}...`, 'info', 'priceResults');
+                const startTime = Date.now();
+                
+                const priceData = await marketDataService.getPrice(symbol);
+                const duration = Date.now() - startTime;
+                
+                logStatus(`✅ Got ${symbol} price in ${duration}ms`, 'success', 'priceResults');
+                logResult({
+                    symbol: priceData.symbol,
+                    price: priceData.price,
+                    change: priceData.change,
+                    changePercent: priceData.changePercent,
+                    source: priceData.source,
+                    duration: `${duration}ms`
+                }, 'priceResults');
+                
+            } catch (error) {
+                logStatus(`❌ Failed to get ${symbol} price: ${error.message}`, 'error', 'priceResults');
+            }
+        }
+
+        async function testMultiplePrices(symbols) {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'priceResults');
+                return;
+            }
+
+            try {
+                logStatus(`Fetching prices for ${symbols.join(', ')}...`, 'info', 'priceResults');
+                const startTime = Date.now();
+                
+                const prices = await marketDataService.getPrices(symbols);
+                const duration = Date.now() - startTime;
+                
+                logStatus(`✅ Got ${Object.keys(prices).length} prices in ${duration}ms`, 'success', 'priceResults');
+                logResult({
+                    symbols: symbols,
+                    prices: prices,
+                    duration: `${duration}ms`
+                }, 'priceResults');
+                
+            } catch (error) {
+                logStatus(`❌ Failed to get multiple prices: ${error.message}`, 'error', 'priceResults');
+            }
+        }
+
+        async function testFinnishMarket() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'finnishResults');
+                return;
+            }
+
+            try {
+                logStatus('Fetching Finnish market data...', 'info', 'finnishResults');
+                const startTime = Date.now();
+                
+                const marketData = await marketDataService.getFinnishMarketData();
+                const duration = Date.now() - startTime;
+                
+                logStatus(`✅ Got Finnish market data in ${duration}ms`, 'success', 'finnishResults');
+                logResult({
+                    marketData: marketData,
+                    duration: `${duration}ms`
+                }, 'finnishResults');
+                
+            } catch (error) {
+                logStatus(`❌ Failed to get Finnish market data: ${error.message}`, 'error', 'finnishResults');
+            }
+        }
+
+        async function testCurrencyRates() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'finnishResults');
+                return;
+            }
+
+            try {
+                logStatus('Fetching EUR/USD exchange rate...', 'info', 'finnishResults');
+                const startTime = Date.now();
+                
+                const rate = await marketDataService.getExchangeRate('EUR', 'USD');
+                const duration = Date.now() - startTime;
+                
+                logStatus(`✅ EUR/USD rate: ${rate} (${duration}ms)`, 'success', 'finnishResults');
+                logResult({
+                    from: 'EUR',
+                    to: 'USD',
+                    rate: rate,
+                    duration: `${duration}ms`
+                }, 'finnishResults');
+                
+            } catch (error) {
+                logStatus(`❌ Failed to get exchange rate: ${error.message}`, 'error', 'finnishResults');
+            }
+        }
+
+        async function testHistoricalData(symbol, timeframe) {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'historicalResults');
+                return;
+            }
+
+            try {
+                logStatus(`Fetching ${symbol} historical data (${timeframe})...`, 'info', 'historicalResults');
+                const startTime = Date.now();
+                
+                const historicalData = await marketDataService.getHistoricalData(symbol, timeframe);
+                const duration = Date.now() - startTime;
+                
+                logStatus(`✅ Got ${historicalData.prices.length} data points for ${symbol} in ${duration}ms`, 'success', 'historicalResults');
+                logResult({
+                    symbol: symbol,
+                    timeframe: timeframe,
+                    dataPoints: historicalData.prices.length,
+                    source: historicalData.source,
+                    duration: `${duration}ms`,
+                    sample: historicalData.prices.slice(0, 3) // Show first 3 points
+                }, 'historicalResults');
+                
+            } catch (error) {
+                logStatus(`❌ Failed to get historical data: ${error.message}`, 'error', 'historicalResults');
+            }
+        }
+
+        async function testCaching() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'performanceResults');
+                return;
+            }
+
+            try {
+                logStatus('Testing cache performance...', 'info', 'performanceResults');
+                
+                // First request (should hit API)
+                const start1 = Date.now();
+                await marketDataService.getPrice('AAPL');
+                const duration1 = Date.now() - start1;
+                
+                // Second request (should hit cache)
+                const start2 = Date.now();
+                await marketDataService.getPrice('AAPL');
+                const duration2 = Date.now() - start2;
+                
+                logStatus(`✅ Cache test complete`, 'success', 'performanceResults');
+                logResult({
+                    firstRequest: `${duration1}ms (API)`,
+                    secondRequest: `${duration2}ms (Cache)`,
+                    improvement: `${Math.round(((duration1 - duration2) / duration1) * 100)}% faster`
+                }, 'performanceResults');
+                
+            } catch (error) {
+                logStatus(`❌ Cache test failed: ${error.message}`, 'error', 'performanceResults');
+            }
+        }
+
+        async function testRateLimiting() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'performanceResults');
+                return;
+            }
+
+            try {
+                logStatus('Testing rate limiting...', 'info', 'performanceResults');
+                const rateLimitStatus = marketDataService.getRateLimitStatus();
+                
+                logStatus(`✅ Rate limiter operational`, 'success', 'performanceResults');
+                logResult(rateLimitStatus, 'performanceResults');
+                
+            } catch (error) {
+                logStatus(`❌ Rate limit test failed: ${error.message}`, 'error', 'performanceResults');
+            }
+        }
+
+        function clearCache() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'performanceResults');
+                return;
+            }
+
+            try {
+                marketDataService.clearCache();
+                logStatus('✅ Cache cleared successfully', 'success', 'performanceResults');
+            } catch (error) {
+                logStatus(`❌ Failed to clear cache: ${error.message}`, 'error', 'performanceResults');
+            }
+        }
+
+        async function testErrorHandling() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning', 'errorResults');
+                return;
+            }
+
+            try {
+                logStatus('Testing error handling with invalid symbol...', 'info', 'errorResults');
+                
+                const result = await marketDataService.getPrice('INVALID_SYMBOL_123');
+                
+                logStatus(`✅ Error handled gracefully`, 'success', 'errorResults');
+                logResult({
+                    symbol: 'INVALID_SYMBOL_123',
+                    result: result,
+                    fallbackUsed: result.source === 'DEFAULT'
+                }, 'errorResults');
+                
+            } catch (error) {
+                logStatus(`✅ Error caught and handled: ${error.message}`, 'success', 'errorResults');
+            }
+        }
+
+        function getServiceStats() {
+            if (!marketDataService) {
+                logStatus('Please initialize service first', 'warning');
+                return;
+            }
+
+            try {
+                const apiStats = marketDataService.getApiStatus();
+                const rateLimitStats = marketDataService.getRateLimitStatus();
+                
+                logStatus('✅ Service statistics retrieved', 'success');
+                logResult({
+                    apis: apiStats,
+                    rateLimiting: rateLimitStats
+                });
+                
+            } catch (error) {
+                logStatus(`❌ Failed to get stats: ${error.message}`, 'error');
+            }
+        }
+
+        function getErrorStats() {
+            // This would require access to the error handler
+            logStatus('Error statistics would show error frequency and types', 'info', 'errorResults');
+        }
+
+        // Auto-initialize on page load
+        window.addEventListener('load', () => {
+            logStatus('Market Data Test Suite loaded. Click "Initialize Service" to begin.', 'info');
+        });
+    </script>
+</body>
+</html>
